@@ -1,0 +1,103 @@
+---
+title: "LiveKit Agents"
+description: "Use the Protoface avatar plugin in a LiveKit Agents app."
+---
+Use `livekit-plugins-protoface` when your voice agent runs on LiveKit Agents.
+The plugin starts a Protoface session, joins the avatar to the room, and routes
+agent audio to the avatar.
+
+## Install
+
+```sh
+pip install livekit-plugins-protoface
+```
+
+## Minimal usage
+
+```python
+from livekit.plugins import protoface
+
+avatar = protoface.AvatarSession()
+await avatar.start(session, room=ctx.room)
+```
+
+Start the avatar before `session.start(...)`:
+
+```python
+await session.start(
+    agent=agent,
+    room=ctx.room,
+)
+```
+
+After the avatar starts, the plugin routes agent audio through a LiveKit
+DataStream output addressed to the avatar participant.
+
+## Token handling
+
+`AvatarSession.start(...)` uses your LiveKit API key and secret inside the
+agent process to mint a short-lived avatar room token. Protoface receives that
+token as `worker_token`; it never receives your LiveKit API secret.
+
+## Configuration
+
+Set these in the agent environment.
+
+| Variable | Required | Used for |
+| --- | --- | --- |
+| `PROTOFACE_API_KEY` | yes | Authenticates calls to Protoface. |
+| `PROTOFACE_API_URL` | no | Overrides `https://api.protoface.com`. |
+| `LIVEKIT_URL` | yes | The LiveKit server the avatar joins. |
+| `LIVEKIT_API_KEY` | yes | Used locally to mint the avatar room token. |
+| `LIVEKIT_API_SECRET` | yes | Used locally to mint the avatar room token. Do not expose it to clients. |
+
+Or pass them directly:
+
+```python
+avatar = protoface.AvatarSession(
+    avatar_id="av_stock_001",
+    api_key="sk_live_...",
+)
+
+await avatar.start(
+    session,
+    room=ctx.room,
+    livekit_url="wss://your-project.livekit.cloud",
+    livekit_api_key="...",
+    livekit_api_secret="...",
+)
+```
+
+## AvatarSession options
+
+| Option | Purpose |
+| --- | --- |
+| `avatar_id` | Avatar to render. Use an ID from the dashboard or `/v1/avatars`. |
+| `api_key` | Protoface API key. Defaults to `PROTOFACE_API_KEY`. |
+| `api_url` | Protoface API base URL. Defaults to `PROTOFACE_API_URL` or `https://api.protoface.com`. |
+| `avatar_participant_identity` | LiveKit identity for the avatar participant. |
+| `avatar_participant_name` | LiveKit display name for the avatar participant. |
+| `max_duration_seconds` | Optional upper bound for the Protoface session. |
+| `conn_options` | LiveKit Agents connection timeout and retry options. |
+
+After `avatar.start(...)` succeeds, `avatar.session_id` contains the Protoface
+session ID.
+
+## Lifecycle
+
+Call `await avatar.start(session, room=ctx.room)` before `session.start(...)`.
+Call `await avatar.aclose()` if you need to stop the avatar explicitly.
+
+## Next
+
+<Columns cols={3}>
+  <Card title="Quickstart" href="/quickstart" icon="rocket">
+    Run a complete sample agent.
+  </Card>
+  <Card title="Avatars" href="/guides/avatars" icon="user-round">
+    Choose the avatar ID for your app.
+  </Card>
+  <Card title="Errors" href="/reference/errors" icon="triangle-alert">
+    API error codes and retry behavior.
+  </Card>
+</Columns>

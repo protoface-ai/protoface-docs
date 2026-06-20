@@ -1,0 +1,53 @@
+---
+title: "Protoface Docs"
+description: "Realtime avatar rendering for voice agents."
+---
+Protoface renders your agent's audio as a realtime talking avatar. It works
+with speech-to-speech realtime models or a separate STT/LLM/TTS pipeline:
+Protoface joins the live room as an avatar participant and publishes
+synchronized audio/video.
+
+## Start here
+
+Use the LiveKit Agents plugin for the supported integration path today. It
+starts the Protoface session, connects the avatar to your LiveKit room, and
+routes agent audio to the avatar.
+
+```python
+from livekit.plugins import protoface
+
+avatar = protoface.AvatarSession(avatar_id="av_stock_001")
+await avatar.start(session, room=ctx.room)
+```
+
+<Columns cols={3}>
+  <Card title="Quickstart" href="/quickstart" icon="rocket">
+    Run a LiveKit Agents app with a Protoface avatar.
+  </Card>
+  <Card title="LiveKit Agents" href="/guides/livekit-agents" icon="radio">
+    Configure the plugin and session lifecycle.
+  </Card>
+  <Card title="Avatars" href="/guides/avatars" icon="user-round">
+    Use the stock avatar or create a custom avatar.
+  </Card>
+</Columns>
+
+## Reference
+
+Use these pages when you need endpoint details, error handling, limits, or
+usage data.
+
+<Columns cols={2}>
+  <Card title="API Reference" href="/api-reference" icon="square-terminal">
+    Endpoint schemas generated from OpenAPI.
+  </Card>
+  <Card title="Errors" href="/reference/errors" icon="triangle-alert">
+    Stable error codes and retry behavior.
+  </Card>
+  <Card title="Limits & quotas" href="/reference/limits" icon="gauge">
+    Session caps, usage rounding, and credit behavior.
+  </Card>
+  <Card title="Usage" href="/guides/usage" icon="chart-no-axes-column">
+    Read account-level session and billing totals.
+  </Card>
+</Columns>

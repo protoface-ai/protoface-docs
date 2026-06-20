@@ -1,0 +1,75 @@
+---
+title: "Avatars"
+description: "Find the avatar ID to use in a Protoface session."
+---
+Each Protoface session renders one avatar. Start with `av_stock_001` while you
+validate session creation and media routing, then switch to a custom avatar
+from the dashboard or API.
+
+## Create an avatar
+
+Custom avatar builds are asynchronous. Upload a portrait image, then poll the
+avatar until `status` is `ready` or `failed`.
+
+```sh
+curl -X POST https://api.protoface.com/v1/avatars \
+  -H "Authorization: Bearer $PROTOFACE_API_KEY" \
+  -F "image=@portrait.png" \
+  -F "name=Demo Avatar"
+```
+
+## Source image checklist
+
+- Use a PNG or JPEG portrait.
+- Use one clearly visible, forward-facing face.
+- Avoid heavy occlusion, extreme crop, harsh lighting, or multiple faces.
+- If the avatar reaches `status: "failed"`, check `failure_reason` on the
+  avatar response before uploading a new source image.
+
+## List avatars
+
+```sh
+curl https://api.protoface.com/v1/avatars \
+  -H "Authorization: Bearer $PROTOFACE_API_KEY"
+```
+
+Use avatars with `status: "ready"` in sessions.
+
+## Retrieve an avatar
+
+```sh
+curl https://api.protoface.com/v1/avatars/av_... \
+  -H "Authorization: Bearer $PROTOFACE_API_KEY"
+```
+
+## Use an avatar
+
+```python
+from livekit.plugins import protoface
+
+avatar = protoface.AvatarSession(avatar_id="av_stock_001")
+```
+
+When using the REST API, pass the same value as `avatar_id` in
+`POST /v1/sessions`.
+
+## Delete an avatar
+
+```sh
+curl -X DELETE https://api.protoface.com/v1/avatars/av_... \
+  -H "Authorization: Bearer $PROTOFACE_API_KEY"
+```
+
+Deleting a custom avatar removes its uploaded source image and built assets.
+Past session and usage records remain. Stock avatars cannot be deleted.
+
+## Next
+
+<Columns cols={2}>
+  <Card title="Quickstart" href="/quickstart" icon="rocket">
+    Run a LiveKit Agents app with a Protoface avatar.
+  </Card>
+  <Card title="LiveKit Agents" href="/guides/livekit-agents" icon="radio">
+    Use an avatar with the plugin.
+  </Card>
+</Columns>

@@ -1,0 +1,36 @@
+---
+title: "Usage"
+description: "Read account-level usage totals."
+---
+Use `GET /v1/usage` for account views and reconciliation. Usage data can lag
+live sessions briefly; do not use this endpoint for live session control.
+
+## Current month
+
+```sh
+curl "https://api.protoface.com/v1/usage?period=current_month" \
+  -H "Authorization: Bearer $PROTOFACE_API_KEY"
+```
+
+`period` can be `current_month` or `previous_month`.
+
+## Custom range
+
+```sh
+curl "https://api.protoface.com/v1/usage?period_start=2026-06-01T00:00:00Z&period_end=2026-07-01T00:00:00Z" \
+  -H "Authorization: Bearer $PROTOFACE_API_KEY"
+```
+
+Usage totals may lag live sessions briefly. For a single running session, read
+the `usage` field on the session resource.
+
+## Next
+
+<Columns cols={2}>
+  <Card title="Limits & quotas" href="/reference/limits" icon="gauge">
+    Session caps, usage rounding, and credit behavior.
+  </Card>
+  <Card title="Errors" href="/reference/errors" icon="triangle-alert">
+    Handle retryable and quota responses.
+  </Card>
+</Columns>
