@@ -21,12 +21,12 @@
   },
   "contextual": {
     "display": "header",
-    "options": ["copy", "chatgpt", "claude", "cursor"]
+    "options": ["copy", "chatgpt", "claude"]
   },
   "api": {
     "openapi": "openapi.json",
     "playground": {
-      "display": "interactive"
+      "display": "none"
     },
     "url": "full",
     "examples": {
