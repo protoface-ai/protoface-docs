@@ -21,7 +21,16 @@
   },
   "contextual": {
     "display": "header",
-    "options": ["copy", "chatgpt", "claude"]
+    "options": [
+      "copy",
+      "view",
+      "chatgpt",
+      "claude",
+      "perplexity",
+      "cursor",
+      "vscode",
+      "download-spec"
+    ]
   },
   "api": {
     "openapi": "openapi.json",
