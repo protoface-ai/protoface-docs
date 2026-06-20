@@ -1,0 +1,61 @@
+---
+title: "Limits"
+description: "Session caps, usage rounding, and credit behavior."
+---
+Limits vary by plan. Session responses include the effective limits for that
+session.
+
+## Plan limits
+
+| Plan | Concurrent sessions | Max session duration |
+| --- | --- | --- |
+| Free | 1 | 2 minutes |
+| Starter | 2 | 10 minutes |
+| Launch | 10 | 20 minutes |
+| Scale | 50 | 60 minutes |
+
+Exceeding a concurrency cap returns `429 quota_exceeded` with
+`error.code: "concurrent_sessions"`.
+
+For early capacity planning, estimate the concurrency budget by dividing daily
+active users by 250. Rarely, Protoface may rate-limit how quickly new sessions
+are created during ramp-up, but that does not reduce the plan's concurrent
+session cap.
+
+## Sessions
+
+| Limit | Default |
+| --- | --- |
+| Idle timeout | 30 seconds without input audio |
+| Metadata size | 8 KB |
+| Create rate limit | 10 requests per minute per key |
+| Idempotency window | 24 hours |
+
+If you send `max_duration_seconds`, Protoface applies the lower of your request
+and your plan limit.
+
+## Credits
+
+Usage is rounded up to the nearest minute. One credit equals one rounded-up
+session minute. If the account has no usable credits, session creation returns
+`402 quota_exceeded` with
+`error.code: "insufficient_credit_balance"`.
+
+Free monthly credits do not roll over. Purchased credits roll over without
+expiry.
+
+## Metadata keys
+
+`metadata` is customer-owned JSON. Keys beginning with `_avatar.` are managed by
+Protoface and are reserved for support-directed use.
+
+## Next
+
+<Columns cols={2}>
+  <Card title="Errors" href="/reference/errors" icon="triangle-alert">
+    Error responses and retry behavior.
+  </Card>
+  <Card title="Usage" href="/guides/usage" icon="chart-no-axes-column">
+    Inspect usage and credits.
+  </Card>
+</Columns>

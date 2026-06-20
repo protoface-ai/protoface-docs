@@ -1,0 +1,88 @@
+{
+  "$schema": "https://mintlify.com/docs.json",
+  "theme": "mint",
+  "name": "Protoface",
+  "colors": {
+    "primary": "#ff5a3d",
+    "light": "#ff7a5f",
+    "dark": "#ff5a3d"
+  },
+  "logo": {
+    "light": "/images/brand/protoface-logo-light.png",
+    "dark": "/images/brand/protoface-logo-dark.png",
+    "href": "https://protoface.com"
+  },
+  "icons": {
+    "library": "lucide"
+  },
+  "api": {
+    "openapi": "openapi.json",
+    "playground": {
+      "display": "interactive"
+    },
+    "url": "full",
+    "examples": {
+      "languages": ["curl", "python", "javascript"],
+      "defaults": "required",
+      "prefill": true,
+      "autogenerate": true
+    }
+  },
+  "navigation": {
+    "groups": [
+      {
+        "group": "Get started",
+        "pages": ["index", "quickstart"]
+      },
+      {
+        "group": "Guides",
+        "pages": [
+          "guides/livekit-agents",
+          "guides/avatars",
+          "guides/usage"
+        ]
+      },
+      {
+        "group": "Reference",
+        "pages": [
+          "reference/errors",
+          "reference/limits",
+          "reference/known-limitations"
+        ]
+      },
+      {
+        "group": "API Reference",
+        "root": "api-reference/index",
+        "openapi": "openapi.json",
+        "pages": [
+          "api-reference/index",
+          "GET /v1/avatars",
+          "POST /v1/avatars",
+          "GET /v1/avatars/{avatar_id}",
+          "DELETE /v1/avatars/{avatar_id}",
+          "GET /v1/billing/plans",
+          "GET /v1/sessions",
+          "POST /v1/sessions",
+          "GET /v1/sessions/{session_id}",
+          "POST /v1/sessions/{session_id}/end",
+          "GET /v1/status",
+          "GET /v1/usage"
+        ]
+      }
+    ]
+  },
+  "redirects": [
+    {
+      "source": "/guides/sessions",
+      "destination": "/guides/livekit-agents"
+    },
+    {
+      "source": "/concepts/transports",
+      "destination": "/guides/livekit-agents"
+    },
+    {
+      "source": "/concepts/architecture",
+      "destination": "/"
+    }
+  ]
+}
