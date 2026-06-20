@@ -23,10 +23,8 @@
     "display": "header",
     "options": [
       "copy",
-      "view",
       "chatgpt",
       "claude",
-      "perplexity",
       "cursor",
       "vscode",
       "download-spec"
