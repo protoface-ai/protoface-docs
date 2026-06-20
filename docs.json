@@ -3,22 +3,37 @@
   "theme": "mint",
   "name": "Protoface",
   "colors": {
-    "primary": "#ff5a3d",
-    "light": "#ff7a5f",
-    "dark": "#ff5a3d"
+    "primary": "#0c0d0e",
+    "light": "#fcfbfa",
+    "dark": "#0c0d0e"
   },
   "logo": {
     "light": "/images/brand/protoface-logo-light.png",
     "dark": "/images/brand/protoface-logo-dark.png",
     "href": "https://protoface.com"
   },
+  "favicon": {
+    "light": "/images/brand/protoface-mark-white.png",
+    "dark": "/images/brand/protoface-mark-ink.png"
+  },
   "icons": {
     "library": "lucide"
+  },
+  "contextual": {
+    "display": "header",
+    "options": [
+      "copy",
+      "chatgpt",
+      "claude",
+      "cursor",
+      "vscode",
+      "download-spec"
+    ]
   },
   "api": {
     "openapi": "openapi.json",
     "playground": {
-      "display": "interactive"
+      "display": "none"
     },
     "url": "full",
     "examples": {
@@ -55,7 +70,6 @@
         "root": "api-reference/index",
         "openapi": "openapi.json",
         "pages": [
-          "api-reference/index",
           "GET /v1/avatars",
           "POST /v1/avatars",
           "GET /v1/avatars/{avatar_id}",
