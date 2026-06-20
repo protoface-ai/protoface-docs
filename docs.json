@@ -13,8 +13,8 @@
     "href": "https://protoface.com"
   },
   "favicon": {
-    "light": "/images/brand/protoface-mark-white.png",
-    "dark": "/images/brand/protoface-mark-ink.png"
+    "light": "/images/brand/protoface-mark-ink.png",
+    "dark": "/images/brand/protoface-mark-white.png"
   },
   "icons": {
     "library": "lucide"
