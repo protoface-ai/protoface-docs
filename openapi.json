@@ -72,6 +72,7 @@
         "examples": [
           {
             "created_at": "2026-01-01T00:00:00Z",
+            "default_voice": "Charon",
             "id": "av_stock_001",
             "is_demo": true,
             "name": "Stock Avatar 001",
@@ -84,6 +85,28 @@
           "created_at": {
             "format": "date-time",
             "type": "string"
+          },
+          "default_custom_instructions": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Preferred managed-conversation instructions for this avatar, when configured."
+          },
+          "default_voice": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Preferred conversation voice for this avatar, when configured."
           },
           "failure_reason": {
             "anyOf": [
