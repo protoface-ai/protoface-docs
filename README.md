@@ -1,6 +1,6 @@
 # Protoface Docs
 
-Public documentation for Protoface.
+The docs are live here: [docs.protoface.com](https://docs.protoface.com)
 
 ## Development
 
