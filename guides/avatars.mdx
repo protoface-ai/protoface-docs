@@ -20,9 +20,12 @@ curl -X POST https://api.protoface.com/v1/avatars \
 
 ## Source image checklist
 
-- Use a PNG or JPEG portrait.
-- Use one clearly visible, forward-facing face.
-- Avoid heavy occlusion, extreme crop, harsh lighting, or multiple faces.
+- Use a PNG or JPEG source image.
+- Use one clearly visible, forward-facing face or face-like subject.
+- Avoid heavy occlusion, extreme crop, harsh lighting, multiple faces, or
+  screen-only/abstract faces without readable landmarks.
+- See [Choosing a source image](/guides/avatar-source-images) for examples of
+  good and bad portrait uploads.
 - If the avatar reaches `status: "failed"`, check `failure_reason` on the
   avatar response before uploading a new source image.
 
