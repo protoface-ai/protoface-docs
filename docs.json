@@ -54,7 +54,8 @@
         "pages": [
           "guides/livekit-agents",
           "guides/avatars",
-          "guides/usage"
+          "guides/usage",
+          "guides/avatar-source-images"
         ]
       },
       {
