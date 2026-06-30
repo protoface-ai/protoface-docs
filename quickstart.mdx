@@ -2,9 +2,11 @@
 title: "Quickstart"
 description: "Run a LiveKit Agents app with a Protoface avatar."
 ---
-Use this quickstart to run a LiveKit Agents app with a Protoface avatar. The
-sample uses Gemini Realtime; the same avatar flow applies to agents that use
+
+This sample uses Gemini Realtime. The same avatar flow applies to agents that use
 separate STT, LLM, and TTS components.
+
+Want more examples? Check out the [Quickstart Repo](https://github.com/protoface-ai/protoface-quickstart), which has examples you can easily clone and run in under 5 minutes.
 
 ## Prerequisites
 
@@ -12,8 +14,6 @@ separate STT, LLM, and TTS components.
 - A LiveKit project with `LIVEKIT_URL`, `LIVEKIT_API_KEY`, and
   `LIVEKIT_API_SECRET`.
 - A Google Gemini API key for the sample realtime model: `GOOGLE_API_KEY`.
-
-Keep `PROTOFACE_API_KEY` and `LIVEKIT_API_SECRET` server-side.
 
 ## 1. Install
 
@@ -65,7 +65,7 @@ async def entrypoint(ctx: JobContext):
     )
 
     avatar = protoface.AvatarSession(
-        avatar_id=os.getenv("PROTOFACE_AVATAR_ID", protoface.DEFAULT_STOCK_AVATAR_ID),
+        avatar_id=os.getenv("PROTOFACE_AVATAR_ID", "av_stock_001"),
     )
     await avatar.start(session, room=ctx.room)
 
@@ -112,7 +112,7 @@ your LiveKit project, join the room, and talk to the agent.
   <Card title="Avatars" href="/guides/avatars" icon="user-round">
     Choose the avatar ID for your app.
   </Card>
-  <Card title="Known limitations" href="/reference/known-limitations" icon="circle-alert">
+  <Card title="Known issues" href="/reference/known-issues" icon="circle-alert">
     Current constraints to account for.
   </Card>
 </Columns>

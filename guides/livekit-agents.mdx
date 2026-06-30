@@ -2,9 +2,9 @@
 title: "LiveKit Agents"
 description: "Use the Protoface avatar plugin in a LiveKit Agents app."
 ---
-Use `livekit-plugins-protoface` when your voice agent runs on LiveKit Agents.
-The plugin starts a Protoface session, joins the avatar to the room, and routes
-agent audio to the avatar.
+If your voice agent runs on LiveKit Agents, `livekit-plugins-protoface` is the
+easiest way to add an avatar. It opens a Protoface session and joins the avatar
+to your room, then streams your agent's audio to it.
 
 ## Install
 
@@ -12,12 +12,12 @@ agent audio to the avatar.
 pip install livekit-plugins-protoface
 ```
 
-## Minimal usage
+## Basic usage
 
 ```python
 from livekit.plugins import protoface
 
-avatar = protoface.AvatarSession()
+avatar = protoface.AvatarSession(avatar_id="av_stock_001")
 await avatar.start(session, room=ctx.room)
 ```
 

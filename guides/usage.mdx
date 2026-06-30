@@ -2,8 +2,9 @@
 title: "Usage"
 description: "Read account-level usage totals."
 ---
-Use `GET /v1/usage` for account views and reconciliation. Usage data can lag
-live sessions briefly; do not use this endpoint for live session control.
+`GET /v1/usage` returns account-level totals for reporting and reconciliation.
+It can lag active sessions by a short delay, so don't rely on it for live
+session control.
 
 ## Current month
 
@@ -21,13 +22,13 @@ curl "https://api.protoface.com/v1/usage?period_start=2026-06-01T00:00:00Z&perio
   -H "Authorization: Bearer $PROTOFACE_API_KEY"
 ```
 
-Usage totals may lag live sessions briefly. For a single running session, read
-the `usage` field on the session resource.
+For a single running session, read the `usage` field on the session resource
+instead.
 
 ## Next
 
 <Columns cols={2}>
-  <Card title="Limits & quotas" href="/reference/limits" icon="gauge">
+  <Card title="Quotas" href="/reference/quotas" icon="gauge">
     Session caps, usage rounding, and credit behavior.
   </Card>
   <Card title="Errors" href="/reference/errors" icon="triangle-alert">
