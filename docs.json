@@ -61,8 +61,8 @@
         "group": "Reference",
         "pages": [
           "reference/errors",
-          "reference/limits",
-          "reference/known-limitations"
+          "reference/quotas",
+          "reference/known-issues"
         ]
       },
       {
@@ -97,6 +97,14 @@
     {
       "source": "/concepts/architecture",
       "destination": "/"
+    },
+    {
+      "source": "/reference/limits",
+      "destination": "/reference/quotas"
+    },
+    {
+      "source": "/reference/known-limitations",
+      "destination": "/reference/known-issues"
     }
   ]
 }

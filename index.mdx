@@ -1,24 +1,21 @@
 ---
 title: "Protoface Docs"
-description: "Realtime avatar rendering for voice agents."
+description: "Add realtime, high-fidelity avatars to your AI app or agent with the Protoface API."
 ---
-Protoface renders your agent's audio as a realtime talking avatar. It works
-with speech-to-speech realtime models or a separate STT/LLM/TTS pipeline:
-Protoface joins the live room as an avatar participant and publishes
-synchronized audio/video.
+
+## About Protoface
+
+Protoface adds high-quality realtime avatars to your AI app or agent, with a drop-in integration for your existing stack.
+
+It converts your agent's audio into realtime face video, so it works across languages with both speech-to-speech realtime models and STT/LLM/TTS pipelines.
+
+Protoface's next-generation models need only a single input image and spin up custom avatars in seconds. The majority of existing low-cost realtime avatar approaches rely on Gaussian-based models, which are much slower to generate custom avatars and lower in fidelity. Protoface solves this problem.
 
 ## Start here
 
-Use the LiveKit Agents plugin for the supported integration path today. It
-starts the Protoface session, connects the avatar to your LiveKit room, and
-routes agent audio to the avatar.
-
-```python
-from livekit.plugins import protoface
-
-avatar = protoface.AvatarSession(avatar_id="av_stock_001")
-await avatar.start(session, room=ctx.room)
-```
+Protoface works with any stack through the REST API, but the LiveKit Agents
+plugin is the fastest way to get started. The [Quickstart](/quickstart) walks
+through a complete, runnable agent in a few minutes.
 
 <Columns cols={3}>
   <Card title="Quickstart" href="/quickstart" icon="rocket">
@@ -44,7 +41,7 @@ usage data.
   <Card title="Errors" href="/reference/errors" icon="triangle-alert">
     Stable error codes and retry behavior.
   </Card>
-  <Card title="Limits & quotas" href="/reference/limits" icon="gauge">
+  <Card title="Quotas" href="/reference/quotas" icon="gauge">
     Session caps, usage rounding, and credit behavior.
   </Card>
   <Card title="Usage" href="/guides/usage" icon="chart-no-axes-column">

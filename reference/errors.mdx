@@ -22,7 +22,7 @@ Every non-2xx response includes one `error` object.
 | ------------ | -------------- | -------------------------------------------------------------------- |
 | `type`       | string         | Broad, stable failure category. Not always one-to-one with HTTP status. See the table below. |
 | `code`       | string         | Stable, machine-readable subcode in `lower_snake_case` / dotted form. |
-| `message`    | string         | Human-readable. Not stable; do not use for control flow.              |
+| `message`    | string         | Human-readable. May change, so don't parse it.                        |
 | `param`      | string \| null | The offending request field (dot-path), when applicable.             |
 | `request_id` | string         | `req_...`; include this when contacting support. Also echoed in `X-Request-Id`. |
 
@@ -34,8 +34,8 @@ Every non-2xx response includes one `error` object.
 | ---- | --------------------- | --------------------------------------------------- |
 | 400  | `invalid_request`     | Malformed JSON, missing or invalid field.           |
 | 401  | `authentication`      | Missing, bad, or revoked API key.                   |
-| 403  | `permission`          | Authenticated, but the key can't access this resource. |
 | 402  | `quota_exceeded`      | Not enough credits, or billing isn't active for a credit-gated action. |
+| 403  | `permission`          | Authenticated, but the key can't access this resource. |
 | 404  | `not_found`           | Resource doesn't exist (or isn't in your scope).    |
 | 409  | `conflict`            | Idempotency conflict or a state-machine clash.      |
 | 422  | `unprocessable`       | Request shape is fine but the semantics are invalid. |
@@ -43,6 +43,11 @@ Every non-2xx response includes one `error` object.
 | 429  | `quota_exceeded`      | Per-org concurrency or usage quota exhausted.        |
 | 500  | `internal`            | Unexpected server error.                             |
 | 503  | `service_unavailable` | No capacity, or scheduled maintenance.               |
+
+Two cases share `429`: `rate_limit` means you're calling too fast (back off and
+retry), while `quota_exceeded` means a plan ceiling like concurrent sessions is
+full (retrying won't help until capacity frees up). Branch on `error.type` to
+tell them apart.
 
 ## Rate limits and retries
 
@@ -75,7 +80,7 @@ For API integrations, use the HTTP status and `error.code` for control flow.
 ## Next
 
 <Columns cols={2}>
-  <Card title="Limits & quotas" href="/reference/limits" icon="gauge">
+  <Card title="Quotas" href="/reference/quotas" icon="gauge">
     Session caps, usage rounding, and credit behavior.
   </Card>
   <Card title="API Reference" href="/api-reference" icon="square-terminal">
