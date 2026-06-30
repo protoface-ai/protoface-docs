@@ -1,0 +1,19 @@
+guides/avatars.mdx
+  s_07f55dff051d82::t_cb96b8eabcdc38 26
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.5",
+  "base_commit_sha": "575c34da254647d59d4091fac17c56cfedd77f85",
+  "prompts": {},
+  "sessions": {
+    "s_07f55dff051d82": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f1a95-50fd-7732-87e9-e8adbeff21d9",
+        "model": "gpt-5.5"
+      },
+      "human_author": "Harish Palani <16145398+harishpalani@users.noreply.github.com>"
+    }
+  }
+}
