@@ -1,0 +1,26 @@
+guides/avatar-source-images.mdx
+  s_07f55dff051d82::t_fd7f0807a11915 1-459
+guides/avatars.mdx
+  s_07f55dff051d82::t_df1792a1ba245c 26
+  s_07f55dff051d82::t_924d416351b696 23-25,27-28
+docs.json
+  s_07f55dff051d82::t_070ade599aa01c 57-58
+openapi.json
+  s_07f55dff051d82::t_0dfc98be1dd3be 1010
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.5",
+  "base_commit_sha": "2427b9a3f06ffd2544ea21f470749fa5b2fef3dd",
+  "prompts": {},
+  "sessions": {
+    "s_07f55dff051d82": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f1a95-50fd-7732-87e9-e8adbeff21d9",
+        "model": "gpt-5.5"
+      },
+      "human_author": null
+    }
+  }
+}
