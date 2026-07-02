@@ -1007,7 +1007,7 @@
         ]
       },
       "post": {
-        "description": "Upload a portrait image to build a custom avatar. Returns the avatar in `processing`; poll `GET /v1/avatars/{id}` until it is `ready` (or `failed`). `multipart/form-data`: `image` (PNG/JPEG), `name`, and optional `runtime_type` (default `avtr1`).",
+        "description": "Upload a source image to build a custom avatar. Returns the avatar in `processing`; poll `GET /v1/avatars/{id}` until it is `ready` (or `failed`). See [Choosing a source image](/guides/avatar-source-images) for examples and best practices. `multipart/form-data`: `image` (PNG/JPEG), `name`, and optional `runtime_type` (default `avtr1`).",
         "operationId": "create_avatar",
         "requestBody": {
           "content": {

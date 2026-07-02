@@ -55,7 +55,8 @@
           "guides/livekit-agents",
           "guides/more-integrations",
           "guides/avatars",
-          "guides/usage"
+          "guides/usage",
+          "guides/avatar-source-images"
         ]
       },
       {
