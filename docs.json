@@ -53,6 +53,7 @@
         "group": "Guides",
         "pages": [
           "guides/livekit-agents",
+          "guides/more-integrations",
           "guides/avatars",
           "guides/usage",
           "guides/avatar-source-images"
