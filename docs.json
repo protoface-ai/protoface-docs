@@ -51,6 +51,11 @@
     "global": {
       "anchors": [
         {
+          "anchor": "Website",
+          "icon": "globe",
+          "href": "https://protoface.com"
+        },
+        {
           "anchor": "Platform",
           "icon": "layout-dashboard",
           "href": "https://app.protoface.com"
