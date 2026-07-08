@@ -1,0 +1,24 @@
+index.mdx
+  s_d34df6de874549::t_ee5d32c29dd798 2
+docs.json
+  s_d34df6de874549::t_ee5d32c29dd798 54-57
+  s_d34df6de874549::t_11c4e75c31f040 53
+reference/known-issues.mdx
+  s_d34df6de874549::t_ee5d32c29dd798 2,11
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "cf55f0ae451e54685d29f8d022d81fea125d4138",
+  "prompts": {},
+  "sessions": {
+    "s_d34df6de874549": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f3f07-980d-7d41-8369-77d16645831c",
+        "model": "gpt-5.5"
+      },
+      "human_author": "Protoface Team <295041388+protoface-team@users.noreply.github.com>"
+    }
+  }
+}
