@@ -1,0 +1,112 @@
+---
+title: "Pipecat"
+description: "Use ProtofaceVideoService in a Pipecat pipeline."
+---
+If your voice agent runs on Pipecat, `pipecat-protoface` adds a Protoface avatar
+as a video service. It starts a hosted Protoface session, consumes assistant
+audio from the pipeline, and emits synchronized audio and video frames to your
+output transport.
+
+If you're not using Pipecat, Protoface also integrates with many more platforms
+and SDKs. See [More Integrations](/guides/more-integrations).
+
+## Install
+
+```sh
+uv add pipecat-protoface
+```
+
+Install Pipecat extras for your transport, STT, LLM, TTS, or realtime model
+separately.
+
+## Basic usage
+
+```python
+import os
+
+from pipecat_protoface import ProtofaceVideoService
+
+protoface = ProtofaceVideoService(
+    api_key=os.environ["PROTOFACE_API_KEY"],
+    avatar_id=os.environ["PROTOFACE_AVATAR_ID"],
+)
+```
+
+Add `protoface` after TTS and before `transport.output()`:
+
+```python
+pipeline = Pipeline([
+    transport.input(),
+    stt,
+    context_aggregator.user(),
+    llm,
+    tts,
+    protoface,
+    transport.output(),
+    context_aggregator.assistant(),
+])
+```
+
+After the pipeline starts, `protoface` emits synchronized avatar audio and video
+frames downstream.
+
+## Realtime speech-to-speech
+
+For realtime speech-to-speech, put `protoface` after the realtime model and
+before the output transport:
+
+```python
+pipeline = Pipeline([
+    transport.input(),
+    context_aggregator.user(),
+    gemini_live,
+    context_aggregator.assistant(),
+    protoface,
+    transport.output(),
+])
+```
+
+## Configuration
+
+Set both variables in the Pipecat worker environment:
+
+- `PROTOFACE_API_KEY`: Authenticates calls to Protoface.
+- `PROTOFACE_AVATAR_ID`: Avatar to render. Start with `av_stock_001` or use an
+  ID from `/v1/avatars`.
+
+## ProtofaceVideoService options
+
+| Option | Purpose |
+| --- | --- |
+| `api_key` | Protoface API key. |
+| `avatar_id` | Avatar to render. Use an ID from the dashboard or `/v1/avatars`. |
+| `api_url` | Protoface API base URL. Defaults to `https://api.protoface.com`. |
+| `max_duration_seconds` | Optional upper bound for the Protoface session. |
+| `metadata` | Metadata attached to the Protoface session. |
+| `settings` | Advanced buffering and client-readiness settings. |
+
+## Lifecycle
+
+`ProtofaceVideoService` starts a hosted Protoface session when the pipeline
+starts. Audio produced before the avatar session is ready is buffered, then
+streamed once the connection is available.
+
+## Compatibility
+
+Tested with Pipecat v1.4.0+ and Python 3.11+.
+Check the [plugin source](https://github.com/protoface-ai/protoface-plugin-pipecat)
+for current examples and compatibility notes.
+
+## Next
+
+<Columns cols={3}>
+  <Card title="Pipecat docs" href="https://docs.pipecat.ai/api-reference/server/services/video/protoface" icon="book-open">
+    Service reference and examples in Pipecat's docs.
+  </Card>
+  <Card title="Plugin source" href="https://github.com/protoface-ai/protoface-plugin-pipecat" icon="github">
+    Source code, examples, and issues.
+  </Card>
+  <Card title="Avatars" href="/guides/avatars" icon="user-round">
+    Choose the avatar ID for your app.
+  </Card>
+</Columns>
