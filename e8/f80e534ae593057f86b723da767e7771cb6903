@@ -1,0 +1,50 @@
+guides/pipecat.mdx
+  s_d34df6de874549::t_2bc535ffbc2d3c 77
+  s_d34df6de874549::t_35559c0c20c7a2 3,10-12,15,19-20,22,24,33,35-37,49,51,55-56,58,69-70,76,78-92
+  s_d34df6de874549::t_e5e32a3e4ee19d 1-2,4,9,13-14,16-18,21,23,25-32,34,38-48,52,54,59-68,72,93,100-102,105-112
+  s_d34df6de874549::t_0a8c9647027d20 97
+  s_d34df6de874549::t_dd5c33eaf8354e 71,73-75
+  s_d34df6de874549::t_708410b332e49d 5-8,50
+  s_d34df6de874549::t_cc2be013b047d8 94-95,99
+  s_d34df6de874549::t_af552e84ea5142 103
+  s_d34df6de874549::t_9bbc699590d677 96,98,104
+  s_d34df6de874549::t_8e78490e22cbd9 53,57
+guides/more-integrations.mdx
+  s_d34df6de874549::t_9bbc699590d677 18
+  s_d34df6de874549::t_a8f94e05ce7046 23
+  s_d34df6de874549::t_dfa1d9b8b8ceac 22
+guides/avatar-source-images.mdx
+  s_d34df6de874549::t_3a6088cd45bfcf 2
+  s_d34df6de874549::t_64b7a8e34e57ac 3
+docs.json
+  s_d34df6de874549::t_71d455affd55e1 20-21
+  s_d34df6de874549::t_8dff65a613df7f 10-13,51-53,55-70,72-75,77-84,86-87,95-107,111-131
+  s_d34df6de874549::t_00bdd2ed82ae37 71
+  s_d34df6de874549::t_efbb921c2eb22e 54
+  s_d34df6de874549::t_e5e32a3e4ee19d 88
+  s_d34df6de874549::t_3a6088cd45bfcf 85,89-94
+index.mdx
+  s_d34df6de874549::t_9bbc699590d677 29
+  s_d34df6de874549::t_a1ee40c8e39643 30
+  s_d34df6de874549::t_e5e32a3e4ee19d 28,31-32
+guides/avatars.mdx
+  s_d34df6de874549::t_3a6088cd45bfcf 27
+openapi.json
+  s_d34df6de874549::t_3a6088cd45bfcf 1010
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "e8f80e534ae593057f86b723da767e7771cb6903",
+  "prompts": {},
+  "sessions": {
+    "s_d34df6de874549": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f3f07-980d-7d41-8369-77d16645831c",
+        "model": "gpt-5.5"
+      },
+      "human_author": "Protoface Team <295041388+protoface-team@users.noreply.github.com>"
+    }
+  }
+}
