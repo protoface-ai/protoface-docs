@@ -7,14 +7,18 @@
     "light": "#fcfbfa",
     "dark": "#0c0d0e"
   },
+  "appearance": {
+    "default": "light",
+    "strict": false
+  },
   "logo": {
     "light": "/images/brand/protoface-logo-light.png",
     "dark": "/images/brand/protoface-logo-dark.png",
     "href": "https://protoface.com"
   },
   "favicon": {
-    "light": "/images/brand/protoface-mark-ink.png",
-    "dark": "/images/brand/protoface-mark-white.png"
+    "light": "/images/brand/protoface-mark-white.png",
+    "dark": "/images/brand/protoface-mark-ink.png"
   },
   "icons": {
     "library": "lucide"
@@ -44,45 +48,87 @@
     }
   },
   "navigation": {
-    "groups": [
+    "global": {
+      "anchors": [
+        {
+          "anchor": "Platform",
+          "icon": "layout-dashboard",
+          "href": "https://app.protoface.com"
+        },
+        {
+          "anchor": "Examples",
+          "icon": "github",
+          "href": "https://github.com/protoface-ai/protoface-quickstart"
+        },
+        {
+          "anchor": "Support",
+          "icon": "life-buoy",
+          "href": "https://protoface.discourse.group/"
+        },
+        {
+          "anchor": "Status",
+          "icon": "activity",
+          "href": "https://status.protoface.com"
+        }
+      ]
+    },
+    "tabs": [
       {
-        "group": "Get started",
-        "pages": ["index", "quickstart"]
-      },
-      {
-        "group": "Guides",
-        "pages": [
-          "guides/livekit-agents",
-          "guides/more-integrations",
-          "guides/avatars",
-          "guides/usage",
-          "guides/avatar-source-images"
+        "tab": "Docs",
+        "icon": "book-open",
+        "groups": [
+          {
+            "group": "Get started",
+            "pages": ["index", "quickstart"]
+          },
+          {
+            "group": "Integrations",
+            "pages": [
+              "guides/livekit-agents",
+              "guides/pipecat",
+              "guides/more-integrations"
+            ]
+          },
+          {
+            "group": "Guides",
+            "pages": [
+              "guides/avatars",
+              "guides/usage",
+              "guides/avatar-source-images"
+            ]
+          },
+          {
+            "group": "Reference",
+            "pages": [
+              "reference/errors",
+              "reference/quotas",
+              "reference/known-issues"
+            ]
+          }
         ]
       },
       {
-        "group": "Reference",
-        "pages": [
-          "reference/errors",
-          "reference/quotas",
-          "reference/known-issues"
-        ]
-      },
-      {
-        "group": "API Reference",
-        "root": "api-reference/index",
-        "openapi": "openapi.json",
-        "pages": [
-          "GET /v1/avatars",
-          "POST /v1/avatars",
-          "GET /v1/avatars/{avatar_id}",
-          "DELETE /v1/avatars/{avatar_id}",
-          "GET /v1/billing/plans",
-          "GET /v1/sessions",
-          "POST /v1/sessions",
-          "GET /v1/sessions/{session_id}",
-          "POST /v1/sessions/{session_id}/end",
-          "GET /v1/status",
-          "GET /v1/usage"
+        "tab": "API Reference",
+        "icon": "square-terminal",
+        "groups": [
+          {
+            "group": "API Reference",
+            "root": "api-reference/index",
+            "openapi": "openapi.json",
+            "pages": [
+              "GET /v1/avatars",
+              "POST /v1/avatars",
+              "GET /v1/avatars/{avatar_id}",
+              "DELETE /v1/avatars/{avatar_id}",
+              "GET /v1/billing/plans",
+              "GET /v1/sessions",
+              "POST /v1/sessions",
+              "GET /v1/sessions/{session_id}",
+              "POST /v1/sessions/{session_id}/end",
+              "GET /v1/status",
+              "GET /v1/usage"
+            ]
+          }
         ]
       }
     ]
