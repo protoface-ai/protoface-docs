@@ -1,0 +1,19 @@
+docs.json
+  s_d34df6de874549::t_656a488e705aa6 37-49,67
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "f731e207c50e0d13dc263cd78e631431e059e083",
+  "prompts": {},
+  "sessions": {
+    "s_d34df6de874549": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f3f07-980d-7d41-8369-77d16645831c",
+        "model": "gpt-5.5"
+      },
+      "human_author": "Protoface Team <295041388+protoface-team@users.noreply.github.com>"
+    }
+  }
+}
