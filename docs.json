@@ -34,6 +34,19 @@
       "download-spec"
     ]
   },
+  "navbar": {
+    "links": [
+      {
+        "label": "Support",
+        "href": "https://protoface.discourse.group"
+      }
+    ],
+    "primary": {
+      "type": "button",
+      "label": "Protoface Platform",
+      "href": "https://app.protoface.com"
+    }
+  },
   "api": {
     "openapi": "openapi.json",
     "playground": {
@@ -51,7 +64,7 @@
     "global": {
       "anchors": [
         {
-          "anchor": "Website",
+          "anchor": "Main Site",
           "icon": "globe",
           "href": "https://protoface.com"
         },
