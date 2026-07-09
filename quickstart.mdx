@@ -3,7 +3,7 @@ title: "Quickstart"
 description: "Run a LiveKit Agents app with a Protoface avatar."
 ---
 
-This sample uses Gemini Realtime. The same avatar flow applies to agents that use
+This sample uses Gemini Live. The same avatar flow applies to agents that use
 separate STT, LLM, and TTS components.
 
 Want more examples? Check out the [Quickstart Repo](https://github.com/protoface-ai/protoface-quickstart), which has examples you can easily clone and run in under 5 minutes.
@@ -46,32 +46,48 @@ Create `agent.py`:
 import os
 
 from dotenv import load_dotenv
-from livekit.agents import Agent, AgentServer, AgentSession, JobContext, cli
+from livekit.agents import (
+    Agent,
+    AgentServer,
+    AgentSession,
+    JobContext,
+    TurnHandlingOptions,
+    cli,
+    room_io,
+)
 from livekit.plugins import google, protoface
 
 load_dotenv()
 
 server = AgentServer()
 AGENT_INSTRUCTIONS = (
-    "You are a concise voice assistant. Keep replies brief and conversational."
+    "You are a friendly AI avatar. "
+    "Keep responses natural, concise, and conversational."
 )
 
 
 @server.rtc_session()
 async def entrypoint(ctx: JobContext):
     session = AgentSession(
-        llm=google.realtime.RealtimeModel(voice="Charon"),
-        resume_false_interruption=False,
+        llm=google.realtime.RealtimeModel(
+            model=os.getenv("GEMINI_MODEL", "gemini-3.1-flash-live-preview"),
+            voice=os.getenv("GEMINI_VOICE", "Charon"),
+        ),
+        turn_handling=TurnHandlingOptions(
+            interruption={"resume_false_interruption": False},
+        ),
     )
 
     avatar = protoface.AvatarSession(
-        avatar_id=os.getenv("PROTOFACE_AVATAR_ID", "av_stock_001"),
+        avatar_id=os.getenv("PROTOFACE_AVATAR_ID", protoface.DEFAULT_STOCK_AVATAR_ID),
     )
     await avatar.start(session, room=ctx.room)
 
     await session.start(
         agent=Agent(instructions=AGENT_INSTRUCTIONS),
         room=ctx.room,
+        # Let Protoface publish the assistant audio.
+        room_options=room_io.RoomOptions(audio_output=False),
     )
 
 
@@ -82,7 +98,7 @@ if __name__ == "__main__":
 ## 4. Run the agent
 
 ```sh
-python agent.py dev
+python agent.py start
 ```
 
 Open [Agents Playground](https://agents-playground.livekit.io), connect it to
