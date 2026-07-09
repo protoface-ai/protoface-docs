@@ -1,0 +1,19 @@
+quickstart.mdx
+  s_d34df6de874549::t_8f1ccc7707fd48 6,49-57,64-65,72-78,82,89-90,101
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "ccd54f226bd01dcc90fcac4f127888b9008ea23e",
+  "prompts": {},
+  "sessions": {
+    "s_d34df6de874549": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f3f07-980d-7d41-8369-77d16645831c",
+        "model": "gpt-5.5"
+      },
+      "human_author": "Protoface Team <295041388+protoface-team@users.noreply.github.com>"
+    }
+  }
+}
