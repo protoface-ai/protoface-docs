@@ -1,0 +1,20 @@
+index.mdx
+  s_d34df6de874549::t_68413dfbd59ed9 6-20
+  s_d34df6de874549::t_8c4434e1fc3c2e 21
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "778d8833f22e13f8de92c718d4028b85aa6c9541",
+  "prompts": {},
+  "sessions": {
+    "s_d34df6de874549": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019f3f07-980d-7d41-8369-77d16645831c",
+        "model": "gpt-5.5"
+      },
+      "human_author": null
+    }
+  }
+}
