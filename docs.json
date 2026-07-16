@@ -111,6 +111,7 @@
             "group": "Guides",
             "pages": [
               "guides/avatars",
+              "guides/videos",
               "guides/usage",
               "guides/avatar-source-images"
             ]
@@ -144,7 +145,8 @@
               "GET /v1/sessions/{session_id}",
               "POST /v1/sessions/{session_id}/end",
               "GET /v1/status",
-              "GET /v1/usage"
+              "GET /v1/usage",
+              "POST /v1/videos"
             ]
           }
         ]

@@ -1208,25 +1208,31 @@
         "description": "Public body for `POST /v1/videos`.",
         "properties": {
           "audio_base64": {
+            "description": "Base64-encoded audio bytes. Clear speech, such as TTS output or a clean voice recording, produces the best video results.",
             "minLength": 1,
             "type": "string"
           },
           "audio_channel_count": {
+            "description": "Number of channels in the uploaded audio. Use 1 for mono when possible.",
             "exclusiveMinimum": 0.0,
             "type": "integer"
           },
           "audio_format": {
+            "description": "Audio format, such as `wav`.",
             "type": "string"
           },
           "audio_sample_rate": {
+            "description": "Audio sample rate in hertz. 16000 is recommended for PCM mono WAV input.",
             "exclusiveMinimum": 0.0,
             "type": "integer"
           },
           "avatar_id": {
+            "description": "Ready avatar to render in the generated video.",
             "type": "string"
           },
           "video_starting_frame": {
             "default": 0,
+            "description": "Starting avatar frame. Defaults to 0.",
             "minimum": 0.0,
             "type": "integer"
           }
@@ -1283,7 +1289,7 @@
     }
   },
   "info": {
-    "description": "Create realtime avatar sessions.\n\n### Authentication\nAll `/v1/*` endpoints require a live API key:\n\n```\nAuthorization: Bearer sk_live_...\n```\n\nKeys are minted in the dashboard and are scoped to a single environment\n(staging or prod).\n\n### Idempotency\n`POST /v1/sessions` may include an `Idempotency-Key` header (any opaque string,\n<= 255 chars). Retries with the same key inside 24 hours return the first\nresponse. The header is optional.\n\n### Errors\nEvery non-2xx response is a JSON body of the form:\n\n```json\n{\n  \"error\": {\n    \"type\": \"invalid_request\",\n    \"code\": \"transport.unsupported\",\n    \"message\": \"transport.type=pipecat is not supported\",\n    \"param\": \"transport.type\",\n    \"request_id\": \"req_01HXY...\"\n  }\n}\n```\n\nSwitch on `error.code` (stable lower_snake_case), not `error.message`.\n\n### Pagination\nList endpoints use cursor pagination:\n\n```\nGET /v1/sessions?limit=20&starting_after=sess_01HXY...\n```\n\nResponse shape:\n\n```json\n{\n  \"object\": \"list\",\n  \"data\": [...],\n  \"has_more\": true,\n  \"next_cursor\": \"sess_01HXY...\"\n}\n```\n",
+    "description": "Create realtime avatar sessions.\n\n### Authentication\nAll `/v1/*` endpoints require a live API key:\n\n```\nAuthorization: Bearer sk_live_...\n```\n\nKeys are minted in the dashboard and are scoped to a single environment\n(staging or prod).\n\n### Idempotency\n`POST /v1/sessions` and `POST /v1/videos` may include an `Idempotency-Key` header. Use any unique string up to 255 characters. If you retry the same request with the same key within 24 hours, Protoface returns the first result instead of creating another session or video. If the request changes, use a new key. The header is optional.\n\n### Errors\nEvery non-2xx response is a JSON body of the form:\n\n```json\n{\n  \"error\": {\n    \"type\": \"invalid_request\",\n    \"code\": \"transport.unsupported\",\n    \"message\": \"transport.type=pipecat is not supported\",\n    \"param\": \"transport.type\",\n    \"request_id\": \"req_01HXY...\"\n  }\n}\n```\n\nSwitch on `error.code` (stable lower_snake_case), not `error.message`.\n\n### Pagination\nList endpoints use cursor pagination:\n\n```\nGET /v1/sessions?limit=20&starting_after=sess_01HXY...\n```\n\nResponse shape:\n\n```json\n{\n  \"object\": \"list\",\n  \"data\": [...],\n  \"has_more\": true,\n  \"next_cursor\": \"sess_01HXY...\"\n}\n```\n",
     "summary": "Protoface \u2014 realtime avatar API for developers.",
     "title": "Protoface API",
     "version": "0.1.0"
@@ -1980,6 +1986,7 @@
             }
           },
           {
+            "description": "Optional retry key, up to 255 characters. Use the same key when retrying the same request within 24 hours. Use a new key if the request changes.",
             "in": "header",
             "name": "Idempotency-Key",
             "required": false,
@@ -2400,10 +2407,11 @@
     },
     "/v1/videos": {
       "post": {
-        "description": "Generate a talking-avatar video from base64 audio and a ready avatar. The request blocks until MP4 and HLS artifacts are available or the configured video timeout is reached.",
+        "description": "Generate a talking-avatar video from base64 audio and a ready avatar. The request waits until MP4 and HLS URLs are ready or video generation times out. Works best with clear speech, such as TTS output or clean recorded speech.",
         "operationId": "create_video",
         "parameters": [
           {
+            "description": "Optional retry key, up to 255 characters. Use the same key when retrying the same video request within 24 hours. Use a new key if the avatar, audio, audio settings, or starting frame changes.",
             "in": "header",
             "name": "Idempotency-Key",
             "required": false,

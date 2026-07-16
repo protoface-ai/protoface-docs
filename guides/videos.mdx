@@ -1,0 +1,101 @@
+---
+title: "Videos"
+description: "Generate a talking-avatar video from audio."
+---
+Use `POST /v1/videos` when you already have an audio file and want Protoface
+to return a finished talking-avatar video. The request waits until the video is
+ready, or until generation times out.
+
+For realtime agents and calls, use a streaming session instead. For batch jobs,
+voice notes, generated TTS clips, or other prerecorded audio, `/v1/videos` is
+the simpler path.
+
+## Audio input
+
+`/v1/videos` works best with clear speech, such as TTS output or a clean voice
+recording without background noise, overlap, music, or long silences. For file
+format, use 16 kHz PCM mono WAV when possible:
+
+| Field | Recommended value |
+| --- | --- |
+| `audio_format` | `wav` |
+| `audio_sample_rate` | `16000` |
+| `audio_channel_count` | `1` |
+
+Other audio formats, sample rates, and channel counts are supported. Clear
+speech matters most. Set the request fields to match the audio you send.
+
+## Generate a video
+
+Use a ready avatar ID from the dashboard or `GET /v1/avatars`.
+
+```sh
+AUDIO_BASE64="$(base64 < speech.wav | tr -d '\n')"
+
+curl -X POST https://api.protoface.com/v1/videos \
+  -H "Authorization: Bearer $PROTOFACE_API_KEY" \
+  -H "Content-Type: application/json" \
+  -H "Idempotency-Key: video-demo-001" \
+  -d "{
+    \"avatar_id\": \"av_stock_001\",
+    \"audio_base64\": \"$AUDIO_BASE64\",
+    \"audio_format\": \"wav\",
+    \"audio_sample_rate\": 16000,
+    \"audio_channel_count\": 1
+  }"
+```
+
+The response includes MP4 and HLS URLs:
+
+```json
+{
+  "mp4_url": "https://...",
+  "hls_url": "https://..."
+}
+```
+
+## Request fields
+
+| Field | Required | Purpose |
+| --- | --- | --- |
+| `avatar_id` | yes | Avatar to render. The avatar must be ready. |
+| `audio_base64` | yes | Base64-encoded audio bytes. |
+| `audio_format` | yes | Audio format, such as `wav`. |
+| `audio_sample_rate` | yes | Audio sample rate in hertz. |
+| `audio_channel_count` | yes | Number of audio channels. Use `1` for mono. |
+| `video_starting_frame` | no | Starting avatar frame. Defaults to `0`. |
+
+## Idempotency
+
+Send an `Idempotency-Key` header when you may need to retry the same request.
+Use any unique string up to 255 characters.
+
+If the retry uses the same key within 24 hours, Protoface returns the first
+result instead of starting another video. Use the same key only when the request
+is unchanged. If you change the avatar, audio, audio settings, or
+`video_starting_frame`, use a new key.
+
+## Timeouts and retries
+
+Because `/v1/videos` waits for the video, it can take longer than most API
+requests. Keep the connection open until it finishes.
+
+| Status | Meaning |
+| --- | --- |
+| `200` | The video is ready. |
+| `400` or `422` | Something in the request is missing or invalid. Check the audio fields. |
+| `409` | The request cannot run as sent, such as when the avatar is not ready. |
+| `429` | Rate limit exceeded. Retry after backing off. |
+| `503` | No worker capacity is available. Retry later. |
+| `504` | Video generation timed out. Retry with the same `Idempotency-Key` if the request is unchanged. |
+
+## Next
+
+<Columns cols={2}>
+  <Card title="Avatars" href="/guides/avatars" icon="user-round">
+    Create or choose the avatar ID for video generation.
+  </Card>
+  <Card title="API reference" href="/api-reference/videos/generate-a-video" icon="square-terminal">
+    See the full `POST /v1/videos` schema.
+  </Card>
+</Columns>

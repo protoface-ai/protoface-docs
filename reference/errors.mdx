@@ -37,7 +37,7 @@ Every non-2xx response includes one `error` object.
 | 402  | `quota_exceeded`      | Not enough credits, or billing isn't active for a credit-gated action. |
 | 403  | `permission`          | Authenticated, but the key can't access this resource. |
 | 404  | `not_found`           | Resource doesn't exist (or isn't in your scope).    |
-| 409  | `conflict`            | Idempotency conflict or a state-machine clash.      |
+| 409  | `conflict`            | Same `Idempotency-Key` used for a changed request, or a state conflict. |
 | 422  | `unprocessable`       | Request shape is fine but the semantics are invalid. |
 | 429  | `rate_limit`          | Per-key rate limit exceeded.                         |
 | 429  | `quota_exceeded`      | Per-org concurrency or usage quota exhausted.        |
@@ -76,6 +76,9 @@ limits, such as concurrent sessions, use HTTP `429`.
 
 For API integrations, use the HTTP status and `error.code` for control flow.
 `error.message` is written for humans and may change.
+
+For `POST` endpoints that accept `Idempotency-Key`, reuse the key only when
+retrying the same request. If anything changes, use a new key.
 
 ## Next
 

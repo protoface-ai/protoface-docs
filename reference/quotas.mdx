@@ -31,6 +31,11 @@ session cap.
 | Create rate limit | 10 requests per minute per key |
 | Idempotency window | 24 hours |
 
+The idempotency window applies to `Idempotency-Key` on supported `POST`
+endpoints. If you retry the same request with the same key during this window,
+Protoface returns the first result instead of creating another session or
+video.
+
 If you send `max_duration_seconds`, Protoface applies the lower of your request
 and your plan limit.
 
