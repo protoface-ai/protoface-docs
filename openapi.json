@@ -72,13 +72,13 @@
         "examples": [
           {
             "created_at": "2026-01-01T00:00:00Z",
-            "default_voice": "Charon",
             "id": "av_stock_001",
             "is_demo": true,
             "name": "Stock Avatar 001",
             "object": "avatar",
             "runtime_type": "avtr1",
-            "status": "ready"
+            "status": "ready",
+            "voice": "cedar"
           }
         ],
         "properties": {
@@ -86,7 +86,7 @@
             "format": "date-time",
             "type": "string"
           },
-          "default_custom_instructions": {
+          "custom_instructions": {
             "anyOf": [
               {
                 "type": "string"
@@ -96,17 +96,6 @@
               }
             ],
             "description": "Preferred managed-conversation instructions for this avatar, when configured."
-          },
-          "default_voice": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "description": "Preferred conversation voice for this avatar, when configured."
           },
           "failure_reason": {
             "anyOf": [
@@ -141,6 +130,28 @@
           },
           "status": {
             "$ref": "#/components/schemas/AvatarStatus"
+          },
+          "voice": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Preferred conversation voice for this avatar, when configured."
+          },
+          "voice_instructions": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Voice-style instructions for managed conversations using this avatar."
           }
         },
         "required": [
@@ -206,6 +217,20 @@
           "failed"
         ],
         "title": "AvatarStatus",
+        "type": "string"
+      },
+      "BillingSurface": {
+        "description": "Product surface that initiated a billable avatar session.",
+        "enum": [
+          "api",
+          "playground",
+          "embed",
+          "share",
+          "public_demo",
+          "pipecat",
+          "video_generation"
+        ],
+        "title": "BillingSurface",
         "type": "string"
       },
       "Body_create_avatar": {
@@ -324,9 +349,96 @@
         "title": "LiveKitTransportConfig",
         "type": "object"
       },
+      "PipecatSessionCreateRequest": {
+        "additionalProperties": false,
+        "description": "Start request for a Pipecat avatar media session.",
+        "properties": {
+          "avatar_id": {
+            "description": "Stable `av_...` avatar id.",
+            "type": "string"
+          },
+          "idle_timeout_seconds": {
+            "default": 30,
+            "maximum": 600.0,
+            "minimum": 1.0,
+            "type": "integer"
+          },
+          "max_duration_seconds": {
+            "anyOf": [
+              {
+                "maximum": 3600.0,
+                "minimum": 1.0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "metadata": {
+            "additionalProperties": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "boolean"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "type": "object"
+          },
+          "quality": {
+            "$ref": "#/components/schemas/QualityTier",
+            "default": "standard"
+          },
+          "relay_mode": {
+            "const": "websocket",
+            "default": "websocket",
+            "type": "string"
+          }
+        },
+        "required": [
+          "avatar_id"
+        ],
+        "title": "PipecatSessionCreateRequest",
+        "type": "object"
+      },
+      "PipecatSessionView": {
+        "additionalProperties": false,
+        "description": "Pipecat avatar media session.",
+        "properties": {
+          "object": {
+            "const": "pipecat.session",
+            "default": "pipecat.session",
+            "type": "string"
+          },
+          "relay": {
+            "$ref": "#/components/schemas/PipecatWebSocketRelayView"
+          },
+          "session": {
+            "$ref": "#/components/schemas/Session"
+          }
+        },
+        "required": [
+          "session",
+          "relay"
+        ],
+        "title": "PipecatSessionView",
+        "type": "object"
+      },
       "PipecatTransportConfig": {
         "additionalProperties": false,
-        "description": "Reserved \u2014 Pipecat integration. **Not yet available.**\n\nRejected at create-time today; see `WebSocketTransportConfig`.",
+        "description": "Reserved \u2014 BYO Pipecat transport.\n\n`POST /v1/sessions` still rejects `transport.type=pipecat`; use\n`POST /v1/pipecat/sessions` for the Protoface Pipecat video service.",
         "properties": {
           "type": {
             "const": "pipecat",
@@ -337,11 +449,64 @@
         "title": "PipecatTransportConfig",
         "type": "object"
       },
+      "PipecatWebSocketRelayView": {
+        "additionalProperties": false,
+        "description": "Short-lived direct media connection details for the Pipecat plugin.",
+        "properties": {
+          "audio_sample_rate": {
+            "type": "integer"
+          },
+          "decoded_video_format": {
+            "const": "RGB",
+            "type": "string"
+          },
+          "media_token": {
+            "type": "string",
+            "writeOnly": true
+          },
+          "media_url": {
+            "type": "string"
+          },
+          "protocol": {
+            "type": "string"
+          },
+          "supports_audio_output": {
+            "type": "boolean"
+          },
+          "type": {
+            "const": "websocket",
+            "default": "websocket",
+            "type": "string"
+          },
+          "video_encoding": {
+            "enum": [
+              "jpeg",
+              "rgb24"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [
+          "protocol",
+          "media_url",
+          "media_token",
+          "audio_sample_rate",
+          "video_encoding",
+          "decoded_video_format",
+          "supports_audio_output"
+        ],
+        "title": "PipecatWebSocketRelayView",
+        "type": "object"
+      },
       "PlanView": {
         "additionalProperties": false,
         "properties": {
           "custom_avatar_slots": {
             "type": "integer"
+          },
+          "enterprise": {
+            "default": false,
+            "type": "boolean"
           },
           "extra_avatar_slot_cents": {
             "anyOf": [
@@ -407,12 +572,103 @@
         "title": "QualityTier",
         "type": "string"
       },
+      "QuotaLimits": {
+        "additionalProperties": false,
+        "examples": [
+          {
+            "balance_credits": 1240,
+            "can_start_session": true,
+            "current_period_end": "2026-08-01T00:00:00Z",
+            "current_period_start": "2026-07-01T00:00:00Z",
+            "included_balance_credits": 740,
+            "included_credits_limit": 7500,
+            "included_credits_used": 6760,
+            "low_balance_threshold_credits": 1500,
+            "plan_key": "launch",
+            "rollover_balance_credits": 500,
+            "status": "active"
+          }
+        ],
+        "properties": {
+          "balance_credits": {
+            "minimum": 0.0,
+            "type": "integer"
+          },
+          "can_start_session": {
+            "type": "boolean"
+          },
+          "current_period_end": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "current_period_start": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "included_balance_credits": {
+            "minimum": 0.0,
+            "type": "integer"
+          },
+          "included_credits_limit": {
+            "minimum": 0.0,
+            "type": "integer"
+          },
+          "included_credits_used": {
+            "minimum": 0.0,
+            "type": "integer"
+          },
+          "low_balance_threshold_credits": {
+            "minimum": 0.0,
+            "type": "integer"
+          },
+          "plan_key": {
+            "type": "string"
+          },
+          "rollover_balance_credits": {
+            "minimum": 0.0,
+            "type": "integer"
+          },
+          "status": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "plan_key",
+          "status",
+          "balance_credits",
+          "included_balance_credits",
+          "rollover_balance_credits",
+          "included_credits_limit",
+          "included_credits_used",
+          "current_period_start",
+          "current_period_end",
+          "low_balance_threshold_credits",
+          "can_start_session"
+        ],
+        "title": "QuotaLimits",
+        "type": "object"
+      },
       "Session": {
         "additionalProperties": false,
         "description": "Public session resource \u2014 what `GET /v1/sessions/{id}` returns.",
         "examples": [
           {
             "avatar_id": "av_stock_001",
+            "billing_surface": "api",
             "created_at": "2026-05-25T19:00:00.123Z",
             "first_frame_at": "2026-05-25T19:00:02.001Z",
             "id": "sess_01HXY5K8E7QYG3X8Z6N9R7S0VR",
@@ -440,6 +696,11 @@
         "properties": {
           "avatar_id": {
             "type": "string"
+          },
+          "billing_surface": {
+            "$ref": "#/components/schemas/BillingSurface",
+            "default": "api",
+            "description": "Service that created the session. Use this to group usage reporting."
           },
           "created_at": {
             "format": "date-time",
@@ -845,9 +1106,26 @@
         "examples": [
           {
             "billable_seconds": 14280,
+            "by_billing_surface": {
+              "api": 180,
+              "playground": 58
+            },
             "by_quality": {
               "pro": 2280,
               "standard": 12000
+            },
+            "by_speech_billing_mode": {
+              "customer_managed": 180,
+              "platform_managed": 58
+            },
+            "credits_charged": 238,
+            "daily_credits_by_billing_surface": {
+              "2026-05-24": {
+                "api": 180
+              },
+              "2026-05-25": {
+                "playground": 58
+              }
             },
             "period_end": "2026-05-25T19:00:00Z",
             "period_start": "2026-05-01T00:00:00Z",
@@ -860,6 +1138,13 @@
             "minimum": 0.0,
             "type": "integer"
           },
+          "by_billing_surface": {
+            "additionalProperties": {
+              "type": "integer"
+            },
+            "description": "`credits_charged` per billing surface.",
+            "type": "object"
+          },
           "by_quality": {
             "additionalProperties": {
               "type": "integer"
@@ -868,6 +1153,29 @@
             "propertyNames": {
               "$ref": "#/components/schemas/QualityTier"
             },
+            "type": "object"
+          },
+          "by_speech_billing_mode": {
+            "additionalProperties": {
+              "type": "integer"
+            },
+            "description": "`credits_charged` per speech billing mode.",
+            "type": "object"
+          },
+          "credits_charged": {
+            "default": 0,
+            "description": "Total credits charged across all usage events in the window.",
+            "minimum": 0.0,
+            "type": "integer"
+          },
+          "daily_credits_by_billing_surface": {
+            "additionalProperties": {
+              "additionalProperties": {
+                "type": "integer"
+              },
+              "type": "object"
+            },
+            "description": "`credits_charged` per UTC day and billing surface. Keys use `YYYY-MM-DD`.",
             "type": "object"
           },
           "period_end": {
@@ -893,6 +1201,62 @@
           "sessions"
         ],
         "title": "UsageSummary",
+        "type": "object"
+      },
+      "VideoCreateRequest": {
+        "additionalProperties": false,
+        "description": "Public body for `POST /v1/videos`.",
+        "properties": {
+          "audio_base64": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "audio_channel_count": {
+            "exclusiveMinimum": 0.0,
+            "type": "integer"
+          },
+          "audio_format": {
+            "type": "string"
+          },
+          "audio_sample_rate": {
+            "exclusiveMinimum": 0.0,
+            "type": "integer"
+          },
+          "avatar_id": {
+            "type": "string"
+          },
+          "video_starting_frame": {
+            "default": 0,
+            "minimum": 0.0,
+            "type": "integer"
+          }
+        },
+        "required": [
+          "avatar_id",
+          "audio_base64",
+          "audio_format",
+          "audio_sample_rate",
+          "audio_channel_count"
+        ],
+        "title": "VideoCreateRequest",
+        "type": "object"
+      },
+      "VideoCreateResponse": {
+        "additionalProperties": false,
+        "description": "Blocking video-generation response.",
+        "properties": {
+          "hls_url": {
+            "type": "string"
+          },
+          "mp4_url": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "mp4_url",
+          "hls_url"
+        ],
+        "title": "VideoCreateResponse",
         "type": "object"
       },
       "WebSocketTransportConfig": {
@@ -962,6 +1326,41 @@
               "description": "Pagination cursor \u2014 an `av_\u2026` id from a previous page.",
               "title": "Starting After"
             }
+          },
+          {
+            "description": "Which avatars to return: `all` (default \u2014 platform stock plus your org's), `platform` (only built-in stock), or `org` (only your custom).",
+            "in": "query",
+            "name": "scope",
+            "required": false,
+            "schema": {
+              "default": "all",
+              "description": "Which avatars to return: `all` (default \u2014 platform stock plus your org's), `platform` (only built-in stock), or `org` (only your custom).",
+              "enum": [
+                "all",
+                "platform",
+                "org"
+              ],
+              "title": "Scope",
+              "type": "string"
+            }
+          },
+          {
+            "description": "Case-insensitive substring filter on avatar name or id.",
+            "in": "query",
+            "name": "q",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Case-insensitive substring filter on avatar name or id.",
+              "title": "Q"
+            }
           }
         ],
         "responses": {
@@ -1007,7 +1406,7 @@
         ]
       },
       "post": {
-        "description": "Upload a source image to build a custom avatar. Returns the avatar in `processing`; poll `GET /v1/avatars/{id}` until it is `ready` or `failed`. See [Source Images](/guides/avatar-source-images) for examples and best practices. `multipart/form-data`: `image` (PNG/JPEG), `name`, and optional `runtime_type` (default `avtr1`).",
+        "description": "Upload a portrait image to build a custom avatar. Returns the avatar in `processing`; poll `GET /v1/avatars/{id}` until it is `ready` (or `failed`). `multipart/form-data`: `image` (PNG/JPEG), `name`, and optional `runtime_type` (default `avtr1`).",
         "operationId": "create_avatar",
         "requestBody": {
           "content": {
@@ -1049,6 +1448,16 @@
               }
             },
             "description": "Unsupported image or stack."
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "Image screening unavailable."
           }
         },
         "security": [
@@ -1236,6 +1645,150 @@
         "summary": "List billing plans",
         "tags": [
           "billing"
+        ]
+      }
+    },
+    "/v1/billing/quota": {
+      "get": {
+        "description": "Return the calling org's current credit balance and low-balance threshold so API clients can warn before credits run out.",
+        "operationId": "get_quota_limits",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QuotaLimits"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "Missing or invalid API key."
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "Request body or parameters failed validation."
+          }
+        },
+        "security": [
+          {
+            "ApiKey": []
+          }
+        ],
+        "summary": "Get quota limits",
+        "tags": [
+          "billing"
+        ]
+      }
+    },
+    "/v1/pipecat/sessions": {
+      "post": {
+        "description": "Start a Protoface avatar session for Pipecat. The response contains short-lived WebSocket media credentials used by the `pipecat-protoface` package.",
+        "operationId": "create_pipecat_session",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PipecatSessionCreateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PipecatSessionView"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "Invalid request body."
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "Missing or invalid API key."
+          },
+          "402": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "Insufficient credits or inactive billing."
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "Avatar not ready."
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "Request body or parameters failed validation."
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "Pipecat relay unavailable."
+          }
+        },
+        "security": [
+          {
+            "ApiKey": []
+          }
+        ],
+        "summary": "Create a Pipecat avatar media session",
+        "tags": [
+          "pipecat"
         ]
       }
     },
@@ -1633,6 +2186,22 @@
               "title": "Session Id",
               "type": "string"
             }
+          },
+          {
+            "in": "header",
+            "name": "X-Protoface-Session-Grant",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Protoface-Session-Grant"
+            }
           }
         ],
         "responses": {
@@ -1828,6 +2397,133 @@
           "usage"
         ]
       }
+    },
+    "/v1/videos": {
+      "post": {
+        "description": "Generate a talking-avatar video from base64 audio and a ready avatar. The request blocks until MP4 and HLS artifacts are available or the configured video timeout is reached.",
+        "operationId": "create_video",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Idempotency-Key",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "maxLength": 255,
+                  "minLength": 1,
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Idempotency-Key"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VideoCreateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VideoCreateResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "Invalid request body."
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "Missing or invalid API key."
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "Conflicting state."
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "Request body failed validation."
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "Rate limit exceeded."
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "No worker capacity; retry later."
+          },
+          "504": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "Video generation timed out."
+          }
+        },
+        "security": [
+          {
+            "ApiKey": []
+          }
+        ],
+        "summary": "Generate a video",
+        "tags": [
+          "videos"
+        ]
+      }
     }
   },
   "tags": [
@@ -1840,12 +2536,20 @@
       "name": "avatars"
     },
     {
+      "description": "Blocking talking-avatar video generation from uploaded audio.",
+      "name": "videos"
+    },
+    {
       "description": "Aggregate usage for billing reconciliation.",
       "name": "usage"
     },
     {
       "description": "Public platform metadata \u2014 currently just status. Unauthenticated. Internal load-balancer and task health probes exist on this host but are not part of the documented surface.",
       "name": "platform"
+    },
+    {
+      "description": "Direct media sessions for the `pipecat-protoface` avatar video service.",
+      "name": "pipecat"
     },
     {
       "description": "Public billing plan metadata for signup and pricing UI.",
