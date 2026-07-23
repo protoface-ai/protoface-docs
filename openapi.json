@@ -82,6 +82,11 @@
           }
         ],
         "properties": {
+          "cognition_enabled": {
+            "default": false,
+            "description": "Whether Cognition is enabled for every conversation with this avatar.",
+            "type": "boolean"
+          },
           "created_at": {
             "format": "date-time",
             "type": "string"
@@ -116,6 +121,16 @@
             "description": "True for platform stock avatars (e.g. `av_stock_001`).",
             "type": "boolean"
           },
+          "is_photo_upload": {
+            "default": false,
+            "description": "True when this avatar was created directly from a customer photo upload, rather than from a stock or reused face.",
+            "type": "boolean"
+          },
+          "memory_enabled": {
+            "default": false,
+            "description": "Whether shared memory is enabled for every conversation with this avatar.",
+            "type": "boolean"
+          },
           "name": {
             "type": "string"
           },
@@ -130,6 +145,14 @@
           },
           "status": {
             "$ref": "#/components/schemas/AvatarStatus"
+          },
+          "tool_events": {
+            "description": "Development-only custom tool event definitions for this avatar.",
+            "items": {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            "type": "array"
           },
           "voice": {
             "anyOf": [
@@ -152,6 +175,16 @@
               }
             ],
             "description": "Voice-style instructions for managed conversations using this avatar."
+          },
+          "web_search_enabled": {
+            "default": false,
+            "description": "Whether configured web research is enabled for this avatar.",
+            "type": "boolean"
+          },
+          "web_search_filter": {
+            "default": "",
+            "description": "Administrator-approved policy limiting avatar web research.",
+            "type": "string"
           }
         },
         "required": [
@@ -225,6 +258,7 @@
           "api",
           "playground",
           "embed",
+          "embed_cognition",
           "share",
           "public_demo",
           "pipecat",
@@ -255,6 +289,57 @@
           "image"
         ],
         "title": "Body_create_avatar",
+        "type": "object"
+      },
+      "EmbedUsageSummary": {
+        "additionalProperties": false,
+        "description": "Usage attributed to one customer-managed avatar embed.",
+        "properties": {
+          "avatar_id": {
+            "type": "string"
+          },
+          "avatar_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "billable_seconds": {
+            "minimum": 0.0,
+            "type": "integer"
+          },
+          "credits_charged": {
+            "minimum": 0.0,
+            "type": "integer"
+          },
+          "embed_id": {
+            "type": "string"
+          },
+          "embed_name": {
+            "type": "string"
+          },
+          "is_active": {
+            "type": "boolean"
+          },
+          "sessions": {
+            "minimum": 0.0,
+            "type": "integer"
+          }
+        },
+        "required": [
+          "embed_id",
+          "embed_name",
+          "avatar_id",
+          "credits_charged",
+          "billable_seconds",
+          "sessions",
+          "is_active"
+        ],
+        "title": "EmbedUsageSummary",
         "type": "object"
       },
       "ErrorType": {
@@ -1145,6 +1230,13 @@
             "description": "`credits_charged` per billing surface.",
             "type": "object"
           },
+          "by_embed": {
+            "description": "Embed-attributed usage, ordered by credits then time.",
+            "items": {
+              "$ref": "#/components/schemas/EmbedUsageSummary"
+            },
+            "type": "array"
+          },
           "by_quality": {
             "additionalProperties": {
               "type": "integer"
@@ -1175,7 +1267,7 @@
               },
               "type": "object"
             },
-            "description": "`credits_charged` per UTC day and billing surface. Keys use `YYYY-MM-DD`.",
+            "description": "`credits_charged` per requested timezone day and billing surface. Keys use `YYYY-MM-DD`.",
             "type": "object"
           },
           "period_end": {
@@ -2342,6 +2434,25 @@
               ],
               "description": "ISO-8601 UTC. Must be paired with `period_start`.",
               "title": "Period End"
+            }
+          },
+          {
+            "description": "IANA timezone for daily credit buckets.",
+            "in": "query",
+            "name": "time_zone",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "maxLength": 64,
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "IANA timezone for daily credit buckets.",
+              "title": "Time Zone"
             }
           }
         ],
