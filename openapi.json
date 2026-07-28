@@ -2407,11 +2407,10 @@
     },
     "/v1/videos": {
       "post": {
-        "description": "Generate a talking-avatar video from base64 audio and a ready avatar. The request waits until MP4 and HLS URLs are ready or video generation times out. Works best with clear speech, such as TTS output or clean recorded speech.",
+        "description": "Generate a talking-avatar video from base64 audio and a ready avatar. The request blocks until MP4 and HLS artifacts are available or the configured video timeout is reached.",
         "operationId": "create_video",
         "parameters": [
           {
-            "description": "Optional retry key, up to 255 characters. Use the same key when retrying the same video request within 24 hours. Use a new key if the avatar, audio, audio settings, or starting frame changes.",
             "in": "header",
             "name": "Idempotency-Key",
             "required": false,
