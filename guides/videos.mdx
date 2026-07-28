@@ -68,17 +68,21 @@ is unchanged. If you change the avatar, audio, audio settings, or
 
 ## Timeouts and retries
 
-Because `/v1/videos` waits for the video, it can take longer than most API
-requests. Keep the connection open until it finishes.
+`/v1/videos` is a blocking request. Keep the connection open until Protoface
+returns the finished video or a timeout error.
 
-| Status | Meaning |
+Use this retry pattern:
+
+| Response | What to do |
 | --- | --- |
-| `200` | The video is ready. |
-| `400` or `422` | Something in the request is missing or invalid. Check the audio fields. |
-| `409` | The request cannot run as sent, such as when the avatar is not ready. |
-| `429` | Rate limit exceeded. Retry after backing off. |
-| `503` | No worker capacity is available. Retry later. |
-| `504` | Video generation timed out. Retry with the same `Idempotency-Key` if the request is unchanged. |
+| `200` | Use the returned MP4 or HLS URL. |
+| `400` or `422` | Fix the request before retrying. Check that the audio fields match the file you sent. |
+| `409` | Fix the avatar state before retrying. For example, choose an avatar whose status is `ready`. |
+| `429` or `503` | Wait, then retry with the same `Idempotency-Key` if the request is unchanged. |
+| `504` | Retry with the same `Idempotency-Key` if the request is unchanged. |
+
+Only reuse an `Idempotency-Key` for the same avatar, audio, audio settings, and
+`video_starting_frame`. Use a new key after changing any of those values.
 
 ## Next
 
