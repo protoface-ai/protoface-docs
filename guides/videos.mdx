@@ -28,6 +28,8 @@ speech matters most. Set the request fields to match the audio you send.
 ## Generate a video
 
 Use a ready avatar ID from the dashboard or `GET /v1/avatars`.
+Save the speech audio you want to render as `speech.wav` in your current
+directory before running the example.
 
 ```sh
 AUDIO_BASE64="$(base64 < speech.wav | tr -d '\n')"
@@ -53,17 +55,6 @@ The response includes MP4 and HLS URLs:
   "hls_url": "https://..."
 }
 ```
-
-## Request fields
-
-| Field | Required | Purpose |
-| --- | --- | --- |
-| `avatar_id` | yes | Avatar to render. The avatar must be ready. |
-| `audio_base64` | yes | Base64-encoded audio bytes. |
-| `audio_format` | yes | Audio format, such as `wav`. |
-| `audio_sample_rate` | yes | Audio sample rate in hertz. |
-| `audio_channel_count` | yes | Number of audio channels. Use `1` for mono. |
-| `video_starting_frame` | no | Starting avatar frame. Defaults to `0`. |
 
 ## Idempotency
 
