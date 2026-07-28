@@ -56,6 +56,32 @@ avatar = protoface.AvatarSession(avatar_id="av_stock_001")
 When using the REST API, pass the same value as `avatar_id` in
 `POST /v1/sessions`.
 
+## Generate videos from audio
+
+If you already have an audio file and want a finished avatar video, use
+`POST /v1/videos`. It waits for the video generation to finish, then returns MP4 and HLS
+URLs. It works best with clear speech, such as TTS output or a clean voice
+recording.
+
+```sh
+AUDIO_BASE64="$(base64 < speech.wav | tr -d '\n')"
+
+curl -X POST https://api.protoface.com/v1/videos \
+  -H "Authorization: Bearer $PROTOFACE_API_KEY" \
+  -H "Content-Type: application/json" \
+  -H "Idempotency-Key: video-demo-001" \
+  -d "{
+    \"avatar_id\": \"av_stock_001\",
+    \"audio_base64\": \"$AUDIO_BASE64\",
+    \"audio_format\": \"wav\",
+    \"audio_sample_rate\": 16000,
+    \"audio_channel_count\": 1
+  }"
+```
+
+See [Videos](/guides/videos) for request fields, audio format guidance, and
+retry behavior.
+
 ## Delete an avatar
 
 ```sh
@@ -72,7 +98,7 @@ Past session and usage records remain. Stock avatars cannot be deleted.
   <Card title="Quickstart" href="/quickstart" icon="rocket">
     Run a LiveKit Agents app with a Protoface avatar.
   </Card>
-  <Card title="LiveKit Agents" href="/guides/livekit-agents" icon="radio">
-    Use an avatar with the plugin.
+  <Card title="Videos" href="/guides/videos" icon="video">
+    Generate a video from audio.
   </Card>
 </Columns>

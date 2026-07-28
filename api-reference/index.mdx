@@ -23,4 +23,7 @@ Create and manage keys in [app.protoface.com](https://app.protoface.com).
 - Timestamps are ISO-8601 UTC strings.
 - List endpoints use cursor pagination with `limit` and `starting_after`.
 - Error responses use the envelope described in [Errors](/reference/errors).
-- `POST /v1/sessions` accepts `Idempotency-Key` for safe retries.
+- `POST /v1/sessions` and `POST /v1/videos` accept `Idempotency-Key`. Use any
+  unique string up to 255 characters. If you retry the same request with the
+  same key within 24 hours, Protoface returns the first result instead of
+  creating another session or video. If the request changes, use a new key.
