@@ -111,6 +111,7 @@
             "group": "Guides",
             "pages": [
               "guides/avatars",
+              "guides/embeds",
               "guides/videos",
               "guides/usage",
               "guides/avatar-source-images"
