@@ -1,14 +1,15 @@
 ---
-title: "Videos"
-description: "Generate a talking-avatar video from audio."
+title: "Avatar Videos"
+description: "Generate a talking-avatar video from prerecorded audio."
 ---
-Use `POST /v1/videos` when you already have an audio file and want Protoface
-to return a finished talking-avatar video. The request waits until the video is
-ready, or until generation times out.
 
-For realtime agents and calls, use a streaming session instead. For batch jobs,
-voice notes, generated TTS clips, or other prerecorded audio, `/v1/videos` is
-the simpler path.
+`POST /v1/videos` turns prerecorded speech into a finished video using the same
+avatar model as Protoface Realtime. The request waits until the video is ready,
+or until generation times out.
+
+For higher-quality video generation and a choice of video models, submit an
+[asynchronous run](/guides/video-generation). For live agents and calls, use a
+realtime session.
 
 ## Audio input
 
@@ -86,9 +87,12 @@ Only reuse an `Idempotency-Key` for the same avatar, audio, audio settings, and
 
 ## Next
 
-<Columns cols={2}>
+<Columns cols={3}>
   <Card title="Avatars" href="/guides/avatars" icon="user-round">
     Create or choose the avatar ID for video generation.
+  </Card>
+  <Card title="Video generation" href="/guides/video-generation" icon="clapperboard">
+    Generate higher-quality video with asynchronous models.
   </Card>
   <Card title="API reference" href="/api-reference/videos/generate-a-video" icon="square-terminal">
     See the full `POST /v1/videos` schema.

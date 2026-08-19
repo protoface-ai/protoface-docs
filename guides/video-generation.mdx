@@ -1,0 +1,109 @@
+---
+title: "Video Generation"
+description: "Generate a video with an asynchronous Protoface run."
+---
+
+Choose a video model, submit a run, and retrieve the result when it finishes.
+The API returns immediately after the run is queued.
+
+<Note>
+  [Protoface Studio](https://app.protoface.com) is the browser-based video
+  editor. The API described here runs video models directly; it does not expose
+  Studio projects or scenes.
+</Note>
+
+## Prerequisites
+
+Create an API key in the [Protoface dashboard](https://app.protoface.com). If
+the key uses scopes, it needs `runs:write` to submit work and `runs:read` to
+check the result.
+
+Set it in your shell:
+
+```sh
+export PROTOFACE_API_KEY="sk_live_..."
+```
+
+## 1. Submit a run
+
+This example generates an eight-second video with MiniMax H3:
+
+```sh
+curl -X POST https://api.protoface.com/v1/run/minimax-h3 \
+  -H "Authorization: Bearer $PROTOFACE_API_KEY" \
+  -H "Content-Type: application/json" \
+  -H "Idempotency-Key: first-video-001" \
+  -d '{
+    "prompt": "A wide shot of a sailboat crossing a quiet bay at sunrise.",
+    "duration_seconds": 8,
+    "quality": "720p",
+    "aspect_ratio": "16:9"
+  }'
+```
+
+The response contains the run ID, its queue status, and the credits reserved
+for it:
+
+```json
+{
+  "id": "run_...",
+  "object": "run",
+  "model": "minimax-h3",
+  "operation": "video.general",
+  "status": "queued",
+  "queue_position": 0,
+  "credit_estimate": {
+    "estimated_credits": 29,
+    "maximum_reserved_credits": 29
+  },
+  "status_url": "/v1/runs/run_.../status",
+  "response_url": "/v1/runs/run_..."
+}
+```
+
+Credit prices can change. Use the estimate returned by the API instead of
+hard-coding the value shown here.
+
+## 2. Check the status
+
+```sh
+curl https://api.protoface.com/v1/runs/run_.../status \
+  -H "Authorization: Bearer $PROTOFACE_API_KEY"
+```
+
+Poll until `status` is `completed`, `failed`, or `canceled`. Use a delay between
+requests; the status endpoint is intended for polling.
+
+## 3. Retrieve the video
+
+```sh
+curl https://api.protoface.com/v1/runs/run_... \
+  -H "Authorization: Bearer $PROTOFACE_API_KEY"
+```
+
+A completed run with one video output includes a `video` field:
+
+```json
+{
+  "id": "run_...",
+  "status": "completed",
+  "progress": 100,
+  "video": {
+    "url": "https://...",
+    "content_type": "video/mp4",
+    "file_name": "output.mp4"
+  },
+  "error": null
+}
+```
+
+## Next
+
+<Columns cols={2}>
+  <Card title="Models" href="/guides/models" icon="boxes">
+    Read model capabilities and request fields.
+  </Card>
+  <Card title="Runs" href="/guides/runs" icon="list-checks">
+    Handle inputs, polling, cancellation, and retries.
+  </Card>
+</Columns>

@@ -43,7 +43,7 @@
     ],
     "primary": {
       "type": "button",
-      "label": "Protoface Platform",
+      "label": "Dashboard",
       "href": "https://app.protoface.com"
     }
   },
@@ -69,7 +69,7 @@
           "href": "https://protoface.com"
         },
         {
-          "anchor": "Platform",
+          "anchor": "Dashboard",
           "icon": "layout-dashboard",
           "href": "https://app.protoface.com"
         },
@@ -97,32 +97,40 @@
         "groups": [
           {
             "group": "Get started",
-            "pages": ["index", "quickstart"]
+            "pages": ["index"]
           },
           {
-            "group": "Integrations",
+            "group": "Video generation",
             "pages": [
-              "guides/livekit-agents",
-              "guides/pipecat",
-              "guides/more-integrations"
+              "guides/video-generation",
+              "guides/models",
+              "guides/runs",
+              "guides/videos"
             ]
           },
           {
-            "group": "Guides",
+            "group": "Realtime avatars",
+            "pages": [
+              "quickstart",
+              "guides/livekit-agents",
+              "guides/pipecat",
+              "guides/more-integrations",
+              "guides/embeds"
+            ]
+          },
+          {
+            "group": "Avatars and account",
             "pages": [
               "guides/avatars",
-              "guides/embeds",
-              "guides/videos",
-              "guides/usage",
-              "guides/avatar-source-images"
+              "guides/avatar-source-images",
+              "guides/usage"
             ]
           },
           {
             "group": "Reference",
             "pages": [
               "reference/errors",
-              "reference/quotas",
-              "reference/known-issues"
+              "reference/quotas"
             ]
           }
         ]
@@ -141,6 +149,8 @@
               "GET /v1/avatars/{avatar_id}",
               "DELETE /v1/avatars/{avatar_id}",
               "GET /v1/billing/plans",
+              "GET /v1/billing/quota",
+              "POST /v1/pipecat/sessions",
               "GET /v1/sessions",
               "POST /v1/sessions",
               "GET /v1/sessions/{session_id}",

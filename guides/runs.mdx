@@ -1,0 +1,110 @@
+---
+title: "Runs"
+description: "Submit, monitor, retrieve, and cancel video generation runs."
+---
+
+A run is one asynchronous model request. Submission reserves the quoted
+credits and returns a run ID immediately.
+
+## Lifecycle
+
+A run moves through these states:
+
+- `queued`: accepted and waiting to start.
+- `running`: claimed by a worker.
+- `completed`: output is ready.
+- `failed`: generation failed and the reservation was released.
+- `canceled`: canceled by the caller.
+
+## Submit
+
+Send a flat JSON body to `POST /v1/run/{model_id}`. The accepted fields come
+from the model contract.
+
+```sh
+curl -X POST https://api.protoface.com/v1/run/minimax-h3 \
+  -H "Authorization: Bearer $PROTOFACE_API_KEY" \
+  -H "Content-Type: application/json" \
+  -H "Idempotency-Key: product-shot-001" \
+  -d '{
+    "prompt": "A slow camera move around a ceramic lamp in a quiet studio.",
+    "duration_seconds": 8,
+    "quality": "720p",
+    "aspect_ratio": "16:9"
+  }'
+```
+
+Use an `Idempotency-Key` when a request may be retried. Reusing the key with the
+same request returns the original run. Reusing it with different input returns
+a conflict.
+
+## Media inputs
+
+Models that accept images, video, or audio can take:
+
+- A Protoface asset ID.
+- A public HTTPS URL.
+- A data URI.
+
+The field names and maximum number of files vary by model. Check
+`GET /v1/models/{model_id}` before building the request.
+
+## Poll status
+
+Use the lightweight status endpoint while the run is active:
+
+```sh
+curl https://api.protoface.com/v1/runs/run_.../status \
+  -H "Authorization: Bearer $PROTOFACE_API_KEY"
+```
+
+Wait between polls. `queue_position` is available while a run is queued and may
+be `null` after it starts.
+
+## Retrieve a result
+
+```sh
+curl https://api.protoface.com/v1/runs/run_... \
+  -H "Authorization: Bearer $PROTOFACE_API_KEY"
+```
+
+`outputs` contains every returned part. When there is exactly one video output,
+the response also includes it in `video` for convenience.
+
+## Cancel
+
+```sh
+curl -X POST https://api.protoface.com/v1/runs/run_.../cancel \
+  -H "Authorization: Bearer $PROTOFACE_API_KEY"
+```
+
+Canceling queued work releases the full reservation. Canceling after work has
+started charges the reserved amount because compute has already been assigned.
+Canceling an already completed or failed run returns `409`.
+
+## List runs and events
+
+List recent runs:
+
+```sh
+curl "https://api.protoface.com/v1/runs?limit=20" \
+  -H "Authorization: Bearer $PROTOFACE_API_KEY"
+```
+
+For detailed progress or debugging, read the ordered event stream:
+
+```sh
+curl https://api.protoface.com/v1/runs/run_.../events \
+  -H "Authorization: Bearer $PROTOFACE_API_KEY"
+```
+
+## Next
+
+<Columns cols={2}>
+  <Card title="Models" href="/guides/models" icon="boxes">
+    Read model capabilities and request fields.
+  </Card>
+  <Card title="Errors" href="/reference/errors" icon="triangle-alert">
+    Handle rate limits, conflicts, and failed requests.
+  </Card>
+</Columns>
