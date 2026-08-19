@@ -3,14 +3,24 @@ title: "Limits and Credits"
 description: "Realtime session limits, inference concurrency, and credit behavior."
 ---
 
-Limits vary by plan. Use `GET /v1/billing/quota` to read the limits currently
-applied to your account.
+Limits vary by plan. `GET /v1/billing/plans` returns the published plan limits.
+`GET /v1/billing/quota` returns your current credit balance and whether the
+account can start a realtime session.
 
 ## Realtime sessions
 
 Realtime plans set the maximum number of concurrent sessions and the maximum
 length of each session. Exceeding the concurrency cap returns
 `429 quota_exceeded` with `error.code: "concurrent_sessions"`.
+
+| Plan | Concurrent sessions | Max session duration |
+| --- | --- | --- |
+| Free | 1 | 2 minutes |
+| Starter | 2 | 10 minutes |
+| Launch | 10 | 20 minutes |
+| Scale | 50 | 60 minutes |
+
+### Other session limits
 
 | Limit | Default |
 | --- | --- |
@@ -19,13 +29,18 @@ length of each session. Exceeding the concurrency cap returns
 | Create rate limit | 10 requests per minute per key |
 | Idempotency window | 24 hours |
 
-The idempotency window applies to `Idempotency-Key` on supported `POST`
-endpoints. If you retry the same request with the same key during this window,
-Protoface returns the first result instead of creating another session or
-video.
+The idempotency window applies to supported `POST` endpoints. Reuse a key only
+when the request is unchanged. Run and session retries replay the original
+response. Avatar video retries resume in-progress work or replay a completed
+result. After a timeout, failure, or cancellation, an avatar video retry may
+start a new generation.
 
 If you send `max_duration_seconds`, Protoface applies the lower of your request
 and your plan limit.
+
+For early capacity planning, divide daily active users by 250 to estimate
+concurrent sessions. Protoface may also limit how quickly new sessions start
+during a ramp-up; active sessions are not affected.
 
 ## Realtime credits
 
@@ -39,20 +54,23 @@ expiry.
 
 ## Model inference
 
-Submitting a run reserves the `maximum_reserved_credits` returned in its
-estimate. A completed run charges that reservation. A failed run releases it.
+When you submit a run, Protoface reserves the `maximum_reserved_credits` shown
+in the estimate. It charges those credits when the run completes and releases
+them if the run fails.
 
-Each plan also limits concurrent inference runs. If the account is at its limit,
-the API returns `429 quota_exceeded`. Wait for an active run to finish before
-submitting another one.
+Each plan also limits concurrent inference runs that produce video. If the
+account is at its limit, the API returns `429 quota_exceeded` with
+`error.code: "video.concurrency_exceeded"`. Wait for an active run to finish
+before submitting another one.
 
 Canceling a queued run releases its reservation. Canceling after work starts
 charges the reserved amount.
 
 ## Metadata keys
 
-`metadata` is customer-owned JSON. Keys beginning with `_avatar.` are managed by
-Protoface and are reserved for support-directed use.
+`metadata` is customer-owned JSON. Session keys beginning with `_avatar.` are
+managed by Protoface. Model-run keys beginning with `protoface_` are reserved
+and rejected.
 
 ## Next
 

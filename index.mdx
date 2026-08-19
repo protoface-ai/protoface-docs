@@ -12,28 +12,22 @@ Both use the same API key and account.
   <Card title="Run model inference" href="/guides/model-inference" icon="boxes">
     Submit work to a model and retrieve the result when it is ready.
   </Card>
-  <Card title="Build a realtime avatar" href="/quickstart" icon="radio">
-    Turn your agent's audio into synchronized avatar video.
+  <Card title="Add a realtime avatar" href="/quickstart" icon="radio">
+    Turn your agent's audio into live avatar video.
   </Card>
 </Columns>
 
 ## Model inference
 
-The inference API gives models a shared run lifecycle. The current catalog is
-focused on video generation.
+All models use the same run lifecycle. The current catalog focuses on video
+generation.
 
 <Columns cols={2}>
-  <Card title="Inference quickstart" href="/guides/model-inference" icon="rocket">
-    Run a model with your first API request.
-  </Card>
   <Card title="Models" href="/guides/models" icon="boxes">
-    Read the current model catalog and request contract.
+    See available models and the inputs they accept.
   </Card>
   <Card title="Runs" href="/guides/runs" icon="list-checks">
     Submit, monitor, retrieve, and cancel inference runs.
-  </Card>
-  <Card title="Avatar videos" href="/guides/videos" icon="user-round">
-    Generate a talking-avatar video from prerecorded audio.
   </Card>
 </Columns>
 
@@ -42,10 +36,10 @@ focused on video generation.
 Protoface turns an agent's audio into live avatar video. Use the LiveKit or
 Pipecat integration, another supported platform, or the REST API.
 
-<Columns cols={2}>
-  <Card title="Realtime quickstart" href="/quickstart" icon="rocket">
-    Run a LiveKit Agents example end to end.
-  </Card>
+Because Protoface consumes agent audio, it works across languages and with both
+speech-to-speech and STT/LLM/TTS pipelines.
+
+<Columns cols={3}>
   <Card title="LiveKit Agents" href="/guides/livekit-agents" icon="radio">
     Add the Protoface plugin to a LiveKit agent.
   </Card>
@@ -63,10 +57,13 @@ Avatars, authentication, usage, and errors are shared across the API.
 
 <Columns cols={2}>
   <Card title="API Reference" href="/api-reference" icon="square-terminal">
-    Request and response schemas for every endpoint.
+    Browse endpoint schemas generated from OpenAPI.
   </Card>
   <Card title="Avatars" href="/guides/avatars" icon="user-round">
     Create and manage avatars for realtime sessions and avatar videos.
+  </Card>
+  <Card title="Avatar videos" href="/guides/videos" icon="video">
+    Generate a talking-avatar video from prerecorded audio.
   </Card>
   <Card title="Errors and retries" href="/reference/errors" icon="triangle-alert">
     Handle stable error codes, rate limits, and retries.

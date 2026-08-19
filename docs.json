@@ -104,8 +104,7 @@
             "pages": [
               "guides/model-inference",
               "guides/models",
-              "guides/runs",
-              "guides/videos"
+              "guides/runs"
             ]
           },
           {
@@ -122,6 +121,7 @@
             "group": "Avatars and account",
             "pages": [
               "guides/avatars",
+              "guides/videos",
               "guides/avatar-source-images",
               "guides/usage"
             ]

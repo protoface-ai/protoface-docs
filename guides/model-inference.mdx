@@ -3,14 +3,13 @@ title: "Model Inference"
 description: "Run a video model through the Protoface inference API."
 ---
 
-The inference API gives every model the same run lifecycle. The current catalog
-is focused on video generation: choose a model, submit a run, and retrieve the
-result when it finishes.
+Models use the same run lifecycle. The current catalog is focused on video
+generation: choose a model, submit a run, and retrieve the result when it
+finishes.
 
 <Note>
-  [Protoface Studio](https://app.protoface.com) is the browser-based video
-  editor. The inference API runs models directly; it does not expose Studio
-  projects or scenes.
+  [Protoface Studio](https://app.protoface.com) is the browser editor; it is
+  separate from the inference API, which does not expose Studio projects or scenes.
 </Note>
 
 ## Prerequisites
@@ -43,7 +42,7 @@ curl -X POST https://api.protoface.com/v1/run/minimax-h3 \
 ```
 
 The response contains the run ID, its queue status, and the credits reserved
-for it:
+for it. This is an excerpt:
 
 ```json
 {
@@ -82,8 +81,7 @@ curl https://api.protoface.com/v1/runs/run_... \
   -H "Authorization: Bearer $PROTOFACE_API_KEY"
 ```
 
-The `outputs` array contains the complete result. A run with one video output
-also includes a `video` field:
+For a run with one video output, `video` contains the file. This is an excerpt:
 
 ```json
 {
@@ -98,6 +96,8 @@ also includes a `video` field:
   "error": null
 }
 ```
+
+See [Runs](/guides/runs) for the full `outputs` array and lifecycle.
 
 ## Next
 

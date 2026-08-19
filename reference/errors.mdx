@@ -77,9 +77,10 @@ limits, such as concurrent sessions, use HTTP `429`.
 For API integrations, use the HTTP status and `error.code` for control flow.
 `error.message` is written for humans and may change.
 
-For video runs, use `429` response headers to decide when to submit again. A
-queued run should be monitored through its status endpoint instead of
-resubmitted.
+If a run submission returns `429` with `error.type: "rate_limit"`, follow
+`Retry-After` when it is present; otherwise back off before retrying. If it
+returns `error.type: "quota_exceeded"`, wait for an active run to finish.
+Monitor queued runs through the status endpoint instead of resubmitting them.
 
 For endpoints that accept `Idempotency-Key`, reuse the key only when retrying
 the same request. If anything changes, use a new key.

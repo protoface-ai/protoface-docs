@@ -18,7 +18,7 @@ Each model includes:
 - `id`: the value used in `POST /v1/run/{model_id}`.
 - `operations`: supported operations and their input fields.
 - `input_modalities` and `output_modalities`: accepted and returned media.
-- `pricing`: the current pricing contract.
+- `pricing`: current credit pricing.
 - `request_schemas`: JSON Schema for the request, when available.
 - `revision` and `contract_revision`: versions of the model and its API contract.
 
@@ -29,8 +29,8 @@ curl https://api.protoface.com/v1/models/minimax-h3 \
   -H "Authorization: Bearer $PROTOFACE_API_KEY"
 ```
 
-Use the returned operation contract to build the request. Models can differ in
-duration, quality, aspect ratio, and supported reference media.
+Use `operations` and `request_schemas` to build the request. Models can differ
+in duration, quality, aspect ratio, and supported reference media.
 
 ## Submit to a model
 
@@ -48,7 +48,7 @@ curl -X POST https://api.protoface.com/v1/run/minimax-h3 \
   }'
 ```
 
-If a model is unavailable or the request falls outside its contract, the API
+If a model is unavailable or the request is invalid for that model, the API
 rejects the run before reserving credits.
 
 ## Next

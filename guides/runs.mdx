@@ -11,15 +11,15 @@ and returns a run ID immediately.
 A run moves through these states:
 
 - `queued`: accepted and waiting to start.
-- `running`: claimed by a worker.
+- `running`: generation is in progress.
 - `completed`: output is ready.
 - `failed`: generation failed and the reservation was released.
 - `canceled`: canceled by the caller.
 
 ## Submit
 
-Send a flat JSON body to `POST /v1/run/{model_id}`. The accepted fields come
-from the model contract.
+Send a flat JSON body to `POST /v1/run/{model_id}`. The model entry defines
+which fields the body accepts.
 
 ```sh
 curl -X POST https://api.protoface.com/v1/run/minimax-h3 \
@@ -35,16 +35,19 @@ curl -X POST https://api.protoface.com/v1/run/minimax-h3 \
 ```
 
 Use an `Idempotency-Key` when a request may be retried. Reusing the key with the
-same request returns the original run. Reusing it with different input returns
-a conflict.
+same request returns the original run. Reusing it with a different request
+returns a conflict.
 
 ## Media inputs
 
 Models that accept images, video, or audio can take:
 
-- A Protoface asset ID.
+- An `asset_...` ID returned by `POST /v1/assets` or a previous run.
 - A public HTTPS URL.
 - A data URI.
+
+Use a URL or data URI for one-off input. Use an asset ID to reuse media across
+runs.
 
 The field names and maximum number of files vary by model. Check
 `GET /v1/models/{model_id}` before building the request.
@@ -68,8 +71,8 @@ curl https://api.protoface.com/v1/runs/run_... \
   -H "Authorization: Bearer $PROTOFACE_API_KEY"
 ```
 
-`outputs` contains every returned part. When there is exactly one video output,
-the response also includes it in `video` for convenience.
+The `outputs` array contains the full result. When there is exactly one video
+output, the response also includes it in `video` for convenience.
 
 ## Cancel
 
@@ -78,9 +81,9 @@ curl -X POST https://api.protoface.com/v1/runs/run_.../cancel \
   -H "Authorization: Bearer $PROTOFACE_API_KEY"
 ```
 
-Canceling queued work releases the full reservation. Canceling after work has
-started charges the reserved amount because compute has already been assigned.
-Canceling an already completed or failed run returns `409`.
+Canceling a queued run releases all reserved credits. Once a run starts,
+canceling it still charges the full reserved amount. Completed and failed runs
+return `409` if you try to cancel them.
 
 ## List runs and events
 
