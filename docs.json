@@ -152,6 +152,16 @@
             ]
           },
           {
+            "group": "Assets",
+            "pages": [
+              "POST /v1/assets",
+              "GET /v1/assets",
+              "GET /v1/assets/{asset_id}",
+              "GET /v1/assets/{asset_id}/content",
+              "DELETE /v1/assets/{asset_id}"
+            ]
+          },
+          {
             "group": "Avatars",
             "pages": [
               "GET /v1/avatars",
