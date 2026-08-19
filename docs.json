@@ -108,9 +108,12 @@
             ]
           },
           {
-            "group": "Realtime avatars",
+            "group": "Realtime",
             "pages": [
               "quickstart",
+              "guides/avatars",
+              "guides/avatar-source-images",
+              "guides/videos",
               "guides/livekit-agents",
               "guides/pipecat",
               "guides/more-integrations",
@@ -118,20 +121,15 @@
             ]
           },
           {
-            "group": "Avatars and account",
+            "group": "Account",
             "pages": [
-              "guides/avatars",
-              "guides/videos",
-              "guides/avatar-source-images",
-              "guides/usage"
+              "guides/usage",
+              "reference/quotas"
             ]
           },
           {
             "group": "Reference",
-            "pages": [
-              "reference/errors",
-              "reference/quotas"
-            ]
+            "pages": ["reference/errors"]
           }
         ]
       },
