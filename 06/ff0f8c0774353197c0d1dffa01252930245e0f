@@ -1,0 +1,23 @@
+docs.json
+  s_40a61b7f5d5388::t_eb01d7266f2364 133-135
+  s_40a61b7f5d5388::t_261090602403d9 136-138
+  s_40a61b7f5d5388::t_461bda72d16215 139-148,150,156-162,166-173,175
+api-reference/index.mdx
+  s_40a61b7f5d5388::t_1f4ba113874bb5 3,6,12
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "06ff0f8c0774353197c0d1dffa01252930245e0f",
+  "prompts": {},
+  "sessions": {
+    "s_40a61b7f5d5388": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a016bf-858b-7be0-ae16-4368711203b8",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "protoface-team <295041388+protoface-team@users.noreply.github.com>"
+    }
+  }
+}
