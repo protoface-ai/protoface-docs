@@ -1,36 +1,36 @@
 ---
 title: "Protoface API"
-description: "Generate videos and add realtime avatars to your apps."
+description: "Run model inference and add realtime avatars to your apps."
 ---
 
 ## Start here
 
-Use the Protoface API to generate videos or add a live avatar to an agent. Both
-use the same API key and account.
+Use the Protoface API to run model inference or add a live avatar to an agent.
+Both use the same API key and account.
 
 <Columns cols={2}>
-  <Card title="Generate videos" href="/guides/video-generation" icon="clapperboard">
-    Submit work to a video model and retrieve the result when it is ready.
+  <Card title="Run model inference" href="/guides/model-inference" icon="boxes">
+    Submit work to a model and retrieve the result when it is ready.
   </Card>
   <Card title="Build a realtime avatar" href="/quickstart" icon="radio">
     Turn your agent's audio into synchronized avatar video.
   </Card>
 </Columns>
 
-## Video generation
+## Model inference
 
-Video generation is asynchronous. Choose a model, submit a run, then poll its
-status or retrieve the completed video.
+The inference API gives models a shared run lifecycle. The current catalog is
+focused on video generation.
 
 <Columns cols={2}>
-  <Card title="Video generation quickstart" href="/guides/video-generation" icon="rocket">
-    Generate a video with your first API request.
+  <Card title="Inference quickstart" href="/guides/model-inference" icon="rocket">
+    Run a model with your first API request.
   </Card>
   <Card title="Models" href="/guides/models" icon="boxes">
     Read the current model catalog and request contract.
   </Card>
   <Card title="Runs" href="/guides/runs" icon="list-checks">
-    Submit, monitor, retrieve, and cancel asynchronous work.
+    Submit, monitor, retrieve, and cancel inference runs.
   </Card>
   <Card title="Avatar videos" href="/guides/videos" icon="user-round">
     Generate a talking-avatar video from prerecorded audio.

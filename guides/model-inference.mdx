@@ -1,15 +1,16 @@
 ---
-title: "Video Generation"
-description: "Generate a video with an asynchronous Protoface run."
+title: "Model Inference"
+description: "Run a video model through the Protoface inference API."
 ---
 
-Choose a video model, submit a run, and retrieve the result when it finishes.
-The API returns immediately after the run is queued.
+The inference API gives every model the same run lifecycle. The current catalog
+is focused on video generation: choose a model, submit a run, and retrieve the
+result when it finishes.
 
 <Note>
   [Protoface Studio](https://app.protoface.com) is the browser-based video
-  editor. The API described here runs video models directly; it does not expose
-  Studio projects or scenes.
+  editor. The inference API runs models directly; it does not expose Studio
+  projects or scenes.
 </Note>
 
 ## Prerequisites
@@ -74,14 +75,15 @@ curl https://api.protoface.com/v1/runs/run_.../status \
 Poll until `status` is `completed`, `failed`, or `canceled`. Use a delay between
 requests; the status endpoint is intended for polling.
 
-## 3. Retrieve the video
+## 3. Retrieve the result
 
 ```sh
 curl https://api.protoface.com/v1/runs/run_... \
   -H "Authorization: Bearer $PROTOFACE_API_KEY"
 ```
 
-A completed run with one video output includes a `video` field:
+The `outputs` array contains the complete result. A run with one video output
+also includes a `video` field:
 
 ```json
 {

@@ -1,6 +1,6 @@
 ---
 title: "Limits and Credits"
-description: "Realtime session limits, video concurrency, and credit behavior."
+description: "Realtime session limits, inference concurrency, and credit behavior."
 ---
 
 Limits vary by plan. Use `GET /v1/billing/quota` to read the limits currently
@@ -37,12 +37,12 @@ session minute. If the account has no usable credits, session creation returns
 Free monthly credits do not roll over. Purchased credits roll over without
 expiry.
 
-## Video generation
+## Model inference
 
 Submitting a run reserves the `maximum_reserved_credits` returned in its
 estimate. A completed run charges that reservation. A failed run releases it.
 
-Each plan also limits concurrent video runs. If the account is at its limit,
+Each plan also limits concurrent inference runs. If the account is at its limit,
 the API returns `429 quota_exceeded`. Wait for an active run to finish before
 submitting another one.
 

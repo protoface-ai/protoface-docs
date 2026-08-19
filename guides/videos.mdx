@@ -7,8 +7,8 @@ description: "Generate a talking-avatar video from prerecorded audio."
 avatar model as Protoface Realtime. The request waits until the video is ready,
 or until generation times out.
 
-For higher-quality video generation and a choice of video models, submit an
-[asynchronous run](/guides/video-generation). For live agents and calls, use a
+For higher-quality video generation and a choice of video models, use
+[model inference](/guides/model-inference). For live agents and calls, use a
 realtime session.
 
 ## Audio input
@@ -91,8 +91,8 @@ Only reuse an `Idempotency-Key` for the same avatar, audio, audio settings, and
   <Card title="Avatars" href="/guides/avatars" icon="user-round">
     Create or choose the avatar ID for video generation.
   </Card>
-  <Card title="Video generation" href="/guides/video-generation" icon="clapperboard">
-    Generate higher-quality video with asynchronous models.
+  <Card title="Model inference" href="/guides/model-inference" icon="boxes">
+    Run higher-quality video models.
   </Card>
   <Card title="API reference" href="/api-reference/videos/generate-a-video" icon="square-terminal">
     See the full `POST /v1/videos` schema.

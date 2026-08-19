@@ -100,9 +100,9 @@
             "pages": ["index"]
           },
           {
-            "group": "Video generation",
+            "group": "Model inference",
             "pages": [
-              "guides/video-generation",
+              "guides/model-inference",
               "guides/models",
               "guides/runs",
               "guides/videos"
@@ -176,6 +176,10 @@
     {
       "source": "/concepts/architecture",
       "destination": "/"
+    },
+    {
+      "source": "/guides/video-generation",
+      "destination": "/guides/model-inference"
     },
     {
       "source": "/reference/limits",

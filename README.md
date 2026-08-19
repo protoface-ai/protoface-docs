@@ -5,7 +5,7 @@ This repository contains the documentation published at
 
 The docs cover two parts of the Protoface API:
 
-- Asynchronous video generation with models and runs.
+- Model inference, currently focused on video generation.
 - Realtime avatars for agents, calls, and web experiences.
 
 They also cover shared resources such as avatars, authentication, usage, limits,
