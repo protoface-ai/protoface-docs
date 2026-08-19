@@ -136,26 +136,49 @@
       {
         "tab": "API Reference",
         "icon": "square-terminal",
-        "groups": [
+        "openapi": "openapi.json",
+        "pages": [
+          "api-reference/index",
           {
-            "group": "API Reference",
-            "root": "api-reference/index",
-            "openapi": "openapi.json",
+            "group": "Model inference",
+            "pages": [
+              "GET /v1/models",
+              "GET /v1/models/{model_id}",
+              "POST /v1/run/{model_id}",
+              "GET /v1/runs",
+              "GET /v1/runs/{run_id}",
+              "GET /v1/runs/{run_id}/status",
+              "GET /v1/runs/{run_id}/events",
+              "POST /v1/runs/{run_id}/cancel"
+            ]
+          },
+          {
+            "group": "Avatars",
             "pages": [
               "GET /v1/avatars",
               "POST /v1/avatars",
               "GET /v1/avatars/{avatar_id}",
               "DELETE /v1/avatars/{avatar_id}",
-              "GET /v1/billing/plans",
-              "GET /v1/billing/quota",
+              "POST /v1/videos"
+            ]
+          },
+          {
+            "group": "Realtime sessions",
+            "pages": [
               "POST /v1/pipecat/sessions",
               "GET /v1/sessions",
               "POST /v1/sessions",
               "GET /v1/sessions/{session_id}",
-              "POST /v1/sessions/{session_id}/end",
-              "GET /v1/status",
+              "POST /v1/sessions/{session_id}/end"
+            ]
+          },
+          {
+            "group": "Account and platform",
+            "pages": [
+              "GET /v1/billing/plans",
+              "GET /v1/billing/quota",
               "GET /v1/usage",
-              "POST /v1/videos"
+              "GET /v1/status"
             ]
           }
         ]
