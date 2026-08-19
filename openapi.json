@@ -2561,62 +2561,6 @@
         "title": "UsageSummary",
         "type": "object"
       },
-      "VideoCreateRequest": {
-        "additionalProperties": false,
-        "description": "Public body for `POST /v1/videos`.",
-        "properties": {
-          "audio_base64": {
-            "minLength": 1,
-            "type": "string"
-          },
-          "audio_channel_count": {
-            "exclusiveMinimum": 0.0,
-            "type": "integer"
-          },
-          "audio_format": {
-            "type": "string"
-          },
-          "audio_sample_rate": {
-            "exclusiveMinimum": 0.0,
-            "type": "integer"
-          },
-          "avatar_id": {
-            "type": "string"
-          },
-          "video_starting_frame": {
-            "default": 0,
-            "minimum": 0.0,
-            "type": "integer"
-          }
-        },
-        "required": [
-          "avatar_id",
-          "audio_base64",
-          "audio_format",
-          "audio_sample_rate",
-          "audio_channel_count"
-        ],
-        "title": "VideoCreateRequest",
-        "type": "object"
-      },
-      "VideoCreateResponse": {
-        "additionalProperties": false,
-        "description": "Blocking video-generation response.",
-        "properties": {
-          "hls_url": {
-            "type": "string"
-          },
-          "mp4_url": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "mp4_url",
-          "hls_url"
-        ],
-        "title": "VideoCreateResponse",
-        "type": "object"
-      },
       "WebSocketTransportConfig": {
         "additionalProperties": false,
         "description": "Reserved \u2014 raw WebSocket transport. **Not yet available.**\n\nListed in the schema so existing clients keep parsing future responses,\nbut `POST /v1/sessions` rejects it today with\n`invalid_request` / `code=transport.unsupported`.",
@@ -5100,124 +5044,6 @@
           "usage"
         ]
       }
-    },
-    "/v1/videos": {
-      "post": {
-        "x-excluded": true,
-        "description": "Generate a talking-avatar video from base64 audio and a ready avatar. The request blocks until MP4 and HLS artifacts are available or the configured video timeout is reached.",
-        "operationId": "create_video",
-        "parameters": [
-          {
-            "in": "header",
-            "name": "Idempotency-Key",
-            "required": false,
-            "schema": {
-              "anyOf": [
-                {
-                  "maxLength": 255,
-                  "minLength": 1,
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "title": "Idempotency-Key"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/VideoCreateRequest"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/VideoCreateResponse"
-                }
-              }
-            },
-            "description": "Successful Response"
-          },
-          "400": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiErrorEnvelope"
-                }
-              }
-            },
-            "description": "Invalid request body."
-          },
-          "401": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiErrorEnvelope"
-                }
-              }
-            },
-            "description": "Missing or invalid API key."
-          },
-          "409": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiErrorEnvelope"
-                }
-              }
-            },
-            "description": "Conflicting state."
-          },
-          "422": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiErrorEnvelope"
-                }
-              }
-            },
-            "description": "Request body failed validation."
-          },
-          "429": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiErrorEnvelope"
-                }
-              }
-            },
-            "description": "Rate limit exceeded."
-          },
-          "504": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiErrorEnvelope"
-                }
-              }
-            },
-            "description": "Video generation timed out."
-          }
-        },
-        "security": [
-          {
-            "ApiKey": []
-          }
-        ],
-        "summary": "Generate a video",
-        "tags": [
-          "videos"
-        ]
-      }
     }
   },
   "servers": [
@@ -5234,10 +5060,6 @@
     {
       "description": "Avatar definitions. Includes platform stock avatars and customer-uploaded avatars.",
       "name": "avatars"
-    },
-    {
-      "description": "Blocking talking-avatar video generation from uploaded audio.",
-      "name": "videos"
     },
     {
       "description": "Reusable multimodal inputs and outputs for asynchronous model runs.",
