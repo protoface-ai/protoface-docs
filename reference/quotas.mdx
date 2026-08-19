@@ -31,9 +31,7 @@ length of each session. Exceeding the concurrency cap returns
 
 The idempotency window applies to supported `POST` endpoints. Reuse a key only
 when the request is unchanged. Run and session retries replay the original
-response. Avatar video retries resume in-progress work or replay a completed
-result. After a timeout, failure, or cancellation, an avatar video retry may
-start a new generation.
+response.
 
 If you send `max_duration_seconds`, Protoface applies the lower of your request
 and your plan limit.

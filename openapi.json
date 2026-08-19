@@ -5103,6 +5103,7 @@
     },
     "/v1/videos": {
       "post": {
+        "x-excluded": true,
         "description": "Generate a talking-avatar video from base64 audio and a ready avatar. The request blocks until MP4 and HLS artifacts are available or the configured video timeout is reached.",
         "operationId": "create_video",
         "parameters": [
