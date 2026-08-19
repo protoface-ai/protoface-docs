@@ -66,6 +66,164 @@
         "title": "ApiErrorEnvelope",
         "type": "object"
       },
+      "AssetList": {
+        "properties": {
+          "data": {
+            "items": {
+              "$ref": "#/components/schemas/AssetView"
+            },
+            "type": "array"
+          },
+          "has_more": {
+            "type": "boolean"
+          },
+          "next_cursor": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "object": {
+            "const": "list",
+            "default": "list",
+            "type": "string"
+          }
+        },
+        "required": [
+          "data",
+          "has_more",
+          "next_cursor"
+        ],
+        "title": "AssetList",
+        "type": "object"
+      },
+      "AssetView": {
+        "properties": {
+          "byte_size": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "created_at": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "deleted_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "download_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "duration_ms": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "height": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "id": {
+            "type": "string"
+          },
+          "media_type": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "modality": {
+            "type": "string"
+          },
+          "object": {
+            "const": "asset",
+            "default": "asset",
+            "type": "string"
+          },
+          "schema_uri": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "scope": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "width": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "scope",
+          "modality",
+          "media_type",
+          "schema_uri",
+          "byte_size",
+          "duration_ms",
+          "width",
+          "height",
+          "status",
+          "download_url",
+          "created_at",
+          "deleted_at"
+        ],
+        "title": "AssetView",
+        "type": "object"
+      },
       "Avatar": {
         "additionalProperties": false,
         "description": "Public Avatar resource returned by `GET /v1/avatars` and `GET /v1/avatars/{id}`.",
@@ -114,6 +272,11 @@
           },
           "is_demo": {
             "description": "True for platform stock avatars (e.g. `av_stock_001`).",
+            "type": "boolean"
+          },
+          "is_photo_upload": {
+            "default": false,
+            "description": "True when this avatar was created directly from a customer photo upload, rather than from a stock or reused face.",
             "type": "boolean"
           },
           "name": {
@@ -228,6 +391,7 @@
           "share",
           "public_demo",
           "pipecat",
+          "agora",
           "video_generation"
         ],
         "title": "BillingSurface",
@@ -257,6 +421,345 @@
         "title": "Body_create_avatar",
         "type": "object"
       },
+      "Body_upload_asset": {
+        "properties": {
+          "duration_ms": {
+            "anyOf": [
+              {
+                "minimum": 0.0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "file": {
+            "contentMediaType": "application/octet-stream",
+            "type": "string"
+          },
+          "modality": {
+            "maxLength": 120,
+            "minLength": 1,
+            "type": "string"
+          },
+          "schema_uri": {
+            "anyOf": [
+              {
+                "maxLength": 500,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "file",
+          "modality"
+        ],
+        "title": "Body_upload_asset",
+        "type": "object"
+      },
+      "BrowserEmbedConfigView": {
+        "additionalProperties": false,
+        "description": "Safe display config returned directly to browser SDKs.",
+        "properties": {
+          "allowed_origins": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "avatar_name": {
+            "type": "string"
+          },
+          "consent": {
+            "additionalProperties": true,
+            "type": "object"
+          },
+          "cta_button_label": {
+            "type": "string"
+          },
+          "cta_description": {
+            "type": "string"
+          },
+          "cta_title": {
+            "type": "string"
+          },
+          "enabled": {
+            "type": "boolean"
+          },
+          "is_default": {
+            "type": "boolean"
+          },
+          "placement": {
+            "type": "string"
+          },
+          "portrait_url": {
+            "type": "string"
+          },
+          "source_height": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "source_width": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "enabled",
+          "is_default",
+          "avatar_name",
+          "allowed_origins",
+          "placement",
+          "cta_title",
+          "cta_description",
+          "cta_button_label",
+          "consent",
+          "portrait_url"
+        ],
+        "title": "BrowserEmbedConfigView",
+        "type": "object"
+      },
+      "CreditEstimateView": {
+        "properties": {
+          "estimated_credits": {
+            "type": "integer"
+          },
+          "lines": {
+            "items": {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "maximum_reserved_credits": {
+            "type": "integer"
+          },
+          "pricing_version": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "pricing_version",
+          "estimated_credits",
+          "maximum_reserved_credits",
+          "lines"
+        ],
+        "title": "CreditEstimateView",
+        "type": "object"
+      },
+      "EmbedConversationRequest": {
+        "properties": {
+          "setup_token": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "setup_token"
+        ],
+        "title": "EmbedConversationRequest",
+        "type": "object"
+      },
+      "EmbedConversationView": {
+        "additionalProperties": false,
+        "properties": {
+          "conversation_id": {
+            "type": "string"
+          },
+          "expires_at": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "livekit_url": {
+            "type": "string"
+          },
+          "room": {
+            "type": "string"
+          },
+          "token": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "conversation_id",
+          "room",
+          "livekit_url",
+          "token",
+          "expires_at"
+        ],
+        "title": "EmbedConversationView",
+        "type": "object"
+      },
+      "EmbedSetupRequest": {
+        "additionalProperties": false,
+        "properties": {
+          "consent": {
+            "additionalProperties": true,
+            "type": "object"
+          },
+          "permissions": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "type": "object"
+          }
+        },
+        "required": [
+          "permissions",
+          "consent"
+        ],
+        "title": "EmbedSetupRequest",
+        "type": "object"
+      },
+      "EmbedSetupView": {
+        "additionalProperties": false,
+        "properties": {
+          "expires_at": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "setup_token": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "setup_token",
+          "expires_at"
+        ],
+        "title": "EmbedSetupView",
+        "type": "object"
+      },
+      "EmbedStatusView": {
+        "additionalProperties": false,
+        "properties": {
+          "expires_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "failure_code": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "failure_message": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "phase": {
+            "type": "string"
+          },
+          "retryTime": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "session_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "phase"
+        ],
+        "title": "EmbedStatusView",
+        "type": "object"
+      },
+      "EmbedUsageSummary": {
+        "additionalProperties": false,
+        "description": "Usage attributed to one customer-managed avatar embed.",
+        "properties": {
+          "avatar_id": {
+            "type": "string"
+          },
+          "avatar_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "billable_seconds": {
+            "minimum": 0.0,
+            "type": "integer"
+          },
+          "credits_charged": {
+            "minimum": 0.0,
+            "type": "integer"
+          },
+          "embed_id": {
+            "type": "string"
+          },
+          "embed_name": {
+            "type": "string"
+          },
+          "is_active": {
+            "type": "boolean"
+          },
+          "sessions": {
+            "minimum": 0.0,
+            "type": "integer"
+          }
+        },
+        "required": [
+          "embed_id",
+          "embed_name",
+          "avatar_id",
+          "credits_charged",
+          "billable_seconds",
+          "sessions",
+          "is_active"
+        ],
+        "title": "EmbedUsageSummary",
+        "type": "object"
+      },
       "ErrorType": {
         "description": "Top-level error categories. Maps roughly to HTTP status.\n\n`code` (a free-form lower_snake_case string on `ApiError`) is the\nmachine-readable subcode SDKs should switch on; `type` is the broad\ncategory.",
         "enum": [
@@ -275,7 +778,7 @@
         "type": "string"
       },
       "LiveKitAudioSource": {
-        "description": "How the LiveKit worker receives audio from the room.\n\nUse `data_stream` with the LiveKit Agents plugin. Use `track` only for\ncustom integrations that publish audio tracks directly.",
+        "description": "How the LiveKit worker receives audio from the room.\n\nBoth modes are supported. Use `data_stream` with the LiveKit Agents\nplugin; use `track` for custom integrations that publish a continuous\naudio track directly.",
         "enum": [
           "data_stream",
           "track"
@@ -285,7 +788,7 @@
       },
       "LiveKitTransportConfig": {
         "additionalProperties": false,
-        "description": "BYO LiveKit transport.\n\nThe customer owns the room and mints `worker_token`; we never touch\ntheir LiveKit API key or secret.",
+        "description": "BYO LiveKit transport.\n\nThe customer owns the room and mints `worker_token`; we never touch\ntheir LiveKit API key or secret. The worker publishes\n`protoface-avatar` video and `protoface-avatar-audio` output tracks.\n\nIn `track` mode, call the `lk.clear_buffer` RPC for barge-in after\nstopping or clearing the upstream audio publisher.",
         "examples": [
           {
             "audio_source": "data_stream",
@@ -299,7 +802,7 @@
           "audio_source": {
             "$ref": "#/components/schemas/LiveKitAudioSource",
             "default": "data_stream",
-            "description": "How the worker receives audio. See LiveKitAudioSource."
+            "description": "How the worker receives audio. Track input is statefully converted to 16 kHz mono PCM. See LiveKitAudioSource."
           },
           "room_name": {
             "description": "Name of the LiveKit room the worker should join.",
@@ -314,7 +817,7 @@
                 "type": "null"
               }
             ],
-            "description": "When `audio_source=track`, pin to this participant. Ignored otherwise."
+            "description": "When `audio_source=track`, pin to this participant. If omitted, the first audio publisher is pinned for the session. Ignored otherwise."
           },
           "synthetic_audio_if_no_input": {
             "default": false,
@@ -347,6 +850,107 @@
           "worker_token"
         ],
         "title": "LiveKitTransportConfig",
+        "type": "object"
+      },
+      "ModelList": {
+        "properties": {
+          "data": {
+            "items": {
+              "$ref": "#/components/schemas/ModelView"
+            },
+            "type": "array"
+          },
+          "object": {
+            "const": "list",
+            "default": "list",
+            "type": "string"
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "ModelList",
+        "type": "object"
+      },
+      "ModelView": {
+        "properties": {
+          "available": {
+            "type": "boolean"
+          },
+          "contract_revision": {
+            "type": "string"
+          },
+          "execution_modes": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "execution_targets": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "id": {
+            "type": "string"
+          },
+          "input_modalities": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "object": {
+            "const": "model",
+            "default": "model",
+            "type": "string"
+          },
+          "operations": {
+            "additionalProperties": true,
+            "type": "object"
+          },
+          "output_modalities": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "pricing": {
+            "additionalProperties": true,
+            "type": "object"
+          },
+          "request_schemas": {
+            "anyOf": [
+              {
+                "additionalProperties": {
+                  "additionalProperties": true,
+                  "type": "object"
+                },
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "revision": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "revision",
+          "contract_revision",
+          "operations",
+          "input_modalities",
+          "output_modalities",
+          "execution_modes",
+          "execution_targets",
+          "pricing",
+          "available"
+        ],
+        "title": "ModelView",
         "type": "object"
       },
       "PipecatSessionCreateRequest": {
@@ -528,6 +1132,9 @@
               }
             ]
           },
+          "family": {
+            "type": "string"
+          },
           "included_credits": {
             "type": "integer"
           },
@@ -535,6 +1142,9 @@
             "type": "string"
           },
           "max_concurrency": {
+            "type": "integer"
+          },
+          "max_video_concurrency": {
             "type": "integer"
           },
           "monthly_price_cents": {
@@ -545,18 +1155,42 @@
           },
           "session_time_limit_seconds": {
             "type": "integer"
+          },
+          "studio_generation_concurrency": {
+            "type": "integer"
+          },
+          "studio_project_limit": {
+            "type": "integer"
+          },
+          "studio_unlimited": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/StudioUnlimitedRuleView"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "voice_clone_slots": {
+            "type": "integer"
           }
         },
         "required": [
           "key",
           "name",
+          "family",
           "monthly_price_cents",
           "included_credits",
           "extra_credit_unit_micros",
           "max_concurrency",
+          "max_video_concurrency",
           "custom_avatar_slots",
           "extra_avatar_slot_cents",
-          "session_time_limit_seconds"
+          "session_time_limit_seconds",
+          "studio_project_limit",
+          "studio_generation_concurrency",
+          "voice_clone_slots"
         ],
         "title": "PlanView",
         "type": "object"
@@ -660,6 +1294,515 @@
           "can_start_session"
         ],
         "title": "QuotaLimits",
+        "type": "object"
+      },
+      "RunCreditsView": {
+        "properties": {
+          "charged": {
+            "type": "integer"
+          },
+          "pricing_version": {
+            "type": "string"
+          },
+          "reserved": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "pricing_version",
+          "reserved",
+          "charged"
+        ],
+        "title": "RunCreditsView",
+        "type": "object"
+      },
+      "RunErrorView": {
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "message"
+        ],
+        "title": "RunErrorView",
+        "type": "object"
+      },
+      "RunEventList": {
+        "properties": {
+          "data": {
+            "items": {
+              "$ref": "#/components/schemas/RunEventView"
+            },
+            "type": "array"
+          },
+          "has_more": {
+            "type": "boolean"
+          },
+          "next_cursor": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "object": {
+            "const": "list",
+            "default": "list",
+            "type": "string"
+          }
+        },
+        "required": [
+          "data",
+          "has_more",
+          "next_cursor"
+        ],
+        "title": "RunEventList",
+        "type": "object"
+      },
+      "RunEventView": {
+        "properties": {
+          "created_at": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "data": {
+            "additionalProperties": true,
+            "type": "object"
+          },
+          "id": {
+            "type": "string"
+          },
+          "part_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "sequence": {
+            "type": "integer"
+          },
+          "type": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "sequence",
+          "type",
+          "part_id",
+          "data",
+          "created_at"
+        ],
+        "title": "RunEventView",
+        "type": "object"
+      },
+      "RunFileView": {
+        "properties": {
+          "content_type": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "file_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "file_size": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "url": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "url",
+          "content_type",
+          "file_name",
+          "file_size"
+        ],
+        "title": "RunFileView",
+        "type": "object"
+      },
+      "RunList": {
+        "properties": {
+          "data": {
+            "items": {
+              "$ref": "#/components/schemas/RunView"
+            },
+            "type": "array"
+          },
+          "has_more": {
+            "type": "boolean"
+          },
+          "next_cursor": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "object": {
+            "const": "list",
+            "default": "list",
+            "type": "string"
+          }
+        },
+        "required": [
+          "data",
+          "has_more",
+          "next_cursor"
+        ],
+        "title": "RunList",
+        "type": "object"
+      },
+      "RunOutputView": {
+        "properties": {
+          "asset_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "data": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "file": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/RunFileView"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "modality": {
+            "type": "string"
+          },
+          "role": {
+            "type": "string"
+          },
+          "text": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "type": {
+            "enum": [
+              "text",
+              "asset",
+              "data"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [
+          "role",
+          "modality",
+          "type"
+        ],
+        "title": "RunOutputView",
+        "type": "object"
+      },
+      "RunQueuedView": {
+        "description": "Acknowledgement returned the moment a run is queued and its credits held.\n\nThe estimate is echoed back because the reservation has already been taken\nagainst the organization's balance by the time this is returned.",
+        "properties": {
+          "created_at": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "credit_estimate": {
+            "$ref": "#/components/schemas/CreditEstimateView"
+          },
+          "id": {
+            "type": "string"
+          },
+          "model": {
+            "type": "string"
+          },
+          "model_revision": {
+            "type": "string"
+          },
+          "object": {
+            "const": "run",
+            "default": "run",
+            "type": "string"
+          },
+          "operation": {
+            "type": "string"
+          },
+          "queue_position": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "response_url": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "status_url": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "model",
+          "model_revision",
+          "operation",
+          "status",
+          "queue_position",
+          "credit_estimate",
+          "status_url",
+          "response_url",
+          "created_at"
+        ],
+        "title": "RunQueuedView",
+        "type": "object"
+      },
+      "RunStatusView": {
+        "properties": {
+          "error": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/RunErrorView"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "id": {
+            "type": "string"
+          },
+          "object": {
+            "const": "run.status",
+            "default": "run.status",
+            "type": "string"
+          },
+          "progress": {
+            "type": "integer"
+          },
+          "queue_position": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "status": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "status",
+          "progress",
+          "queue_position",
+          "error"
+        ],
+        "title": "RunStatusView",
+        "type": "object"
+      },
+      "RunView": {
+        "description": "One finished or in-flight run.\n\n`video` / `image` / `audio` are a convenience projection: each carries the\nsole output of that modality when the run produced exactly one, which is the\nshape most clients read. `outputs` is the complete record and is the only\nplace multi-part results, text, and structured data appear. The modality to\nfield-name mapping is a platform convention, not a per-model fact.",
+        "properties": {
+          "audio": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/RunFileView"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "completed_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "created_at": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "credits": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/RunCreditsView"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "error": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/RunErrorView"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "external_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "id": {
+            "type": "string"
+          },
+          "image": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/RunFileView"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "metadata": {
+            "additionalProperties": true,
+            "type": "object"
+          },
+          "model": {
+            "type": "string"
+          },
+          "model_revision": {
+            "type": "string"
+          },
+          "object": {
+            "const": "run",
+            "default": "run",
+            "type": "string"
+          },
+          "operation": {
+            "type": "string"
+          },
+          "outputs": {
+            "items": {
+              "$ref": "#/components/schemas/RunOutputView"
+            },
+            "type": "array"
+          },
+          "progress": {
+            "type": "integer"
+          },
+          "started_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "status": {
+            "type": "string"
+          },
+          "video": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/RunFileView"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "model",
+          "model_revision",
+          "operation",
+          "status",
+          "progress",
+          "outputs",
+          "credits",
+          "error",
+          "metadata",
+          "external_id",
+          "created_at",
+          "started_at",
+          "completed_at"
+        ],
+        "title": "RunView",
         "type": "object"
       },
       "Session": {
@@ -871,7 +2014,7 @@
           },
           "idle_timeout_seconds": {
             "default": 30,
-            "description": "End the session automatically after this many seconds without received audio. Only applies to transports that observe inbound audio; ignored otherwise.",
+            "description": "End the session automatically after this many seconds without received audio. Only applies to transports that observe inbound audio; ignored otherwise. In LiveKit track mode, every received audio frame, including silence, resets this timeout.",
             "maximum": 600.0,
             "minimum": 1.0,
             "type": "integer"
@@ -1046,6 +2189,80 @@
         "title": "SessionUsage",
         "type": "object"
       },
+      "StartRequest": {
+        "additionalProperties": true,
+        "description": "Accept flat and nested field shapes used by Agora Generic Avatar.",
+        "properties": {
+          "app_id": {
+            "type": "string"
+          },
+          "avatar_id": {
+            "type": "string"
+          },
+          "channel": {
+            "type": "string"
+          },
+          "enable_string_uid": {
+            "default": false,
+            "type": "boolean"
+          },
+          "idle_timeout_seconds": {
+            "default": 120,
+            "maximum": 600.0,
+            "minimum": 1.0,
+            "type": "integer"
+          },
+          "quality": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "token": {
+            "type": "string"
+          },
+          "uid": {
+            "type": "string"
+          },
+          "video_encoding": {
+            "default": "h264",
+            "type": "string"
+          }
+        },
+        "required": [
+          "avatar_id",
+          "app_id",
+          "channel",
+          "token",
+          "uid"
+        ],
+        "title": "StartRequest",
+        "type": "object"
+      },
+      "StartResponse": {
+        "properties": {
+          "session_id": {
+            "type": "string"
+          },
+          "session_token": {
+            "type": "string"
+          },
+          "websocket_address": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "session_id",
+          "websocket_address",
+          "session_token"
+        ],
+        "title": "StartResponse",
+        "type": "object"
+      },
       "StatusComponent": {
         "additionalProperties": false,
         "properties": {
@@ -1100,6 +2317,126 @@
         "title": "StatusResponse",
         "type": "object"
       },
+      "StopRequest": {
+        "additionalProperties": false,
+        "description": "Agora Generic Avatar stop-session request.",
+        "properties": {
+          "session_id": {
+            "type": "string"
+          },
+          "session_token": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "session_id",
+          "session_token"
+        ],
+        "title": "StopRequest",
+        "type": "object"
+      },
+      "StopResponse": {
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "status",
+          "message"
+        ],
+        "title": "StopResponse",
+        "type": "object"
+      },
+      "StudioUnlimitedRuleView": {
+        "additionalProperties": false,
+        "properties": {
+          "max_duration_seconds_by_quality": {
+            "additionalProperties": {
+              "type": "integer"
+            },
+            "type": "object"
+          },
+          "priority": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "max_duration_seconds_by_quality",
+          "priority"
+        ],
+        "title": "StudioUnlimitedRuleView",
+        "type": "object"
+      },
+      "UsageChargeSummary": {
+        "additionalProperties": false,
+        "description": "One settled model or Studio charge for customer-visible audit history.",
+        "properties": {
+          "billing_surface": {
+            "type": "string"
+          },
+          "created_at": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "credits_charged": {
+            "minimum": 0.0,
+            "type": "integer"
+          },
+          "id": {
+            "type": "string"
+          },
+          "model": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "operation": {
+            "type": "string"
+          },
+          "project_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "scene_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "source_id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "billing_surface",
+          "operation",
+          "source_id",
+          "credits_charged",
+          "created_at"
+        ],
+        "title": "UsageChargeSummary",
+        "type": "object"
+      },
       "UsageSummary": {
         "additionalProperties": false,
         "description": "Aggregated usage; returned by `GET /v1/usage`.",
@@ -1145,6 +2482,20 @@
             "description": "`credits_charged` per billing surface.",
             "type": "object"
           },
+          "by_embed": {
+            "description": "Embed-attributed usage, ordered by credits then time.",
+            "items": {
+              "$ref": "#/components/schemas/EmbedUsageSummary"
+            },
+            "type": "array"
+          },
+          "by_operation": {
+            "additionalProperties": {
+              "type": "integer"
+            },
+            "description": "`credits_charged` per durable billable operation identifier.",
+            "type": "object"
+          },
           "by_quality": {
             "additionalProperties": {
               "type": "integer"
@@ -1175,7 +2526,7 @@
               },
               "type": "object"
             },
-            "description": "`credits_charged` per UTC day and billing surface. Keys use `YYYY-MM-DD`.",
+            "description": "`credits_charged` per requested timezone day and billing surface. Keys use `YYYY-MM-DD`.",
             "type": "object"
           },
           "period_end": {
@@ -1187,6 +2538,13 @@
             "description": "Inclusive start of the aggregated window. Matches the `period_start` query argument.",
             "format": "date-time",
             "type": "string"
+          },
+          "recent_charges": {
+            "description": "Most recent settled model and Studio charges in the requested window.",
+            "items": {
+              "$ref": "#/components/schemas/UsageChargeSummary"
+            },
+            "type": "array"
           },
           "sessions": {
             "description": "Number of sessions that contributed usage in the window.",
@@ -1208,31 +2566,25 @@
         "description": "Public body for `POST /v1/videos`.",
         "properties": {
           "audio_base64": {
-            "description": "Base64-encoded audio bytes. Clear speech, such as TTS output or a clean voice recording, produces the best video results.",
             "minLength": 1,
             "type": "string"
           },
           "audio_channel_count": {
-            "description": "Number of channels in the uploaded audio. Use 1 for mono when possible.",
             "exclusiveMinimum": 0.0,
             "type": "integer"
           },
           "audio_format": {
-            "description": "Audio format, such as `wav`.",
             "type": "string"
           },
           "audio_sample_rate": {
-            "description": "Audio sample rate in hertz. 16000 is recommended for PCM mono WAV input.",
             "exclusiveMinimum": 0.0,
             "type": "integer"
           },
           "avatar_id": {
-            "description": "Ready avatar to render in the generated video.",
             "type": "string"
           },
           "video_starting_frame": {
             "default": 0,
-            "description": "Starting avatar frame. Defaults to 0.",
             "minimum": 0.0,
             "type": "integer"
           }
@@ -1289,18 +2641,654 @@
     }
   },
   "info": {
-    "description": "Create realtime avatar sessions.\n\n### Authentication\nAll `/v1/*` endpoints require a live API key:\n\n```\nAuthorization: Bearer sk_live_...\n```\n\nKeys are minted in the dashboard and are scoped to a single environment\n(staging or prod).\n\n### Idempotency\n`POST /v1/sessions` and `POST /v1/videos` may include an `Idempotency-Key` header. Use any unique string up to 255 characters. If you retry the same request with the same key within 24 hours, Protoface returns the first result instead of creating another session or video. If the request changes, use a new key. The header is optional.\n\n### Errors\nEvery non-2xx response is a JSON body of the form:\n\n```json\n{\n  \"error\": {\n    \"type\": \"invalid_request\",\n    \"code\": \"transport.unsupported\",\n    \"message\": \"transport.type=pipecat is not supported\",\n    \"param\": \"transport.type\",\n    \"request_id\": \"req_01HXY...\"\n  }\n}\n```\n\nSwitch on `error.code` (stable lower_snake_case), not `error.message`.\n\n### Pagination\nList endpoints use cursor pagination:\n\n```\nGET /v1/sessions?limit=20&starting_after=sess_01HXY...\n```\n\nResponse shape:\n\n```json\n{\n  \"object\": \"list\",\n  \"data\": [...],\n  \"has_more\": true,\n  \"next_cursor\": \"sess_01HXY...\"\n}\n```\n",
+    "description": "Create realtime avatar sessions.\n\n### Authentication\nAll `/v1/*` endpoints require a live API key:\n\n```\nAuthorization: Bearer sk_live_...\n```\n\nKeys are minted in the dashboard and are scoped to a single environment\n(staging or prod).\n\n### Idempotency\n`POST /v1/sessions` may include an `Idempotency-Key` header (any opaque string,\n<= 255 chars). Retries with the same key inside 24 hours return the first\nresponse. The header is optional.\n\n### Errors\nEvery non-2xx response is a JSON body of the form:\n\n```json\n{\n  \"error\": {\n    \"type\": \"invalid_request\",\n    \"code\": \"transport.unsupported\",\n    \"message\": \"transport.type=pipecat is not supported\",\n    \"param\": \"transport.type\",\n    \"request_id\": \"req_01HXY...\"\n  }\n}\n```\n\nSwitch on `error.code` (stable lower_snake_case), not `error.message`.\n\n### Pagination\nList endpoints use cursor pagination:\n\n```\nGET /v1/sessions?limit=20&starting_after=sess_01HXY...\n```\n\nResponse shape:\n\n```json\n{\n  \"object\": \"list\",\n  \"data\": [...],\n  \"has_more\": true,\n  \"next_cursor\": \"sess_01HXY...\"\n}\n```\n",
     "summary": "Protoface \u2014 realtime avatar API for developers.",
     "title": "Protoface API",
     "version": "0.1.0"
   },
   "openapi": "3.1.0",
-  "servers": [
-    {
-      "url": "https://api.protoface.com"
-    }
-  ],
   "paths": {
+    "/api/v1/embed/{embed_public_id}/config": {
+      "get": {
+        "operationId": "get_embed_config",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "embed_public_id",
+            "required": true,
+            "schema": {
+              "maxLength": 120,
+              "minLength": 1,
+              "title": "Embed Public Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BrowserEmbedConfigView"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "Request body or parameters failed validation."
+          }
+        },
+        "summary": "Get Embed Config",
+        "tags": [
+          "avatar-embed"
+        ]
+      }
+    },
+    "/api/v1/embed/{embed_public_id}/conversations": {
+      "post": {
+        "operationId": "create_embed_conversation",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "embed_public_id",
+            "required": true,
+            "schema": {
+              "maxLength": 120,
+              "minLength": 1,
+              "title": "Embed Public Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EmbedConversationRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EmbedConversationView"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "Request body or parameters failed validation."
+          }
+        },
+        "summary": "Create Embed Conversation",
+        "tags": [
+          "avatar-embed"
+        ]
+      }
+    },
+    "/api/v1/embed/{embed_public_id}/conversations/{room}/status": {
+      "get": {
+        "operationId": "get_embed_status",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "embed_public_id",
+            "required": true,
+            "schema": {
+              "maxLength": 120,
+              "minLength": 1,
+              "title": "Embed Public Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "room",
+            "required": true,
+            "schema": {
+              "maxLength": 120,
+              "minLength": 1,
+              "title": "Room",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EmbedStatusView"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "Request body or parameters failed validation."
+          }
+        },
+        "summary": "Get Embed Status",
+        "tags": [
+          "avatar-embed"
+        ]
+      }
+    },
+    "/api/v1/embed/{embed_public_id}/conversations/{room}/stop": {
+      "post": {
+        "operationId": "stop_embed_conversation",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "embed_public_id",
+            "required": true,
+            "schema": {
+              "maxLength": 120,
+              "minLength": 1,
+              "title": "Embed Public Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "room",
+            "required": true,
+            "schema": {
+              "maxLength": 120,
+              "minLength": 1,
+              "title": "Room",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": {
+                    "type": "boolean"
+                  },
+                  "title": "Response Stop Embed Conversation",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "Request body or parameters failed validation."
+          }
+        },
+        "summary": "Stop Embed Conversation",
+        "tags": [
+          "avatar-embed"
+        ]
+      }
+    },
+    "/api/v1/embed/{embed_public_id}/portrait": {
+      "get": {
+        "operationId": "get_embed_portrait",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "embed_public_id",
+            "required": true,
+            "schema": {
+              "maxLength": 120,
+              "minLength": 1,
+              "title": "Embed Public Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "Request body or parameters failed validation."
+          }
+        },
+        "summary": "Get Embed Portrait",
+        "tags": [
+          "avatar-embed"
+        ]
+      }
+    },
+    "/api/v1/embed/{embed_public_id}/setup": {
+      "post": {
+        "operationId": "create_embed_setup",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "embed_public_id",
+            "required": true,
+            "schema": {
+              "maxLength": 120,
+              "minLength": 1,
+              "title": "Embed Public Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EmbedSetupRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EmbedSetupView"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "Request body or parameters failed validation."
+          }
+        },
+        "summary": "Create Embed Setup",
+        "tags": [
+          "avatar-embed"
+        ]
+      }
+    },
+    "/v1/agora/session/start": {
+      "post": {
+        "operationId": "start_agora_session",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StartRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StartResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "Request body or parameters failed validation."
+          }
+        },
+        "security": [
+          {
+            "ApiKey": []
+          }
+        ],
+        "summary": "Start",
+        "tags": [
+          "agora"
+        ]
+      }
+    },
+    "/v1/agora/session/stop": {
+      "delete": {
+        "operationId": "stop_agora_session",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StopRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StopResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "Request body or parameters failed validation."
+          }
+        },
+        "security": [
+          {
+            "ApiKey": []
+          }
+        ],
+        "summary": "Stop",
+        "tags": [
+          "agora"
+        ]
+      }
+    },
+    "/v1/assets": {
+      "get": {
+        "operationId": "list_assets",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 20,
+              "maximum": 100,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "starting_after",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "maxLength": 40,
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Starting After"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AssetList"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "Request body or parameters failed validation."
+          }
+        },
+        "security": [
+          {
+            "ApiKey": []
+          }
+        ],
+        "summary": "List assets",
+        "tags": [
+          "assets"
+        ]
+      },
+      "post": {
+        "operationId": "upload_asset",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_upload_asset"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AssetView"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "Request body or parameters failed validation."
+          }
+        },
+        "security": [
+          {
+            "ApiKey": []
+          }
+        ],
+        "summary": "Upload an asset",
+        "tags": [
+          "assets"
+        ]
+      }
+    },
+    "/v1/assets/{asset_id}": {
+      "delete": {
+        "operationId": "delete_asset",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "asset_id",
+            "required": true,
+            "schema": {
+              "title": "Asset Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "Request body or parameters failed validation."
+          }
+        },
+        "security": [
+          {
+            "ApiKey": []
+          }
+        ],
+        "summary": "Delete an asset",
+        "tags": [
+          "assets"
+        ]
+      },
+      "get": {
+        "operationId": "get_asset",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "asset_id",
+            "required": true,
+            "schema": {
+              "title": "Asset Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AssetView"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "Request body or parameters failed validation."
+          }
+        },
+        "security": [
+          {
+            "ApiKey": []
+          }
+        ],
+        "summary": "Retrieve an asset",
+        "tags": [
+          "assets"
+        ]
+      }
+    },
+    "/v1/assets/{asset_id}/content": {
+      "get": {
+        "operationId": "get_asset_content",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "asset_id",
+            "required": true,
+            "schema": {
+              "title": "Asset Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "Request body or parameters failed validation."
+          }
+        },
+        "security": [
+          {
+            "ApiKey": []
+          }
+        ],
+        "summary": "Retrieve asset content",
+        "tags": [
+          "assets"
+        ]
+      }
+    },
     "/v1/avatars": {
       "get": {
         "description": "List avatars available to the calling org. Includes platform-built-in stock avatars (e.g. `av_stock_001`) and any customer-uploaded avatars.",
@@ -1706,6 +3694,89 @@
         ]
       }
     },
+    "/v1/models": {
+      "get": {
+        "operationId": "list_models",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ModelList"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "Request body or parameters failed validation."
+          }
+        },
+        "security": [
+          {
+            "ApiKey": []
+          }
+        ],
+        "summary": "List models",
+        "tags": [
+          "models"
+        ]
+      }
+    },
+    "/v1/models/{model_id}": {
+      "get": {
+        "operationId": "get_model",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "model_id",
+            "required": true,
+            "schema": {
+              "title": "Model Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ModelView"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "Request body or parameters failed validation."
+          }
+        },
+        "security": [
+          {
+            "ApiKey": []
+          }
+        ],
+        "summary": "Retrieve a model",
+        "tags": [
+          "models"
+        ]
+      }
+    },
     "/v1/pipecat/sessions": {
       "post": {
         "description": "Start a Protoface avatar session for Pipecat. The response contains short-lived WebSocket media credentials used by the `pipecat-protoface` package.",
@@ -1800,6 +3871,608 @@
         "summary": "Create a Pipecat avatar media session",
         "tags": [
           "pipecat"
+        ]
+      }
+    },
+    "/v1/run/{model_id}": {
+      "post": {
+        "operationId": "submitRun",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "model_id",
+            "required": true,
+            "schema": {
+              "title": "Model Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "header",
+            "name": "Idempotency-Key",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "maxLength": 255,
+                  "minLength": 1,
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Idempotency-Key"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": true,
+                "title": "Payload",
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "202": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RunQueuedView"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "402": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "The organization has insufficient credits for this run."
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "The API key's scopes do not permit this operation."
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "The request conflicts with the current state of the run."
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "Request body or parameters failed validation."
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "Rate limit or queue capacity reached. Retry after the indicated delay."
+          }
+        },
+        "security": [
+          {
+            "ApiKey": []
+          }
+        ],
+        "summary": "Submit a run",
+        "tags": [
+          "runs"
+        ]
+      }
+    },
+    "/v1/runs": {
+      "get": {
+        "operationId": "listRuns",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 20,
+              "maximum": 100,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "starting_after",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "maxLength": 40,
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Starting After"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RunList"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "402": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "The organization has insufficient credits for this run."
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "The API key's scopes do not permit this operation."
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "The request conflicts with the current state of the run."
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "Request body or parameters failed validation."
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "Rate limit or queue capacity reached. Retry after the indicated delay."
+          }
+        },
+        "security": [
+          {
+            "ApiKey": []
+          }
+        ],
+        "summary": "List runs",
+        "tags": [
+          "runs"
+        ]
+      }
+    },
+    "/v1/runs/{run_id}": {
+      "get": {
+        "operationId": "getRun",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "run_id",
+            "required": true,
+            "schema": {
+              "title": "Run Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RunView"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "402": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "The organization has insufficient credits for this run."
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "The API key's scopes do not permit this operation."
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "The request conflicts with the current state of the run."
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "Request body or parameters failed validation."
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "Rate limit or queue capacity reached. Retry after the indicated delay."
+          }
+        },
+        "security": [
+          {
+            "ApiKey": []
+          }
+        ],
+        "summary": "Retrieve a run",
+        "tags": [
+          "runs"
+        ]
+      }
+    },
+    "/v1/runs/{run_id}/cancel": {
+      "post": {
+        "description": "Call off a run. Queued work is refunded; running work is charged in full.\n\nCancelling twice is not an error, so a client that lost the first response can\nretry without having to know whether it landed.",
+        "operationId": "cancelRun",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "run_id",
+            "required": true,
+            "schema": {
+              "title": "Run Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RunView"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "402": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "The organization has insufficient credits for this run."
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "The API key's scopes do not permit this operation."
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "The request conflicts with the current state of the run."
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "Request body or parameters failed validation."
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "Rate limit or queue capacity reached. Retry after the indicated delay."
+          }
+        },
+        "security": [
+          {
+            "ApiKey": []
+          }
+        ],
+        "summary": "Cancel a run",
+        "tags": [
+          "runs"
+        ]
+      }
+    },
+    "/v1/runs/{run_id}/events": {
+      "get": {
+        "operationId": "listRunEvents",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "run_id",
+            "required": true,
+            "schema": {
+              "title": "Run Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "after",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "minimum": 0,
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "After"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 100,
+              "maximum": 500,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RunEventList"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "402": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "The organization has insufficient credits for this run."
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "The API key's scopes do not permit this operation."
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "The request conflicts with the current state of the run."
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "Request body or parameters failed validation."
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "Rate limit or queue capacity reached. Retry after the indicated delay."
+          }
+        },
+        "security": [
+          {
+            "ApiKey": []
+          }
+        ],
+        "summary": "List run events",
+        "tags": [
+          "runs"
+        ]
+      }
+    },
+    "/v1/runs/{run_id}/status": {
+      "get": {
+        "operationId": "getRunStatus",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "run_id",
+            "required": true,
+            "schema": {
+              "title": "Run Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RunStatusView"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "402": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "The organization has insufficient credits for this run."
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "The API key's scopes do not permit this operation."
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "The request conflicts with the current state of the run."
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "Request body or parameters failed validation."
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "Rate limit or queue capacity reached. Retry after the indicated delay."
+          }
+        },
+        "security": [
+          {
+            "ApiKey": []
+          }
+        ],
+        "summary": "Poll run status",
+        "tags": [
+          "runs"
         ]
       }
     },
@@ -1991,7 +4664,6 @@
             }
           },
           {
-            "description": "Optional retry key, up to 255 characters. Use the same key when retrying the same request within 24 hours. Use a new key if the request changes.",
             "in": "header",
             "name": "Idempotency-Key",
             "required": false,
@@ -2355,6 +5027,25 @@
               "description": "ISO-8601 UTC. Must be paired with `period_start`.",
               "title": "Period End"
             }
+          },
+          {
+            "description": "IANA timezone for daily credit buckets.",
+            "in": "query",
+            "name": "time_zone",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "maxLength": 64,
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "IANA timezone for daily credit buckets.",
+              "title": "Time Zone"
+            }
           }
         ],
         "responses": {
@@ -2505,16 +5196,6 @@
             },
             "description": "Rate limit exceeded."
           },
-          "503": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiErrorEnvelope"
-                }
-              }
-            },
-            "description": "No worker capacity; retry later."
-          },
           "504": {
             "content": {
               "application/json": {
@@ -2538,6 +5219,12 @@
       }
     }
   },
+  "servers": [
+    {
+      "description": "Production",
+      "url": "https://api.protoface.com"
+    }
+  ],
   "tags": [
     {
       "description": "Create, retrieve, list, and end realtime avatar sessions. Sessions stream audio in and video out; their lifecycle drives billing.",
@@ -2550,6 +5237,18 @@
     {
       "description": "Blocking talking-avatar video generation from uploaded audio.",
       "name": "videos"
+    },
+    {
+      "description": "Reusable multimodal inputs and outputs for asynchronous model runs.",
+      "name": "assets"
+    },
+    {
+      "description": "Provider-neutral model contracts and modality capabilities.",
+      "name": "models"
+    },
+    {
+      "description": "Async model execution with typed multimodal inputs and outputs.",
+      "name": "runs"
     },
     {
       "description": "Aggregate usage for billing reconciliation.",
