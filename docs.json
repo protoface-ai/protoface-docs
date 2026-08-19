@@ -113,7 +113,6 @@
               "quickstart",
               "guides/avatars",
               "guides/avatar-source-images",
-              "guides/videos",
               "guides/livekit-agents",
               "guides/pipecat",
               "guides/more-integrations",
@@ -158,8 +157,7 @@
               "GET /v1/avatars",
               "POST /v1/avatars",
               "GET /v1/avatars/{avatar_id}",
-              "DELETE /v1/avatars/{avatar_id}",
-              "POST /v1/videos"
+              "DELETE /v1/avatars/{avatar_id}"
             ]
           },
           {
@@ -200,6 +198,14 @@
     },
     {
       "source": "/guides/video-generation",
+      "destination": "/guides/model-inference"
+    },
+    {
+      "source": "/guides/videos",
+      "destination": "/guides/model-inference"
+    },
+    {
+      "source": "/api-reference/videos/generate-a-video",
       "destination": "/guides/model-inference"
     },
     {
