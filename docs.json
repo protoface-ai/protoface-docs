@@ -43,7 +43,7 @@
     ],
     "primary": {
       "type": "button",
-      "label": "Protoface Platform",
+      "label": "Dashboard",
       "href": "https://app.protoface.com"
     }
   },
@@ -69,7 +69,7 @@
           "href": "https://protoface.com"
         },
         {
-          "anchor": "Platform",
+          "anchor": "Dashboard",
           "icon": "layout-dashboard",
           "href": "https://app.protoface.com"
         },
@@ -96,34 +96,40 @@
         "icon": "book-open",
         "groups": [
           {
-            "group": "Get started",
-            "pages": ["index", "quickstart"]
+            "group": "Get Started",
+            "pages": ["index"]
           },
           {
-            "group": "Integrations",
+            "group": "Model Inference",
             "pages": [
-              "guides/livekit-agents",
-              "guides/pipecat",
-              "guides/more-integrations"
+              "guides/model-inference",
+              "guides/models",
+              "guides/runs"
             ]
           },
           {
-            "group": "Guides",
+            "group": "Realtime",
             "pages": [
+              "quickstart",
               "guides/avatars",
-              "guides/embeds",
+              "guides/avatar-source-images",
               "guides/videos",
+              "guides/livekit-agents",
+              "guides/pipecat",
+              "guides/more-integrations",
+              "guides/embeds"
+            ]
+          },
+          {
+            "group": "Account",
+            "pages": [
               "guides/usage",
-              "guides/avatar-source-images"
+              "reference/quotas"
             ]
           },
           {
             "group": "Reference",
-            "pages": [
-              "reference/errors",
-              "reference/quotas",
-              "reference/known-issues"
-            ]
+            "pages": ["reference/errors"]
           }
         ]
       },
@@ -141,6 +147,8 @@
               "GET /v1/avatars/{avatar_id}",
               "DELETE /v1/avatars/{avatar_id}",
               "GET /v1/billing/plans",
+              "GET /v1/billing/quota",
+              "POST /v1/pipecat/sessions",
               "GET /v1/sessions",
               "POST /v1/sessions",
               "GET /v1/sessions/{session_id}",
@@ -166,6 +174,10 @@
     {
       "source": "/concepts/architecture",
       "destination": "/"
+    },
+    {
+      "source": "/guides/video-generation",
+      "destination": "/guides/model-inference"
     },
     {
       "source": "/reference/limits",

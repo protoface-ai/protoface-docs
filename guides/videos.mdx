@@ -1,14 +1,15 @@
 ---
-title: "Videos"
-description: "Generate a talking-avatar video from audio."
+title: "Avatar Videos"
+description: "Generate a talking-avatar video from prerecorded audio."
 ---
-Use `POST /v1/videos` when you already have an audio file and want Protoface
-to return a finished talking-avatar video. The request waits until the video is
-ready, or until generation times out.
 
-For realtime agents and calls, use a streaming session instead. For batch jobs,
-voice notes, generated TTS clips, or other prerecorded audio, `/v1/videos` is
-the simpler path.
+`POST /v1/videos` turns prerecorded speech into a finished video using the same
+avatar model as Protoface Realtime. The request waits until the video is ready,
+or until generation times out.
+
+For higher-quality output or access to other video models, use
+[model inference](/guides/model-inference). For live agents and calls, use a
+realtime session.
 
 ## Audio input
 
@@ -61,10 +62,12 @@ The response includes MP4 and HLS URLs:
 Send an `Idempotency-Key` header when you may need to retry the same request.
 Use any unique string up to 255 characters.
 
-If the retry uses the same key within 24 hours, Protoface returns the first
-result instead of starting another video. Use the same key only when the request
-is unchanged. If you change the avatar, audio, audio settings, or
-`video_starting_frame`, use a new key.
+Within 24 hours, the same key resumes a video that is still processing or
+replays a completed result. If the earlier attempt timed out, failed, or was
+canceled, a retry may start a new generation.
+
+Use the same key only when the request is unchanged. If you change the avatar,
+audio, audio settings, or `video_starting_frame`, use a new key.
 
 ## Timeouts and retries
 
@@ -86,9 +89,12 @@ Only reuse an `Idempotency-Key` for the same avatar, audio, audio settings, and
 
 ## Next
 
-<Columns cols={2}>
+<Columns cols={3}>
   <Card title="Avatars" href="/guides/avatars" icon="user-round">
     Create or choose the avatar ID for video generation.
+  </Card>
+  <Card title="Model inference" href="/guides/model-inference" icon="boxes">
+    Run higher-quality video models through the inference API.
   </Card>
   <Card title="API reference" href="/api-reference/videos/generate-a-video" icon="square-terminal">
     See the full `POST /v1/videos` schema.

@@ -77,14 +77,19 @@ limits, such as concurrent sessions, use HTTP `429`.
 For API integrations, use the HTTP status and `error.code` for control flow.
 `error.message` is written for humans and may change.
 
-For `POST` endpoints that accept `Idempotency-Key`, reuse the key only when
-retrying the same request. If anything changes, use a new key.
+If a run submission returns `429` with `error.type: "rate_limit"`, follow
+`Retry-After` when it is present; otherwise back off before retrying. If it
+returns `error.type: "quota_exceeded"`, wait for an active run to finish.
+Monitor queued runs through the status endpoint instead of resubmitting them.
+
+For endpoints that accept `Idempotency-Key`, reuse the key only when retrying
+the same request. If anything changes, use a new key.
 
 ## Next
 
 <Columns cols={2}>
-  <Card title="Quotas" href="/reference/quotas" icon="gauge">
-    Session caps, usage rounding, and credit behavior.
+  <Card title="Limits and credits" href="/reference/quotas" icon="gauge">
+    Realtime limits, inference concurrency, and credit behavior.
   </Card>
   <Card title="API Reference" href="/api-reference" icon="square-terminal">
     Endpoint schema generated from OpenAPI.

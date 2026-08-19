@@ -1,10 +1,10 @@
 ---
 title: "Avatars"
-description: "Find the avatar ID to use in a Protoface session."
+description: "Create and use avatars in realtime sessions and avatar videos."
 ---
-Each Protoface session renders one avatar. Start with `av_stock_001` while you
-validate session creation and media routing, then switch to a custom avatar
-from the dashboard or API.
+
+Use an avatar ID with realtime sessions and `POST /v1/videos`. Start with
+`av_stock_001`, then switch to a custom avatar from the dashboard or API.
 
 ## Create an avatar
 
@@ -36,7 +36,7 @@ curl https://api.protoface.com/v1/avatars \
   -H "Authorization: Bearer $PROTOFACE_API_KEY"
 ```
 
-Use avatars with `status: "ready"` in sessions.
+Use avatars with `status: "ready"` in sessions or avatar video requests.
 
 ## Retrieve an avatar
 
@@ -79,8 +79,8 @@ curl -X POST https://api.protoface.com/v1/videos \
   }"
 ```
 
-See [Videos](/guides/videos) for request fields, audio format guidance, and
-retry behavior.
+See [Avatar Videos](/guides/videos) for request fields, audio format guidance,
+and retry behavior.
 
 ## Delete an avatar
 
@@ -95,13 +95,13 @@ Past session and usage records remain. Stock avatars cannot be deleted.
 ## Next
 
 <Columns cols={3}>
-  <Card title="Quickstart" href="/quickstart" icon="rocket">
+  <Card title="Realtime quickstart" href="/quickstart" icon="rocket">
     Run a LiveKit Agents app with a Protoface avatar.
   </Card>
   <Card title="Embeds" href="/guides/embeds" icon="panel-top">
     Add an avatar to a website or share a standalone conversation link.
   </Card>
-  <Card title="Videos" href="/guides/videos" icon="video">
-    Generate a video from audio.
+  <Card title="Avatar videos" href="/guides/videos" icon="video">
+    Generate an avatar video from prerecorded audio.
   </Card>
 </Columns>

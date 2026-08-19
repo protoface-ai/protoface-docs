@@ -1,0 +1,63 @@
+---
+title: "Models"
+description: "Discover the video models available through the Protoface API."
+---
+
+The model catalog tells you which video models are available and what each one
+accepts. Read it at runtime instead of keeping a fixed list in your application.
+
+## List models
+
+```sh
+curl https://api.protoface.com/v1/models \
+  -H "Authorization: Bearer $PROTOFACE_API_KEY"
+```
+
+Each model includes:
+
+- `id`: the value used in `POST /v1/run/{model_id}`.
+- `operations`: supported operations and their input fields.
+- `input_modalities` and `output_modalities`: accepted and returned media.
+- `pricing`: current credit pricing.
+- `request_schemas`: JSON Schema for the request, when available.
+- `revision` and `contract_revision`: versions of the model and its API contract.
+
+## Retrieve one model
+
+```sh
+curl https://api.protoface.com/v1/models/minimax-h3 \
+  -H "Authorization: Bearer $PROTOFACE_API_KEY"
+```
+
+Use `operations` and `request_schemas` to build the request. Models can differ
+in duration, quality, aspect ratio, and supported reference media.
+
+## Submit to a model
+
+Put the model ID in the URL:
+
+```sh
+curl -X POST https://api.protoface.com/v1/run/minimax-h3 \
+  -H "Authorization: Bearer $PROTOFACE_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "prompt": "A close shot of rain moving across a window at night.",
+    "duration_seconds": 8,
+    "quality": "720p",
+    "aspect_ratio": "16:9"
+  }'
+```
+
+If a model is unavailable or the request is invalid for that model, the API
+rejects the run before reserving credits.
+
+## Next
+
+<Columns cols={2}>
+  <Card title="Model inference" href="/guides/model-inference" icon="boxes">
+    Run your first model.
+  </Card>
+  <Card title="Runs" href="/guides/runs" icon="list-checks">
+    Monitor and retrieve inference results.
+  </Card>
+</Columns>

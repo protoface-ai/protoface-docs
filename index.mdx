@@ -1,70 +1,71 @@
 ---
-title: "Welcome to Protoface"
-description: "Add realtime, high-fidelity avatars to your AI app or agent with the Protoface API."
+title: "Protoface API"
+description: "Run model inference and add realtime avatars to your apps."
 ---
-
-<div
-  style={{
-    border: "1px solid rgba(12, 13, 14, 0.10)",
-    borderRadius: "12px",
-    marginBottom: "2rem",
-    marginTop: "0.5rem",
-    overflow: "hidden"
-  }}
->
-  <img
-    src="/images/home/welcome-avatar-grid.webp"
-    alt="Protoface avatars displayed as realtime video tiles"
-    style={{ display: "block", height: "auto", margin: 0, width: "100%" }}
-  />
-</div>
-
-## About Protoface
-
-Protoface adds high-quality realtime avatars to your AI app or agent, with a drop-in integration for your existing stack.
-
-It converts your agent's audio into realtime face video, so it works across languages with both speech-to-speech realtime models and STT/LLM/TTS pipelines.
-
-Protoface's next-generation models need only a single input image and spin up custom avatars in seconds. The majority of existing low-cost realtime avatar approaches rely on Gaussian-based models, which are much slower to generate custom avatars and lower in fidelity. Protoface solves this problem.
 
 ## Start here
 
-Protoface works with any stack through the REST API, and integrates with many
-voice AI platforms, SDKs, and frameworks. The [Quickstart](/quickstart) walks
-through a complete, runnable agent in a few minutes, and
-[More Integrations](/guides/more-integrations) lists every supported platform.
+Use the Protoface API to run model inference or add a live avatar to an agent.
+Both use the same API key and account.
 
 <Columns cols={2}>
-  <Card title="Quickstart" href="/quickstart" icon="rocket">
-    Run a sample Protoface avatar agent end to end.
+  <Card title="Run model inference" href="/guides/model-inference" icon="boxes">
+    Submit work to a model and retrieve the result when it is ready.
   </Card>
-  <Card title="LiveKit Agents" href="/guides/livekit-agents" icon="radio">
-    Configure the plugin and session lifecycle.
-  </Card>
-  <Card title="Pipecat" href="/guides/pipecat" icon="workflow">
-    Render Pipecat assistant audio as avatar video.
-  </Card>
-  <Card title="More Integrations" href="/guides/more-integrations" icon="blocks">
-    Quickstarts for Vapi, Agora, VideoSDK, and more.
+  <Card title="Add a realtime avatar" href="/quickstart" icon="radio">
+    Turn your agent's audio into live avatar video.
   </Card>
 </Columns>
 
-## Reference
+## Model inference
 
-Use these pages when you need endpoint details, error handling, limits, or
-usage data.
+All models use the same run lifecycle. The current catalog focuses on video
+generation.
+
+<Columns cols={2}>
+  <Card title="Models" href="/guides/models" icon="boxes">
+    See available models and the inputs they accept.
+  </Card>
+  <Card title="Runs" href="/guides/runs" icon="list-checks">
+    Submit, monitor, retrieve, and cancel inference runs.
+  </Card>
+</Columns>
+
+## Realtime avatars
+
+Protoface turns an agent's audio into live avatar video. Use the LiveKit or
+Pipecat integration, another supported platform, or the REST API.
+
+Because Protoface consumes agent audio, it works across languages and with both
+speech-to-speech and STT/LLM/TTS pipelines.
+
+<Columns cols={3}>
+  <Card title="LiveKit Agents" href="/guides/livekit-agents" icon="radio">
+    Add the Protoface plugin to a LiveKit agent.
+  </Card>
+  <Card title="Pipecat" href="/guides/pipecat" icon="workflow">
+    Add a Protoface video service to a Pipecat pipeline.
+  </Card>
+  <Card title="More integrations" href="/guides/more-integrations" icon="blocks">
+    Find SDKs, plugins, and starter repositories.
+  </Card>
+</Columns>
+
+## Shared resources
+
+Avatars, authentication, usage, and errors are shared across the API.
 
 <Columns cols={2}>
   <Card title="API Reference" href="/api-reference" icon="square-terminal">
-    Endpoint schemas generated from OpenAPI.
+    Browse endpoint schemas generated from OpenAPI.
   </Card>
-  <Card title="Errors" href="/reference/errors" icon="triangle-alert">
-    Stable error codes and retry behavior.
+  <Card title="Avatars" href="/guides/avatars" icon="user-round">
+    Create and manage avatars for realtime sessions and avatar videos.
   </Card>
-  <Card title="Quotas" href="/reference/quotas" icon="gauge">
-    Session caps, usage rounding, and credit behavior.
+  <Card title="Avatar videos" href="/guides/videos" icon="video">
+    Generate a talking-avatar video from prerecorded audio.
   </Card>
-  <Card title="Usage" href="/guides/usage" icon="chart-no-axes-column">
-    Read account-level session and billing totals.
+  <Card title="Errors and retries" href="/reference/errors" icon="triangle-alert">
+    Handle stable error codes, rate limits, and retries.
   </Card>
 </Columns>
