@@ -96,11 +96,11 @@
         "icon": "book-open",
         "groups": [
           {
-            "group": "Get started",
+            "group": "Get Started",
             "pages": ["index"]
           },
           {
-            "group": "Model inference",
+            "group": "Model Inference",
             "pages": [
               "guides/model-inference",
               "guides/models",
