@@ -916,6 +916,19 @@
             },
             "type": "array"
           },
+          "output_quality_descriptions": {
+            "anyOf": [
+              {
+                "additionalProperties": {
+                  "type": "string"
+                },
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
           "pricing": {
             "additionalProperties": true,
             "type": "object"
