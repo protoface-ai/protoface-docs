@@ -56,13 +56,28 @@ When you submit a run, Protoface reserves the `maximum_reserved_credits` shown
 in the estimate. It charges those credits when the run completes and releases
 them if the run fails.
 
-Each plan also limits concurrent inference runs that produce video. If the
-account is at its limit, the API returns `429 quota_exceeded` with
-`error.code: "video.concurrency_exceeded"`. Wait for an active run to finish
-before submitting another one.
-
 Canceling a queued run releases its reservation. Canceling after work starts
 charges the reserved amount.
+
+### Concurrency
+
+Concurrency is based on platform spend over the last 30 days: the price of
+your current plan plus any credits you buy. Refunded purchases don't count.
+
+Workers is how many generations can run at the same time. Requested is how
+many runs you can have queued or running. Extra runs wait until a worker is
+free. If you hit the requested limit, the API returns `429` with
+`error.code: "run.concurrency_exceeded"`.
+
+| Last 30-day spend | Workers | Requested |
+| --- | --- | --- |
+| Under $10 | 1 | 100 |
+| $10+ | 3 | 300 |
+| $100+ | 10 | 1,000 |
+| $500+ | 30 | 3,000 |
+| $1,000+ | 40 | 4,000 |
+
+Need higher limits? [Contact us](https://protoface.com/enterprise).
 
 ## Metadata keys
 
