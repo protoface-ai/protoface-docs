@@ -1,0 +1,21 @@
+quickstart.mdx
+  s_d638f47d1e7fef::t_f0845a06359f6e 6-21
+index.mdx
+  s_d638f47d1e7fef::t_c7f0d07277dcc6 6-21
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.0",
+  "base_commit_sha": "6d8e0e2e43b49d6b52de04f671e721db6f114262",
+  "prompts": {},
+  "sessions": {
+    "s_d638f47d1e7fef": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "911a6c9f-9cb7-43d7-b02e-eede178f6835",
+        "model": "grok-4.6"
+      },
+      "human_author": "Protoface Team <295041388+protoface-team@users.noreply.github.com>"
+    }
+  }
+}
