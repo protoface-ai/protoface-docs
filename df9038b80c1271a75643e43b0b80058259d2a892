@@ -1,0 +1,28 @@
+docs.json
+  s_6921d09ed30bfb::t_2599f33180dffd 155-163
+  s_7da55dee622069::t_10b1bc6c426e52 154
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.22",
+  "base_commit_sha": "df9038b80c1271a75643e43b0b80058259d2a892",
+  "prompts": {},
+  "sessions": {
+    "s_6921d09ed30bfb": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a01bfd-8350-7aa2-8092-af804f583cf1",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "protoface-team <295041388+protoface-team@users.noreply.github.com>"
+    },
+    "s_7da55dee622069": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a016d4-4632-7d33-8dd1-d2cf6c5499ad",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "protoface-team <295041388+protoface-team@users.noreply.github.com>"
+    }
+  }
+}
