@@ -1,0 +1,61 @@
+guides/more-integrations.mdx
+  s_d638f47d1e7fef::t_dd151dfa2457e0 2-3,6-7,9-10,16-29
+guides/avatar-source-images.mdx
+  s_d638f47d1e7fef::t_38cd18661026fd 2
+guides/authentication.mdx
+  s_d638f47d1e7fef::t_b4dc8ffae88a9f 1-46
+reference/quotas.mdx
+  s_d638f47d1e7fef::t_8a1c70f810c03b 2-3,6-15,19-21,37-38,40-41,43-45,50,53,58-59,61,66-67,69-71,81
+guides/assets.mdx
+  s_d638f47d1e7fef::t_cf320860c15ec2 1-67
+api-reference/index.mdx
+  s_d638f47d1e7fef::t_5f7b1016893562 9,12,18-23,27-35
+guides/runs.mdx
+  s_d638f47d1e7fef::t_923d1172bd6e26 3,6-8,12-18,22-23,25-26,38,40-46,48-49,51,53-55,57-66,68-70,72-73,75-93,98-99,103,108-110,114,119-121,125,130-132,134
+guides/pipecat.mdx
+  s_d638f47d1e7fef::t_c01c600acdc2eb 6-8,10-12,16,36,51-52,56,71,73-74,80-85,89-90,94-95
+guides/livekit-agents.mdx
+  s_d638f47d1e7fef::t_2a72a9e5465c6b 6-7,9-11,15,44,52-56,79,81-85,87,93
+guides/model-inference.mdx
+  s_d638f47d1e7fef::t_90ac6bb4767dd8 35
+  s_d638f47d1e7fef::t_a94cc84dd5131d 2-3,6,8-9,11,17-18,20-21,23,36-70,72-109,115,128-133,135,137,142-144,148,153,169,171-188,190-191
+  s_d638f47d1e7fef::t_92e52327113b2d 22
+  s_d638f47d1e7fef::t_7f5bba7b627997 71
+quickstart.mdx
+  s_d638f47d1e7fef::t_89e6d8d153a387 2,9-10,14-16,20,30,100,110,122-123
+guides/models.mdx
+  s_d638f47d1e7fef::t_08b364b205555e 3,6-12,16,21,23-32,36-37,41-42,44,46-47,58-60,62-63
+README.md
+  s_d638f47d1e7fef::t_70a552b07a7d4b 1,3,5-6,8,17,19,21-26,28-29,33-48
+guides/avatars.mdx
+  s_d638f47d1e7fef::t_e5c4ad0f62bffc 6-7,11-12,14,21-24,28,33,37,50,54,59-60
+reference/errors.mdx
+  s_d638f47d1e7fef::t_b96c2b6686687a 6-9,23-49,51,53,55-57,59-60,64-66
+guides/usage.mdx
+  s_d638f47d1e7fef::t_f8e494339a21a0 6-8,12,17,21
+  s_d638f47d1e7fef::t_0526dbf4c710a3 5
+docs.json
+  s_d638f47d1e7fef::t_d544e7bf62f028 99-105,108,110,112,130,132
+guides/libraries.mdx
+  s_d638f47d1e7fef::t_8ea78324ce83ef 1-24
+index.mdx
+  s_d638f47d1e7fef::t_0f72f27d8f0d09 3,6-91
+guides/embeds.mdx
+  s_d638f47d1e7fef::t_4b457fb6356890 3,6-7,9,11,13-15,17,19-20,22-24,26-27,29-30,32,34-35,37-39,41,47-49,51,53-54,56,58,65-67,69-70,79,81-83,102,104,106-114,116-118,120,122-125,127-128,130,132-133,135-136,138-139,141,143-149,153-158,160
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.0",
+  "base_commit_sha": "6ee9e685b40c657504177bcf2daff6f691d030fe",
+  "prompts": {},
+  "sessions": {
+    "s_d638f47d1e7fef": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "911a6c9f-9cb7-43d7-b02e-eede178f6835",
+        "model": "grok-4.6"
+      },
+      "human_author": "Protoface Team <295041388+protoface-team@users.noreply.github.com>"
+    }
+  }
+}
