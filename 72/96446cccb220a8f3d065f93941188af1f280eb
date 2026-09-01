@@ -1,0 +1,29 @@
+guides/usage.mdx
+  s_d638f47d1e7fef::t_9073b81d24b1f1 3,6-8,17-18,28,43-44
+api-reference/index.mdx
+  s_d638f47d1e7fef::t_54fbc293d45b9d 3,6-8,10,16-18,22-29
+guides/livekit-agents.mdx
+  s_d638f47d1e7fef::t_77da2c44e5e9ef 3
+index.mdx
+  s_d638f47d1e7fef::t_8d6748d917f93f 3
+reference/errors.mdx
+  s_d638f47d1e7fef::t_67fc4fb2c2b18d 3,10,32
+reference/quotas.mdx
+  s_d638f47d1e7fef::t_f77e20e83a13a4 10,12-14,28-31,33-35,70-72,78-80
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.0",
+  "base_commit_sha": "7296446cccb220a8f3d065f93941188af1f280eb",
+  "prompts": {},
+  "sessions": {
+    "s_d638f47d1e7fef": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "911a6c9f-9cb7-43d7-b02e-eede178f6835",
+        "model": "grok-4.6"
+      },
+      "human_author": "Protoface Team <295041388+protoface-team@users.noreply.github.com>"
+    }
+  }
+}
