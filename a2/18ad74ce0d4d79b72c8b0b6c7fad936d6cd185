@@ -1,0 +1,19 @@
+reference/quotas.mdx
+  s_d638f47d1e7fef::t_a22c3c6ed17196 12-14,19-20,22-24,28-32,42-44,49-51,60-61,70-72,74-76,81-82,89-91
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.0",
+  "base_commit_sha": "a218ad74ce0d4d79b72c8b0b6c7fad936d6cd185",
+  "prompts": {},
+  "sessions": {
+    "s_d638f47d1e7fef": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "911a6c9f-9cb7-43d7-b02e-eede178f6835",
+        "model": "grok-4.6"
+      },
+      "human_author": "Protoface Team <295041388+protoface-team@users.noreply.github.com>"
+    }
+  }
+}
