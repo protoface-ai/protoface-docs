@@ -1,0 +1,29 @@
+guides/embeds.mdx
+  s_d638f47d1e7fef::t_e632ffa1e170bf 114-116
+guides/pipecat.mdx
+  s_d638f47d1e7fef::t_629de00f7d3e74 92-94
+api-reference/index.mdx
+  s_d638f47d1e7fef::t_d59712026da9bd 6-8,16-19,23-25,28-32
+guides/usage.mdx
+  s_d638f47d1e7fef::t_ead9994602cf37 6-8,17-18,43-44
+reference/errors.mdx
+  s_d638f47d1e7fef::t_706dd17eecf0dd 78-80
+reference/quotas.mdx
+  s_d638f47d1e7fef::t_cb3fb7506d4863 42-44
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.0",
+  "base_commit_sha": "656a412b757b829a488ef12799eb320b076e69d2",
+  "prompts": {},
+  "sessions": {
+    "s_d638f47d1e7fef": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "911a6c9f-9cb7-43d7-b02e-eede178f6835",
+        "model": "grok-4.6"
+      },
+      "human_author": "Protoface Team <295041388+protoface-team@users.noreply.github.com>"
+    }
+  }
+}
