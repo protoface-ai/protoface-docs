@@ -1,0 +1,249 @@
+guides/assets.mdx
+  s_d638f47d1e7fef::t_ba32ed892efcd1 9-10
+  s_d638f47d1e7fef::t_3bfc73ceed33b4 6-8,39-43
+  s_d638f47d1e7fef::t_b4dce2eec915db 59
+  s_d638f47d1e7fef::t_6f4bd12fb33675 3
+  s_d638f47d1e7fef::t_4861394d360a10 44-56,83
+  s_d638f47d1e7fef::t_d94798f9305ade 63
+  s_d638f47d1e7fef::t_cf320860c15ec2 15-17,26,64-67
+  s_d638f47d1e7fef::t_3dfb4376565048 11,58,84-85
+quickstart.mdx
+  s_d638f47d1e7fef::t_4f64e93bbf5c2f 29-30,120,128-129,140
+  s_d638f47d1e7fef::t_1c50ff518bff0a 23-25
+  s_d638f47d1e7fef::t_04acb17e5e684c 3
+  s_d638f47d1e7fef::t_15b165c82d43a0 4
+  s_d638f47d1e7fef::t_1cab3daacccb96 44
+  s_d638f47d1e7fef::t_f6dc98f4a729e5 127
+  s_d638f47d1e7fef::t_62ae85ae720bd0 121,141
+reference/quotas.mdx
+  s_d638f47d1e7fef::t_e0561a3d20758d 20
+  s_d638f47d1e7fef::t_38858039648ea5 33-34
+  s_d638f47d1e7fef::t_7a17972e10a1ee 7
+  s_d638f47d1e7fef::t_a8cd654cb07846 16-17,21-32,35-43
+  s_d638f47d1e7fef::t_84660d0b36e29a 15
+  s_d638f47d1e7fef::t_37793c6bc30e45 8,44,51,60-61
+  s_d638f47d1e7fef::t_a3c19062f50ab2 6
+  s_d638f47d1e7fef::t_7bbb3f2daea947 49-50
+  s_d638f47d1e7fef::t_86a15abfa10ee4 45
+  s_d638f47d1e7fef::t_3f541b85915808 18-19
+  s_d638f47d1e7fef::t_2e8289419d703c 11-14
+  s_d638f47d1e7fef::t_ef508606cd426d 3
+index.mdx
+  s_d638f47d1e7fef::t_2b6227d06e4c2e 17
+  s_d638f47d1e7fef::t_78c98a5f10f35e 30-31
+  s_d638f47d1e7fef::t_96c7fb33ab6893 22
+  s_d638f47d1e7fef::t_52e30362074d1b 23,25-26
+  s_d638f47d1e7fef::t_bb6972f25472c3 28
+  s_d638f47d1e7fef::t_4a2b22c249311d 45-47
+  s_d638f47d1e7fef::t_6ce36a31e0a0e2 52-57
+  s_d638f47d1e7fef::t_01527929879ce8 67-70
+  s_d638f47d1e7fef::t_8814f98fd9cfb4 61-63
+  s_d638f47d1e7fef::t_a48f8a4f7684cb 3
+  s_d638f47d1e7fef::t_ba2c21c2cc9c47 65
+guides/avatars.mdx
+  s_d638f47d1e7fef::t_f3e680a8926d69 3
+  s_d638f47d1e7fef::t_e5c4ad0f62bffc 61
+  s_d638f47d1e7fef::t_6bb3116dd8d7ef 4
+  s_d638f47d1e7fef::t_1dfeddefe33112 7-9,11-13
+  s_d638f47d1e7fef::t_948cd82d1f3511 35,44-45,48-49,56-58
+  s_d638f47d1e7fef::t_249039a1766570 14,16,25-26,59-60,62-65
+guides/models.mdx
+  s_d638f47d1e7fef::t_b6da89d0930b2b 24
+  s_d638f47d1e7fef::t_3592bb7a3c6f2e 6-9,18,23,27-30,32-34,37,41-44,52,61-62,64,66-119,122-133
+  s_d638f47d1e7fef::t_08b364b205555e 25
+  s_d638f47d1e7fef::t_09f7527bb869b4 31
+  s_d638f47d1e7fef::t_8d2353d64c975c 36,39,45
+  s_d638f47d1e7fef::t_888dcfbf3a659f 51
+  s_d638f47d1e7fef::t_2705bd18e01308 35,38,40,46-50
+  s_d638f47d1e7fef::t_b379b4bd05e5f0 3
+  s_d638f47d1e7fef::t_d4a23284bff863 134,136-137
+guides/embeds.mdx
+  s_d638f47d1e7fef::t_ae81f2f3614f9b 138-143
+  s_d638f47d1e7fef::t_c49da61e90c251 3
+  s_d638f47d1e7fef::t_6e63ab963a3ad9 8
+  s_d638f47d1e7fef::t_322ef668a5a8e5 14-16,49
+  s_d638f47d1e7fef::t_d892fd2307c325 6-7,10,20-21,27-29,34,36-39,53-54,65-67,69-70,81-82,115,122,124,144-145
+  s_d638f47d1e7fef::t_6b46577103fce0 33
+  s_d638f47d1e7fef::t_4b457fb6356890 117,121,134
+  s_d638f47d1e7fef::t_a9ef8a88d16a2c 116,126,133,146-147
+reference/errors.mdx
+  s_d638f47d1e7fef::t_8cb5f5784662b0 16-18
+  s_d638f47d1e7fef::t_25734e66e2f943 49-51
+  s_d638f47d1e7fef::t_6dd92de7465f79 48
+  s_d638f47d1e7fef::t_b7e9c06dbd520b 68
+  s_d638f47d1e7fef::t_938efea2dd8c22 3
+  s_d638f47d1e7fef::t_263bfbd896cd39 56
+  s_d638f47d1e7fef::t_bceafc055ccee0 59
+  s_d638f47d1e7fef::t_3e9ca0c697ca28 77
+  s_d638f47d1e7fef::t_8cfc756d902555 53-54,57-58,60-63,65-67,80
+  s_d638f47d1e7fef::t_0e89a7b353a4cb 6-7
+  s_d638f47d1e7fef::t_5046e3f01f85ce 55
+  s_d638f47d1e7fef::t_c240893a05373e 69
+  s_d638f47d1e7fef::t_c1155072f5ecf9 79
+  s_d638f47d1e7fef::t_d7fe4bb21b8fe7 83-86
+  s_d638f47d1e7fef::t_0d2c613a29e46d 8,78
+  s_d638f47d1e7fef::t_cac71eaa821397 70-71
+  s_d638f47d1e7fef::t_d723b78f53ab4d 81
+  s_d638f47d1e7fef::t_99f95fb97e2cdc 64
+  s_d638f47d1e7fef::t_8c818fe2809735 42
+guides/pipecat.mdx
+  s_d638f47d1e7fef::t_b102a867500f9f 3
+  s_d638f47d1e7fef::t_c067812cf8ba1c 10
+  s_d638f47d1e7fef::t_c5fb08fc4a7d6f 94
+  s_d638f47d1e7fef::t_8669a2a2c365cd 6-8
+  s_d638f47d1e7fef::t_3a98a2aa8003a0 55
+  s_d638f47d1e7fef::t_236a2cd7b7ce0e 89-93
+  s_d638f47d1e7fef::t_8b8d200c57bbc0 51
+  s_d638f47d1e7fef::t_c01c600acdc2eb 98
+  s_d638f47d1e7fef::t_d3a33fa1725f17 73
+  s_d638f47d1e7fef::t_e4d84b3a0534f9 19-20,24-26
+  s_d638f47d1e7fef::t_85adb0de842ca8 56,71,74
+guides/avatar-source-images.mdx
+  s_d638f47d1e7fef::t_d49fb9e538e596 3
+  s_d638f47d1e7fef::t_a4741c1e442e04 151,153-154,156-158
+  s_d638f47d1e7fef::t_f4381620e7aead 40-42,46,55,146-147,159-161,165-167,169,171,173-175
+  s_d638f47d1e7fef::t_c82938827349f6 6-15,18-27,30,32-39,43-45,47-54,56-68,71-76,79-84,87-92,96,98-99,102-107,110-115,118-123,126-131,134-139,142-145
+  s_d638f47d1e7fef::t_132c53afecdb73 170
+guides/image-to-video.mdx
+  s_d638f47d1e7fef::t_0e11f40ed05110 1,4-5,10-23
+  s_d638f47d1e7fef::t_7129c2dba51cc2 28-32,34,36-38
+  s_d638f47d1e7fef::t_6ee4a3bd80ebbc 3
+  s_d638f47d1e7fef::t_bafa081c1034d8 35
+  s_d638f47d1e7fef::t_fe027af4f3f351 8
+  s_d638f47d1e7fef::t_858173be8da0a9 2
+  s_d638f47d1e7fef::t_571855afdbce5a 24-26
+  s_d638f47d1e7fef::t_f27ef115ed1d3f 6-7,9
+  s_d638f47d1e7fef::t_909a09cf8fc906 27,33
+guides/authentication.mdx
+  s_d638f47d1e7fef::t_9ff8958f244627 15-16,42-44
+  s_d638f47d1e7fef::t_9b53c683431543 24
+  s_d638f47d1e7fef::t_3b358c3e57d4d4 7-9
+  s_d638f47d1e7fef::t_8ad2fa0acdb7cf 3
+  s_d638f47d1e7fef::t_5e26b84048bd59 6,33,35,50
+  s_d638f47d1e7fef::t_68b3f766b5e1d5 34
+  s_d638f47d1e7fef::t_ee68efc8e95ef3 48-49
+  s_d638f47d1e7fef::t_40262a728839ac 22-23,25-29
+  s_d638f47d1e7fef::t_8fff531c1c14e9 46
+  s_d638f47d1e7fef::t_44ad089e562300 39
+guides/usage.mdx
+  s_d638f47d1e7fef::t_98c65c8bccc57e 6
+  s_d638f47d1e7fef::t_5b93cdc32c54f5 9-11,20,50
+  s_d638f47d1e7fef::t_dac1f9539e7409 23-27,47-48
+  s_d638f47d1e7fef::t_5b690ce38bfe44 31,33-36
+  s_d638f47d1e7fef::t_af90e5bc5ea645 28-30,32,37,49
+  s_d638f47d1e7fef::t_75eab5c0c822ab 7-8
+  s_d638f47d1e7fef::t_dcbe71549ee5ad 3
+  s_d638f47d1e7fef::t_f36e3e07b6d8a8 21-22,45-46,51
+docs.json
+  s_d638f47d1e7fef::t_586b5fc5af595a 104-108,111-112
+  s_d638f47d1e7fef::t_21d047f8d5ed79 237-239
+  s_d638f47d1e7fef::t_8494925ef441fe 103
+  s_d638f47d1e7fef::t_7a7887d2763162 124,133
+  s_d638f47d1e7fef::t_934c4d6420e5c5 220,236,258-266
+  s_d638f47d1e7fef::t_d31aaf934cc019 126
+  s_d638f47d1e7fef::t_9af8a046788518 5
+  s_d638f47d1e7fef::t_3919c6097312e8 122-123,125,127-132,134-139
+  s_d638f47d1e7fef::t_b0d100aef17d17 152
+  s_d638f47d1e7fef::t_0312ff65841fe6 221-223
+  s_d638f47d1e7fef::t_59c47dff66b84d 109-110
+  s_d638f47d1e7fef::t_01754afe17b068 146-151
+  s_d638f47d1e7fef::t_7e38bf3953b1a2 98-99
+guides/model-inference.mdx
+  s_d638f47d1e7fef::t_fbff4994e3e833 70-71,113-115
+  s_d638f47d1e7fef::t_f7e9976f7280e9 57,72,95,97,116,122,146,180
+  s_d638f47d1e7fef::t_cfdc6a17f99156 96
+  s_d638f47d1e7fef::t_0e4bcb03e0faaa 94
+  s_d638f47d1e7fef::t_4dcbdfca7c98e4 155
+  s_d638f47d1e7fef::t_599296259e6dab 160
+  s_d638f47d1e7fef::t_31af6f624e09a1 135-145
+  s_d638f47d1e7fef::t_cfdf83ba841542 3
+  s_d638f47d1e7fef::t_bf97e14ee1a4d2 207,213
+  s_d638f47d1e7fef::t_f88047e864d741 7
+  s_d638f47d1e7fef::t_a94cc84dd5131d 47,58,73,83,98,117,156,214
+  s_d638f47d1e7fef::t_1b35774b266579 19
+  s_d638f47d1e7fef::t_beaf12882382fd 196-197,199-206
+  s_d638f47d1e7fef::t_55c13332b7118e 212
+  s_d638f47d1e7fef::t_71e54a6f27cb86 179
+  s_d638f47d1e7fef::t_38e7375f11339c 215,219
+  s_d638f47d1e7fef::t_c8f90ad4882e22 168-176,208
+  s_d638f47d1e7fef::t_a8f9e5e4369f90 4
+  s_d638f47d1e7fef::t_c86113f41a0ff3 8-9,15,17-18,154,217,220-221
+  s_d638f47d1e7fef::t_6a80a13a7c7bf8 20,123,130,147,158,161,177,181,222-223
+README.md
+  s_d638f47d1e7fef::t_be835f42806522 28-29
+  s_d638f47d1e7fef::t_2ed2ae0b8a221d 26
+  s_d638f47d1e7fef::t_a2c4246ff01133 5-6
+  s_d638f47d1e7fef::t_0eb34d8333893c 19-24
+guides/more-integrations.mdx
+  s_d638f47d1e7fef::t_3c33b05e1655fc 19-20
+  s_d638f47d1e7fef::t_4654708fdb5b41 7
+  s_d638f47d1e7fef::t_1e6e050c05d391 6
+  s_d638f47d1e7fef::t_5260d6ec9533e4 23
+  s_d638f47d1e7fef::t_db01245bb20dd0 3
+  s_d638f47d1e7fef::t_e897fe477cd0db 22
+guides/generate-video.mdx
+  s_d638f47d1e7fef::t_384da4e31cabb0 42-46
+  s_d638f47d1e7fef::t_eee90498c5e237 2,9-20,25-27,40
+  s_d638f47d1e7fef::t_5c0640e55b9c42 41
+  s_d638f47d1e7fef::t_5bd0e337ed6fe6 3
+  s_d638f47d1e7fef::t_54c3adabadd4b9 6-7
+  s_d638f47d1e7fef::t_21ed485398c928 22-23
+  s_d638f47d1e7fef::t_a5bdd58b94ddce 28,30-39
+api-reference/index.mdx
+  s_d638f47d1e7fef::t_9ec6be2d8df3fd 9
+  s_d638f47d1e7fef::t_664da012304dc0 6-8,11-12,18-20,24-29
+  s_d638f47d1e7fef::t_fd64be94f47443 3
+  s_d638f47d1e7fef::t_055515c6b1cc8a 30-32
+guides/runs.mdx
+  s_d638f47d1e7fef::t_51520cd1f14454 119-120
+  s_d638f47d1e7fef::t_2eff1890b4f9c5 138-168,170-190
+  s_d638f47d1e7fef::t_ece13e510eaa71 82
+  s_d638f47d1e7fef::t_192783e27846d5 118,211
+  s_d638f47d1e7fef::t_27bb1ca566fe87 20
+  s_d638f47d1e7fef::t_b109a226f72a69 3
+  s_d638f47d1e7fef::t_873dee49d0f2fe 6-8,22-23,51-52,59-60,69,71-72,75-77,81,83-84,88-90,92-93,97-107,109-113,116,121-122,131-132,169,191-192,194,198-199,205-207,212-213,219,225-228
+  s_d638f47d1e7fef::t_1b291a02742cf9 38-50,53-58,61-68
+  s_d638f47d1e7fef::t_e524e905401d4d 17
+  s_d638f47d1e7fef::t_5411bffba7c34c 114
+  s_d638f47d1e7fef::t_24403025a9f667 73,193
+guides/livekit-agents.mdx
+  s_d638f47d1e7fef::t_bf65999f3d4964 21
+  s_d638f47d1e7fef::t_7844877ec0381d 10
+  s_d638f47d1e7fef::t_e81d54d00d3ceb 3
+  s_d638f47d1e7fef::t_f6aa6153e22e89 37-38
+  s_d638f47d1e7fef::t_75c482e404e9f1 6
+  s_d638f47d1e7fef::t_bdfff029a30a1b 42-44
+  s_d638f47d1e7fef::t_3d5e13cce457c8 48
+  s_d638f47d1e7fef::t_538b8f9190e0ae 56
+  s_d638f47d1e7fef::t_9e34bfec3bc219 91-93
+  s_d638f47d1e7fef::t_a1caa12d0c933f 95-103
+  s_d638f47d1e7fef::t_b405e33cd9a810 87-90,104,106-109
+  s_d638f47d1e7fef::t_56e13fb8c33bc3 7-8
+  s_d638f47d1e7fef::t_662cb895d0c8cc 22
+  s_d638f47d1e7fef::t_5f927cf6e48385 58,110
+guides/generate-image.mdx
+  s_d638f47d1e7fef::t_4ab2ca9a1b5793 1-2,4-5,11-21,24-26,30-35
+  s_d638f47d1e7fef::t_95345cc499126f 22-23
+  s_d638f47d1e7fef::t_f84152b1c7008a 36-46
+  s_d638f47d1e7fef::t_d9b31c133930cf 3
+  s_d638f47d1e7fef::t_189788301eb874 7
+  s_d638f47d1e7fef::t_062e038a95b1a6 27-29
+  s_d638f47d1e7fef::t_339a0b1861e331 8-10
+  s_d638f47d1e7fef::t_177062e6f8567c 6
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.0",
+  "base_commit_sha": "11e825b525d9bdc9e283895e32129d0bfdcf3a56",
+  "prompts": {},
+  "sessions": {
+    "s_d638f47d1e7fef": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "911a6c9f-9cb7-43d7-b02e-eede178f6835",
+        "model": "grok-4.6"
+      },
+      "human_author": "Protoface Team <295041388+protoface-team@users.noreply.github.com>"
+    }
+  }
+}
