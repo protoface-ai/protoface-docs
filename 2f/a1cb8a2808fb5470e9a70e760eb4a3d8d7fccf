@@ -1,0 +1,21 @@
+reference/errors.mdx
+  s_d638f47d1e7fef::t_178f23758cb3c3 85-87
+reference/quotas.mdx
+  s_d638f47d1e7fef::t_3d9aeb405f393d 69,77-79
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.0",
+  "base_commit_sha": "2fa1cb8a2808fb5470e9a70e760eb4a3d8d7fccf",
+  "prompts": {},
+  "sessions": {
+    "s_d638f47d1e7fef": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "911a6c9f-9cb7-43d7-b02e-eede178f6835",
+        "model": "grok-4.6"
+      },
+      "human_author": "Protoface Team <295041388+protoface-team@users.noreply.github.com>"
+    }
+  }
+}
