@@ -1,0 +1,29 @@
+guides/models.mdx
+  s_d638f47d1e7fef::t_e914b8417b6b8b 132-134
+guides/image-to-video.mdx
+  s_d638f47d1e7fef::t_532ce432b8f107 8
+guides/embeds.mdx
+  s_d638f47d1e7fef::t_a753f79bcea1dd 3
+guides/model-inference.mdx
+  s_d638f47d1e7fef::t_51e0cf3256b5c5 143-145
+guides/runs.mdx
+  s_d638f47d1e7fef::t_960bcecaff7dc7 101,228-229
+reference/errors.mdx
+  s_d638f47d1e7fef::t_264562804b60f4 77-78,87
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.0",
+  "base_commit_sha": "611430c06dc400d0219d35998bf420b8a852bcce",
+  "prompts": {},
+  "sessions": {
+    "s_d638f47d1e7fef": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "911a6c9f-9cb7-43d7-b02e-eede178f6835",
+        "model": "grok-4.6"
+      },
+      "human_author": "Protoface Team <295041388+protoface-team@users.noreply.github.com>"
+    }
+  }
+}
