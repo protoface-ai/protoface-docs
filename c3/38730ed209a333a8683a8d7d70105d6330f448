@@ -1,0 +1,33 @@
+guides/assets.mdx
+  s_d638f47d1e7fef::t_a6231d3fbbf1d9 6-8,11,17-18,40,61
+guides/authentication.mdx
+  s_d638f47d1e7fef::t_91afbbca4ca0dc 42
+guides/generate-video.mdx
+  s_d638f47d1e7fef::t_789dd6940bd225 7,22
+guides/image-to-video.mdx
+  s_d638f47d1e7fef::t_1eb46e2bf041e5 6-8,25-26
+guides/model-inference.mdx
+  s_d638f47d1e7fef::t_cce43b0f272ba2 8-9,19,135,142-143,168-169,201-202
+guides/models.mdx
+  s_d638f47d1e7fef::t_b3079ecea0fb79 31,38-39,52-53,90-92,102,132-134,136-137
+guides/runs.mdx
+  s_d638f47d1e7fef::t_438865fa2c2e2a 6-8,76-78,227-229
+index.mdx
+  s_d638f47d1e7fef::t_ed0a9702198a60 67-69
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.0",
+  "base_commit_sha": "c338730ed209a333a8683a8d7d70105d6330f448",
+  "prompts": {},
+  "sessions": {
+    "s_d638f47d1e7fef": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "911a6c9f-9cb7-43d7-b02e-eede178f6835",
+        "model": "grok-4.6"
+      },
+      "human_author": "Protoface Team <295041388+protoface-team@users.noreply.github.com>"
+    }
+  }
+}
