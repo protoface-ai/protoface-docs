@@ -1,0 +1,21 @@
+guides/avatars.mdx
+  s_d638f47d1e7fef::t_6b9af7fcac4deb 7-9
+guides/more-integrations.mdx
+  s_d638f47d1e7fef::t_4316105922313f 19-20,24-30
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.0",
+  "base_commit_sha": "e18c618589d144aa2500dbce3c8996e28290f044",
+  "prompts": {},
+  "sessions": {
+    "s_d638f47d1e7fef": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "911a6c9f-9cb7-43d7-b02e-eede178f6835",
+        "model": "grok-4.6"
+      },
+      "human_author": "Protoface Team <295041388+protoface-team@users.noreply.github.com>"
+    }
+  }
+}
