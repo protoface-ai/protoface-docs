@@ -1,0 +1,21 @@
+guides/model-inference.mdx
+  s_d638f47d1e7fef::t_7ced961bc27bf7 42-57,61-77,112-113,165-173
+  s_d638f47d1e7fef::t_38bf066fb154ee 174-176
+  s_d638f47d1e7fef::t_ac05ed8c6b184b 177-283
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.0",
+  "base_commit_sha": "3e2b2251200ebc167b0003d5f2c6bd8f8246bd22",
+  "prompts": {},
+  "sessions": {
+    "s_d638f47d1e7fef": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "911a6c9f-9cb7-43d7-b02e-eede178f6835",
+        "model": "grok-4.6"
+      },
+      "human_author": "Protoface Team <295041388+protoface-team@users.noreply.github.com>"
+    }
+  }
+}
