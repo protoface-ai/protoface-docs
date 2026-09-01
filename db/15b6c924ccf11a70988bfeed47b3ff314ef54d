@@ -1,0 +1,20 @@
+reference/quotas.mdx
+  s_d638f47d1e7fef::t_672aea2dc26034 53
+  s_d638f47d1e7fef::t_9a92dc5312dbdc 73
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.0",
+  "base_commit_sha": "db15b6c924ccf11a70988bfeed47b3ff314ef54d",
+  "prompts": {},
+  "sessions": {
+    "s_d638f47d1e7fef": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "911a6c9f-9cb7-43d7-b02e-eede178f6835",
+        "model": "grok-4.6"
+      },
+      "human_author": "Protoface Team <295041388+protoface-team@users.noreply.github.com>"
+    }
+  }
+}
