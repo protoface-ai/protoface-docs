@@ -1,0 +1,24 @@
+guides/runs.mdx
+  s_d638f47d1e7fef::t_5d8de1ee00f4d9 61
+  s_d638f47d1e7fef::t_cbd2f054c1e3c4 172
+  s_d638f47d1e7fef::t_7554c81971dcc6 52-53
+guides/model-inference.mdx
+  s_d638f47d1e7fef::t_28c6c018d4ff0a 163
+  s_d638f47d1e7fef::t_35ddb18d2f4d42 96-97
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.0",
+  "base_commit_sha": "3b6ca3b50f90dfd431034054a4681822d0e3ab19",
+  "prompts": {},
+  "sessions": {
+    "s_d638f47d1e7fef": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "911a6c9f-9cb7-43d7-b02e-eede178f6835",
+        "model": "grok-4.6"
+      },
+      "human_author": "Protoface Team <295041388+protoface-team@users.noreply.github.com>"
+    }
+  }
+}
