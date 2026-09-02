@@ -874,10 +874,22 @@
       },
       "ModelView": {
         "properties": {
+          "aliases": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
           "available": {
             "type": "boolean"
           },
           "contract_revision": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "display_name": {
             "type": "string"
           },
           "execution_modes": {
@@ -891,6 +903,9 @@
               "type": "string"
             },
             "type": "array"
+          },
+          "family": {
+            "type": "string"
           },
           "id": {
             "type": "string"
@@ -916,6 +931,22 @@
             },
             "type": "array"
           },
+          "output_quality_descriptions": {
+            "anyOf": [
+              {
+                "additionalProperties": {
+                  "type": "string"
+                },
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "owner": {
+            "type": "string"
+          },
           "pricing": {
             "additionalProperties": true,
             "type": "object"
@@ -936,10 +967,20 @@
           },
           "revision": {
             "type": "string"
+          },
+          "tags": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
           }
         },
         "required": [
           "id",
+          "owner",
+          "display_name",
+          "description",
+          "family",
           "revision",
           "contract_revision",
           "operations",
@@ -3922,6 +3963,16 @@
               }
             },
             "description": "Rate limit or queue capacity reached. Retry after the indicated delay."
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "Exact pricing or the selected model route is temporarily unavailable."
           }
         },
         "security": [
