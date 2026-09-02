@@ -2,7 +2,10 @@
 title: "Errors"
 description: "Error envelope, stable codes, and retry behavior."
 ---
-Every non-2xx response includes one `error` object.
+
+A failed request returns a single `error` object. HTTP status and
+`error.code` are stable. `error.message` is human-readable and may be
+reworded at any time.
 
 ## The error envelope
 
@@ -10,55 +13,94 @@ Every non-2xx response includes one `error` object.
 {
   "error": {
     "type": "invalid_request",
-    "code": "transport.type.missing",
-    "message": "Field `transport.type` is required.",
-    "param": "transport.type",
+    "code": "run.operation_required",
+    "message": "Model 'openai/gpt-image-2' exposes several operations; set 'operation' to one of: image.edit, image.generate.",
+    "param": "operation",
     "request_id": "req_01HYZ..."
   }
 }
 ```
 
-| Field        | Type           | Notes                                                                 |
-| ------------ | -------------- | -------------------------------------------------------------------- |
-| `type`       | string         | Broad, stable failure category. Not always one-to-one with HTTP status. See the table below. |
-| `code`       | string         | Stable, machine-readable subcode in `lower_snake_case` / dotted form. |
-| `message`    | string         | Human-readable. May change, so don't parse it.                        |
-| `param`      | string \| null | The offending request field (dot-path), when applicable.             |
-| `request_id` | string         | `req_...`; include this when contacting support. Also echoed in `X-Request-Id`. |
+| Field | Type | Notes |
+| --- | --- | --- |
+| `type` | string | Stable category. Not always 1:1 with HTTP status. |
+| `code` | string | Stable subcode (`lower_snake_case` or dotted). |
+| `message` | string | Human-readable. May change. |
+| `param` | string or null | Offending field, as a dot-path. |
+| `request_id` | string | `req_...`. Also on `X-Request-Id`. Include it when contacting support. |
 
 ## Error types
 
-`error.type` is one of a fixed set:
+| HTTP | `error.type` | When |
+| --- | --- | --- |
+| 400 | `invalid_request` | Malformed JSON, missing or invalid field |
+| 401 | `authentication` | Missing, bad, or revoked API key |
+| 402 | `quota_exceeded` | Not enough credits, or billing is inactive for a credit-gated action |
+| 403 | `permission` | Authenticated, but this key cannot access the resource |
+| 404 | `not_found` | Resource does not exist or is not visible to this key |
+| 409 | `conflict` | Same `Idempotency-Key` with a changed body, or a state conflict |
+| 422 | `unprocessable` | Valid shape, invalid semantics |
+| 429 | `rate_limit` | Per-key rate limit |
+| 429 | `quota_exceeded` | Per-org concurrency or usage quota |
+| 500 | `internal` | Unexpected server error |
+| 503 | `service_unavailable` | No capacity, or maintenance |
 
-| HTTP | `error.type`          | When it happens                                      |
-| ---- | --------------------- | --------------------------------------------------- |
-| 400  | `invalid_request`     | Malformed JSON, missing or invalid field.           |
-| 401  | `authentication`      | Missing, bad, or revoked API key.                   |
-| 402  | `quota_exceeded`      | Not enough credits, or billing isn't active for a credit-gated action. |
-| 403  | `permission`          | Authenticated, but the key can't access this resource. |
-| 404  | `not_found`           | Resource doesn't exist (or isn't in your scope).    |
-| 409  | `conflict`            | Same `Idempotency-Key` used for a changed request, or a state conflict. |
-| 422  | `unprocessable`       | Request shape is fine but the semantics are invalid. |
-| 429  | `rate_limit`          | Per-key rate limit exceeded.                         |
-| 429  | `quota_exceeded`      | Per-org concurrency or usage quota exhausted.        |
-| 500  | `internal`            | Unexpected server error.                             |
-| 503  | `service_unavailable` | No capacity, or scheduled maintenance.               |
+Two failures share HTTP `429` and call for opposite responses. A
+`rate_limit` means you are asking too fast, so back off and retry. A
+`quota_exceeded` means a ceiling is full, and backing off will not help
+until something already running finishes.
 
-Two cases share `429`: `rate_limit` means you're calling too fast (back off and
-retry), while `quota_exceeded` means a plan ceiling like concurrent sessions is
-full (retrying won't help until capacity frees up). Branch on `error.type` to
-tell them apart.
+## Inference codes
+
+| `error.code` | When |
+| --- | --- |
+| `run.operation_required` | The model has several operations and `operation` was not set |
+| `run.operation_unsupported` | That operation is not on this model |
+| `model.not_available` | Model is missing or not accepting runs |
+| `run.parameter_invalid` | A field failed the model's contract |
+| `run.concurrency_exceeded` | Too many runs queued or running |
+| `run.rate_limited` | Too many run requests on this key |
+| `insufficient_credit_balance` | Not enough credits to reserve the run (`402`) |
+| `run.not_cancelable` | Cancel after the run already finished |
+| `run.metadata_reserved` | `metadata` used a `protoface_` key |
+| `run.input_role_dependency` | A field requires another field that was omitted |
+| `run.input_role_conflict` | Two fields cannot be combined on this model |
+| `asset.not_available` | An `asset_...` input is missing, deleted, or owned by another org |
+| `run.input_url_unreachable` | An input URL could not be fetched |
+| `api_key.scope_required` | The key lacks `runs:write` or `runs:read` (`403`) |
+
+Inputs resolve before roles are checked, so a bad asset is reported ahead
+of an illegal combination. `param` points at the offending input as a
+dot-path, such as `reference.0` for arrays.
+
+A generation that fails after the `202` records the failure on the run,
+where `status` is `failed` and `error` appears on `GET /v1/runs/{id}`.
+`/status` returns a normal response describing the failed run, not a
+second HTTP error.
+
+## Session codes
+
+| `error.code` | When |
+| --- | --- |
+| `concurrent_sessions` | Too many sessions running for your plan (`429`) |
+| `session_start_rate_limited` | Sessions started too quickly (`429`) |
+| `avatar.not_found` | No such avatar on this account |
 
 ## Rate limits and retries
 
-`429` and `503` responses may include `Retry-After` in seconds. Use that delay
-before retrying.
+`429` and `503` responses may include `Retry-After` in seconds. Use that
+delay before retrying. Submitting runs too quickly returns
+`run.rate_limited`, and starting sessions too quickly returns
+`session_start_rate_limited`. A full ceiling clears when an active run
+finishes, which `/status` tracks. Monitor queued runs there rather than
+resubmitting them. A retry with a changed body needs a new
+`Idempotency-Key`.
 
 ## Quota exhaustion
 
-A `quota_exceeded` error names the exhausted resource in `error.code`. Credit
-exhaustion uses HTTP `402` with `code: "insufficient_credit_balance"`. Runtime
-limits, such as concurrent sessions, use HTTP `429`.
+`error.code` names whichever resource ran out. Credits return `402` with
+`insufficient_credit_balance`. Runtime ceilings such as concurrent
+sessions return `429`.
 
 ```json
 {
@@ -72,26 +114,10 @@ limits, such as concurrent sessions, use HTTP `429`.
 }
 ```
 
-## Handling errors
+## Incidents
 
-For API integrations, use the HTTP status and `error.code` for control flow.
-`error.message` is written for humans and may change.
-
-If a run submission returns `429` with `error.type: "rate_limit"`, follow
-`Retry-After` when it is present; otherwise back off before retrying. If it
-returns `error.type: "quota_exceeded"`, wait for an active run to finish.
-Monitor queued runs through the status endpoint instead of resubmitting them.
-
-For endpoints that accept `Idempotency-Key`, reuse the key only when retrying
-the same request. If anything changes, use a new key.
-
-## Next
-
-<Columns cols={2}>
-  <Card title="Limits and credits" href="/reference/quotas" icon="gauge">
-    Realtime limits, inference concurrency, and credit behavior.
-  </Card>
-  <Card title="API Reference" href="/api-reference" icon="square-terminal">
-    Endpoint schema generated from OpenAPI.
-  </Card>
-</Columns>
+Active incidents are posted at
+[status.protoface.com](https://status.protoface.com). If a request fails
+unexpectedly and nothing is listed there, contact
+[support](https://protoface.discourse.group/) with the `request_id` from
+the error response.

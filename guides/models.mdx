@@ -1,63 +1,138 @@
 ---
 title: "Models"
-description: "Discover the video models available through the Protoface API."
+description: "Fields, operations, and request schemas for every model."
 ---
 
-The model catalog tells you which video models are available and what each one
-accepts. Read it at runtime instead of keeping a fixed list in your application.
+`GET /v1/models` is the live contract for every model: operations,
+request schemas, accepted and returned media, and availability. It
+changes as models are added and retired, so read it at runtime rather
+than pinning a fixed list. A model's
+`id` is `publisher/model`, which is also the path for
+`POST /v1/run/{model_id}`.
 
 ## List models
 
-```sh
+```bash
 curl https://api.protoface.com/v1/models \
   -H "Authorization: Bearer $PROTOFACE_API_KEY"
 ```
 
-Each model includes:
+Each object in `data` is one model's contract.
 
-- `id`: the value used in `POST /v1/run/{model_id}`.
-- `operations`: supported operations and their input fields.
-- `input_modalities` and `output_modalities`: accepted and returned media.
-- `pricing`: current credit pricing.
-- `request_schemas`: JSON Schema for the request, when available.
-- `revision` and `contract_revision`: versions of the model and its API contract.
+| Field | Meaning |
+| --- | --- |
+| `id` | Value for `POST /v1/run/{model_id}` |
+| `owner` | Publisher, which is also the first half of the ID |
+| `display_name` / `description` | Human-readable label and summary |
+| `family` | Groups revisions of the same model |
+| `aliases` | Other IDs that resolve to this model |
+| `tags` | Free-form labels such as `video`, `generation`, `self-hosted` |
+| `operations` | Each operation with its input roles and parameter names |
+| `request_schemas` | JSON Schema per operation, where the model publishes one |
+| `input_modalities` / `output_modalities` | Media accepted and returned |
+| `execution_modes` | How the model runs |
+| `execution_targets` | `shared`, or `dedicated` where capacity can be reserved |
+| `pricing` | How the model meters, detailed under [Metering](#metering) |
+| `available` | Whether the model is accepting runs |
+| `revision` / `contract_revision` | Model version and contract version |
+| `output_quality_descriptions` | Notes on quality tiers, where the model provides them |
+
+A model with `available` set to `false` rejects runs before any credits
+are reserved, returning `error.code: "model.not_available"`.
+
+## Filter by what a model produces
+
+Filter on `output_modalities`, whose values are `video`, `image`,
+`audio`, and `model.3d`.
+
+```bash
+curl -s https://api.protoface.com/v1/models \
+  -H "Authorization: Bearer $PROTOFACE_API_KEY" \
+  | jq -r '.data[] | select(.output_modalities | contains(["video"])) | .id'
+```
+
+A model that returns more than one kind of file matches more than one of
+these filters.
 
 ## Retrieve one model
 
-```sh
-curl https://api.protoface.com/v1/models/minimax-h3 \
+```bash
+curl https://api.protoface.com/v1/models/minimax/minimax-h3 \
   -H "Authorization: Bearer $PROTOFACE_API_KEY"
 ```
 
-Use `operations` and `request_schemas` to build the request. Models can differ
-in duration, quality, aspect ratio, and supported reference media.
+Retrieving one model returns the same fields as its list entry.
+`operations` and `request_schemas` define the request.
 
-## Submit to a model
+### Operations
 
-Put the model ID in the URL:
+`operations` is keyed by operation name. Each declares its media inputs
+as roles, its parameter names, and any dependencies between roles.
 
-```sh
-curl -X POST https://api.protoface.com/v1/run/minimax-h3 \
-  -H "Authorization: Bearer $PROTOFACE_API_KEY" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "prompt": "A close shot of rain moving across a window at night.",
-    "duration_seconds": 8,
-    "quality": "768p",
-    "aspect_ratio": "16:9"
-  }'
+```json
+{
+  "operations": {
+    "video.general": {
+      "required_input_roles": ["prompt"],
+      "input_roles": {
+        "prompt": { "types": ["text"], "modalities": ["text"] },
+        "first_frame": { "types": ["asset"], "modalities": ["image"], "max_count": 1 },
+        "last_frame": { "types": ["asset"], "modalities": ["image"], "max_count": 1 },
+        "reference": { "types": ["asset"], "modalities": ["image"], "max_count": 9 }
+      },
+      "parameter_names": ["aspect_ratio", "duration_seconds", "generate_audio", "quality", "style"],
+      "role_dependencies": { "last_frame": ["first_frame"] },
+      "output_modalities": ["video"]
+    }
+  }
+}
 ```
 
-If a model is unavailable or the request is invalid for that model, the API
-rejects the run before reserving credits.
+Violating `role_dependencies` returns
+`error.code: "run.input_role_dependency"`. Here `last_frame` requires
+`first_frame`. A combination the model will not accept returns
+`error.code: "run.input_role_conflict"`, naming the fields involved.
 
-## Next
+A model with several operations requires `operation` on every request.
+Omitting it returns `error.code: "run.operation_required"` with the valid
+names.
 
-<Columns cols={2}>
-  <Card title="Model inference" href="/guides/model-inference" icon="boxes">
-    Run your first model.
-  </Card>
-  <Card title="Runs" href="/guides/runs" icon="list-checks">
-    Monitor and retrieve inference results.
-  </Card>
-</Columns>
+### Request schemas
+
+`request_schemas` holds the JSON Schema for each operation, covering
+types, enums, defaults, and bounds. `additionalProperties` is `false`, so
+an unrecognized field is rejected rather than ignored.
+
+```json
+{
+  "request_schemas": {
+    "video.general": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["prompt"],
+      "properties": {
+        "prompt": { "type": "string" },
+        "duration_seconds": { "type": "integer", "minimum": 4, "maximum": 15, "default": 8 },
+        "quality": { "type": "string", "enum": ["480p", "768p", "2k"], "default": "480p" },
+        "first_frame": { "type": "string", "description": "A public URL, a data URI, or an asset id." }
+      }
+    }
+  }
+}
+```
+
+Bounds and enums are set per model, and a value outside them returns
+`error.code: "run.parameter_invalid"`, naming the field.
+
+## Metering
+
+`pricing` describes how a model meters, not what it charges. `meter` is
+`output_seconds`, which bills by the duration of the output, or
+`request`, which is a flat cost per call.
+
+Some duration-metered models also carry `rounding` and a `duration_basis`
+that says whether the meter counts the duration requested or the duration
+delivered. Request-metered models carry `minimum_credits`.
+
+[Credits and limits](/reference/quotas) covers what a run is actually
+charged.

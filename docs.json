@@ -2,6 +2,7 @@
   "$schema": "https://mintlify.com/docs.json",
   "theme": "mint",
   "name": "Protoface",
+  "description": "Call frontier media models and live avatars through one API.",
   "colors": {
     "primary": "#0c0d0e",
     "light": "#fcfbfa",
@@ -94,41 +95,63 @@
       {
         "tab": "Docs",
         "icon": "book-open",
-        "groups": [
+        "pages": [
+          "index",
           {
-            "group": "Get Started",
-            "pages": ["index"]
-          },
-          {
-            "group": "Model Inference",
+            "group": "Inference",
             "pages": [
               "guides/model-inference",
+              {
+                "group": "Examples",
+                "expanded": true,
+                "pages": [
+                  "guides/generate-video",
+                  "guides/generate-image",
+                  "guides/image-to-video"
+                ]
+              },
+              "guides/runs",
               "guides/models",
-              "guides/runs"
+              "guides/assets"
             ]
           },
           {
             "group": "Realtime",
             "pages": [
               "quickstart",
-              "guides/avatars",
-              "guides/avatar-source-images",
-              "guides/livekit-agents",
-              "guides/pipecat",
-              "guides/more-integrations",
-              "guides/embeds"
+              {
+                "group": "Avatars",
+                "expanded": true,
+                "pages": [
+                  "guides/avatars",
+                  "guides/avatar-source-images"
+                ]
+              },
+              "guides/embeds",
+              {
+                "group": "Integrations",
+                "expanded": true,
+                "pages": [
+                  "guides/livekit-agents",
+                  "guides/pipecat",
+                  "guides/more-integrations"
+                ]
+              }
             ]
           },
           {
             "group": "Account",
             "pages": [
-              "guides/usage",
-              "reference/quotas"
+              "reference/quotas",
+              "guides/usage"
             ]
           },
           {
             "group": "Reference",
-            "pages": ["reference/errors"]
+            "pages": [
+              "guides/authentication",
+              "reference/errors"
+            ]
           }
         ]
       },
@@ -195,6 +218,10 @@
   },
   "redirects": [
     {
+      "source": "/guides/what-you-can-generate",
+      "destination": "/guides/models"
+    },
+    {
       "source": "/guides/sessions",
       "destination": "/guides/livekit-agents"
     },
@@ -205,6 +232,10 @@
     {
       "source": "/concepts/architecture",
       "destination": "/"
+    },
+    {
+      "source": "/guides/libraries",
+      "destination": "/guides/more-integrations"
     },
     {
       "source": "/guides/video-generation",
@@ -224,7 +255,15 @@
     },
     {
       "source": "/reference/known-limitations",
-      "destination": "/reference/known-issues"
+      "destination": "/reference/errors"
+    },
+    {
+      "source": "/reference/known-issues",
+      "destination": "/reference/errors"
+    },
+    {
+      "source": "/guides/agents",
+      "destination": "/"
     }
   ]
 }

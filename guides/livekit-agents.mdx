@@ -2,48 +2,48 @@
 title: "LiveKit Agents"
 description: "Use the Protoface avatar plugin in a LiveKit Agents app."
 ---
-If your voice agent runs on LiveKit Agents, `livekit-plugins-protoface` is an
-easy way to add an avatar. It opens a Protoface session and joins the avatar
-to your room, then streams your agent's audio to it.
 
-If you're not using LiveKit, Protoface also integrates with many more platforms and SDKs. See
-[More Integrations](/guides/more-integrations).
+If your voice agent runs on LiveKit Agents, `livekit-plugins-protoface` is
+the quickest way to add an avatar. It starts a Protoface session and joins
+the avatar to your room as a participant, then streams your agent's audio
+to it.
 
-[Official LiveKit-hosted docs](https://docs.livekit.io/agents/models/avatar/plugins/protoface/)
-are also available. LiveKit directly maintains and publishes the official Protoface plugin.
+LiveKit maintains and publishes the plugin, and documents it at
+[docs.livekit.io](https://docs.livekit.io/agents/models/avatar/plugins/protoface/).
+
+If you are not on LiveKit, Protoface works with many more platforms and
+SDKs. See [Other integrations](/guides/more-integrations).
 
 ## Install
 
-```sh
+```bash
 pip install livekit-plugins-protoface
 ```
 
 ## Basic usage
+
+Create an `AvatarSession` and start it before `session.start(...)`:
 
 ```python
 from livekit.plugins import protoface
 
 avatar = protoface.AvatarSession(avatar_id="av_stock_001")
 await avatar.start(session, room=ctx.room)
-```
 
-Start the avatar before `session.start(...)`:
-
-```python
 await session.start(
     agent=agent,
     room=ctx.room,
 )
 ```
 
-After the avatar starts, the plugin routes agent audio through a LiveKit
-DataStream output addressed to the avatar participant.
+Once started, the plugin routes your agent's audio through a LiveKit
+DataStream addressed to the avatar participant.
 
 ## Token handling
 
-`AvatarSession.start(...)` uses your LiveKit API key and secret inside the
-agent process to mint a short-lived avatar room token. Protoface receives that
-token as `worker_token`; it never receives your LiveKit API secret.
+`AvatarSession.start(...)` mints a short-lived room token in the agent
+process from your LiveKit API key and secret, then passes it to Protoface
+as `worker_token`. Your secret never leaves the agent process.
 
 ## Configuration
 
@@ -86,24 +86,24 @@ await avatar.start(
 | `max_duration_seconds` | Optional upper bound for the Protoface session. |
 | `conn_options` | LiveKit Agents connection timeout and retry options. |
 
-After `avatar.start(...)` succeeds, `avatar.session_id` contains the Protoface
-session ID.
+## Session
 
-## Lifecycle
+`avatar.start(...)` creates a Protoface session and puts its `sess_...` ID
+on `avatar.session_id`. The session moves through `queued`, `starting`,
+and `running`. `first_frame_at` is set when the first frame reaches the
+room, and a `protoface-avatar-agent` participant publishes audio and
+video into it.
 
-Call `await avatar.start(session, room=ctx.room)` before `session.start(...)`.
-Call `await avatar.aclose()` if you need to stop the avatar explicitly.
+```bash
+curl https://api.protoface.com/v1/sessions/sess_... \
+  -H "Authorization: Bearer $PROTOFACE_API_KEY"
+```
 
-## Next
+A session ends on `await avatar.aclose()` or `POST /v1/sessions/{id}/end`,
+after `idle_timeout_seconds` without inbound audio, or at your plan's
+duration cap. The idle default is 30 seconds, and the timer follows the
+audio your agent sends rather than when the visitor stops speaking.
 
-<Columns cols={3}>
-  <Card title="Realtime quickstart" href="/quickstart" icon="rocket">
-    Run a complete sample agent.
-  </Card>
-  <Card title="More Integrations" href="/guides/more-integrations" icon="blocks">
-    Quickstarts for other platforms and SDKs.
-  </Card>
-  <Card title="Avatars" href="/guides/avatars" icon="user-round">
-    Choose the avatar ID for your app.
-  </Card>
-</Columns>
+Billing rounds up to the minute, and `usage.billable_seconds` settles
+after the fact rather than ticking live.
+[Credits and limits](/reference/quotas) covers the caps.

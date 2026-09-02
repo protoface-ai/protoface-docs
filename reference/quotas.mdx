@@ -1,68 +1,31 @@
 ---
-title: "Limits and Credits"
-description: "Realtime session limits, inference concurrency, and credit behavior."
+title: "Credits and limits"
+description: "Credit reservations, concurrency ceilings, and session limits."
 ---
 
-Limits vary by plan. `GET /v1/billing/plans` returns the published plan limits.
-`GET /v1/billing/quota` returns your current credit balance and whether the
-account can start a realtime session.
+API usage is billed in credits worth $0.01 each. Per-model rates are on
+[protoface.com/pricing](https://www.protoface.com/pricing).
 
-## Realtime sessions
-
-Realtime plans set the maximum number of concurrent sessions and the maximum
-length of each session. Exceeding the concurrency cap returns
-`429 quota_exceeded` with `error.code: "concurrent_sessions"`.
-
-| Plan | Concurrent sessions | Max session duration |
-| --- | --- | --- |
-| Free | 1 | 2 minutes |
-| Starter | 2 | 10 minutes |
-| Launch | 10 | 20 minutes |
-| Scale | 50 | 60 minutes |
-
-### Other session limits
-
-| Limit | Default |
-| --- | --- |
-| Idle timeout | 30 seconds without input audio |
-| Metadata size | 8 KB |
-| Create rate limit | 10 requests per minute per key |
-| Idempotency window | 24 hours |
-
-The idempotency window applies to supported `POST` endpoints. Reuse a key only
-when the request is unchanged. Run and session retries replay the original
-response.
-
-If you send `max_duration_seconds`, Protoface applies the lower of your request
-and your plan limit.
-
-For early capacity planning, divide daily active users by 250 to estimate
-concurrent sessions. Protoface may also limit how quickly new sessions start
-during a ramp-up; active sessions are not affected.
-
-## Realtime credits
-
-Usage is rounded up to the nearest minute. One credit equals one rounded-up
-session minute. If the account has no usable credits, session creation returns
-`402 quota_exceeded` with
-`error.code: "insufficient_credit_balance"`.
-
-Free monthly credits do not roll over. Purchased credits roll over without
-expiry.
+`GET /v1/billing/plans` returns published plan limits and
+`GET /v1/billing/quota` returns where your account stands against them.
+`balance_credits` is your spendable total, and `can_start_session`
+accounts for that and your concurrency.
 
 ## Model inference
 
-When you submit a run, Protoface reserves the `maximum_reserved_credits` shown
-in the estimate. It charges those credits when the run completes and releases
-them if the run fails.
+A generation reserves `credit_estimate.maximum_reserved_credits` against
+your balance up front. A completed run is charged that amount, and a
+failed run releases it.
 
-Canceling a queued run releases its reservation. Canceling after work starts
-charges the reserved amount.
+Canceling before the run starts releases the reservation. Canceling after
+it starts charges the full reserved amount. A request Protoface rejects
+outright reserves nothing.
 
 ### Concurrency
 
 Concurrency is based on platform spend over the last 30 days: the price of
-your current plan plus any credits you buy. Refunded purchases don't count.
+your current plan plus any credits you buy. Refunded purchases do not
+count.
 
 Workers is how many generations can run at the same time. Requested is how
 many runs you can have queued or running. Extra runs wait until a worker is
@@ -77,21 +40,50 @@ free. If you hit the requested limit, the API returns `429` with
 | $500+ | 30 | 3,000 |
 | $1,000+ | 40 | 4,000 |
 
+Run submissions are separately capped at 60 per minute per key, and
+exceeding that returns `429` with `error.code: "run.rate_limited"`.
+
 Need higher limits? [Contact us](https://protoface.com/enterprise).
+
+## Realtime sessions
+
+Your plan sets how many sessions you can run at once and how long each
+one lasts. Every session response carries the effective limits for that
+session.
+
+| Plan | Concurrent sessions | Max session duration |
+| --- | --- | --- |
+| Free | 1 | 2 minutes |
+| Starter | 2 | 10 minutes |
+| Launch | 10 | 20 minutes |
+| Scale | 50 | 60 minutes |
+
+If you exceed your concurrency, session creation returns `429` with
+`error.type: "quota_exceeded"` and `error.code: "concurrent_sessions"`.
+
+| Limit | Default |
+| --- | --- |
+| Idle timeout | 30 seconds without inbound audio, settable from 1 to 600 |
+| Metadata size | 8 KB |
+| Create rate limit | 10 requests per minute per org |
+| Idempotency window | 24 hours |
+
+If you send `max_duration_seconds`, Protoface applies the lower of your
+request and your plan limit.
+
+For early capacity planning, divide daily active users by 250 to estimate
+concurrent sessions.
+
+## Realtime credits
+
+Session time rounds up to the nearest minute, at one credit per minute.
+If your balance is empty, session creation returns `402` with
+`error.code: "insufficient_credit_balance"`. Free monthly credits do not
+roll over. Purchased credits roll over without expiry.
 
 ## Metadata keys
 
-`metadata` is customer-owned JSON. Session keys beginning with `_avatar.` are
-managed by Protoface. Model-run keys beginning with `protoface_` are reserved
-and rejected.
-
-## Next
-
-<Columns cols={2}>
-  <Card title="Errors" href="/reference/errors" icon="triangle-alert">
-    Error responses and retry behavior.
-  </Card>
-  <Card title="Usage" href="/guides/usage" icon="chart-no-axes-column">
-    Inspect usage and credits.
-  </Card>
-</Columns>
+`metadata` is customer-owned JSON with two reservations. Session keys
+beginning with `_avatar.` are managed by Protoface and reserved for
+support-directed use. Model-run keys beginning with `protoface_` are
+rejected.

@@ -1,0 +1,38 @@
+---
+title: "Animate an image"
+description: "Use a still as the opening frame of a generated clip."
+---
+
+A video model can begin from a still image you supply. The image goes in
+whichever field that model uses for an opening frame, given as a public
+URL, a data URI, or an `asset_...` ID. In the example below, MiniMax H3
+calls that field `first_frame`.
+
+```bash
+curl -X POST https://api.protoface.com/v1/run/minimax/minimax-h3 \
+  -H "Authorization: Bearer $PROTOFACE_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "prompt": "The sailboat holds course as morning light fills the bay.",
+    "duration_seconds": 8,
+    "quality": "768p",
+    "aspect_ratio": "16:9",
+    "first_frame": "https://example.com/sailboat.png"
+  }'
+```
+
+The clip lands on `video.url` when the run completes.
+
+A still from [Generate an image](/guides/generate-image) already has an
+`asset_id` on that run's `outputs`. Pass it straight into the next run
+instead of downloading the file.
+
+Models constrain which inputs combine. On MiniMax H3, `last_frame`
+requires `first_frame`, and sending it alone returns
+`error.code: "run.input_role_dependency"`. Neither frame combines with
+`reference`, `reference_video`, or `audio`, and sending them together
+returns `error.code: "run.input_role_conflict"`.
+
+Many models expose animation as a separate operation, `video.animate`,
+which takes the still on `image` and requires `operation`. Check the
+[catalog entry](/guides/models#operations) for the model you call.

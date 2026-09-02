@@ -1,37 +1,45 @@
 ---
 title: "Usage"
-description: "Read account-level usage totals."
+description: "Read account-level spend by day, operation, and surface."
 ---
-`GET /v1/usage` returns account-level totals for reporting and reconciliation.
-It can lag active sessions by a short delay, so don't rely on it for live
-session control.
+
+`GET /v1/usage` returns account-level totals for a month or a custom
+range, counting only settled work. It lags active sessions, so do not use
+it for live session control. For a single running session, read `usage`
+on the session object instead.
 
 ## Current month
 
-```sh
+```bash
 curl "https://api.protoface.com/v1/usage?period=current_month" \
   -H "Authorization: Bearer $PROTOFACE_API_KEY"
 ```
 
-`period` can be `current_month` or `previous_month`.
+`period` accepts `current_month` or `previous_month` and cannot be
+combined with `period_start` and `period_end`.
+
+| Field | Meaning |
+| --- | --- |
+| `period_start` / `period_end` | Window the totals cover |
+| `credits_charged` | Credits settled in the window |
+| `by_operation` | Credits per billable operation, such as `video.general` |
+| `by_billing_surface` | Credits split by surface, such as `api` and `studio` |
+| `daily_credits_by_billing_surface` | The same split, per calendar day |
+| `by_quality` | Credits per quality tier |
+| `recent_charges` | The individual charges behind the totals |
+| `billable_seconds` / `sessions` | Realtime session time and count |
+| `by_speech_billing_mode` | Realtime credits split by speech billing mode |
+| `by_embed` | Realtime credits per embed |
+
+Daily buckets are UTC unless you pass `time_zone` as an IANA name such as
+`America/Los_Angeles`.
 
 ## Custom range
 
-```sh
+```bash
 curl "https://api.protoface.com/v1/usage?period_start=2026-06-01T00:00:00Z&period_end=2026-07-01T00:00:00Z" \
   -H "Authorization: Bearer $PROTOFACE_API_KEY"
 ```
 
-For a single running session, read the `usage` field on the session resource
-instead.
-
-## Next
-
-<Columns cols={2}>
-  <Card title="Limits and credits" href="/reference/quotas" icon="gauge">
-    Realtime limits, inference concurrency, and credit behavior.
-  </Card>
-  <Card title="Errors" href="/reference/errors" icon="triangle-alert">
-    Handle retryable and quota responses.
-  </Card>
-</Columns>
+Both bounds are ISO-8601 UTC, with `period_start` inclusive and
+`period_end` exclusive.

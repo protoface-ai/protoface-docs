@@ -1,35 +1,28 @@
 ---
-title: "Model Inference Quickstart"
-description: "Run a video model through the Protoface inference API."
+title: "Inference quickstart"
+sidebarTitle: "Quickstart"
+description: "Generate your first video with curl, Python, or JavaScript."
 ---
 
-Models use the same run lifecycle. The current catalog is focused on video
-generation: choose a model, submit a run, and retrieve the result when it
-finishes.
+Create a key in the [dashboard](https://app.protoface.com). A scoped key
+needs `runs:write` to submit and `runs:read` to retrieve.
+[Authentication](/guides/authentication) covers revocation and where to
+keep keys.
 
-<Note>
-  [Protoface Studio](https://app.protoface.com) is the browser editor; it is
-  separate from the inference API, which does not expose Studio projects or scenes.
-</Note>
-
-## Prerequisites
-
-Create an API key in the [Protoface dashboard](https://app.protoface.com). If
-the key uses scopes, it needs `runs:write` to submit work and `runs:read` to
-check the result.
-
-Set it in your shell:
-
-```sh
+```bash
 export PROTOFACE_API_KEY="sk_live_..."
 ```
 
-## 1. Submit a run
+## Generate a video
 
-This example generates an eight-second video with MiniMax H3:
+Submit a prompt and the model's parameters to `/v1/run/{model_id}`. The
+example below uses MiniMax H3, which takes a length in seconds, a quality
+tier, and an aspect ratio. It returns video with sound.
 
-```sh
-curl -X POST https://api.protoface.com/v1/run/minimax-h3 \
+<CodeGroup>
+
+```bash curl
+curl -X POST https://api.protoface.com/v1/run/minimax/minimax-h3 \
   -H "Authorization: Bearer $PROTOFACE_API_KEY" \
   -H "Content-Type: application/json" \
   -H "Idempotency-Key: first-video-001" \
@@ -41,47 +34,111 @@ curl -X POST https://api.protoface.com/v1/run/minimax-h3 \
   }'
 ```
 
-The response contains the run ID, its queue status, and the credits reserved
-for it. This is an excerpt:
+```python httpx
+import os
+
+import httpx
+
+created = httpx.post(
+    "https://api.protoface.com/v1/run/minimax/minimax-h3",
+    headers={
+        "Authorization": f"Bearer {os.environ['PROTOFACE_API_KEY']}",
+        "Idempotency-Key": "first-video-001",
+    },
+    json={
+        "prompt": "A wide shot of a sailboat crossing a quiet bay at sunrise.",
+        "duration_seconds": 8,
+        "quality": "768p",
+        "aspect_ratio": "16:9",
+    },
+    timeout=60.0,
+)
+created.raise_for_status()
+run_id = created.json()["id"]
+```
+
+```javascript fetch
+const created = await fetch(
+  "https://api.protoface.com/v1/run/minimax/minimax-h3",
+  {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${process.env.PROTOFACE_API_KEY}`,
+      "Content-Type": "application/json",
+      "Idempotency-Key": "first-video-001",
+    },
+    body: JSON.stringify({
+      prompt: "A wide shot of a sailboat crossing a quiet bay at sunrise.",
+      duration_seconds: 8,
+      quality: "768p",
+      aspect_ratio: "16:9",
+    }),
+  },
+);
+
+const { id: runId } = await created.json();
+```
+
+</CodeGroup>
+
+The response is a `202` with a run ID. Generation continues in the
+background.
 
 ```json
 {
   "id": "run_...",
   "object": "run",
-  "model": "minimax-h3",
+  "model": "minimax/minimax-h3",
   "operation": "video.general",
   "status": "queued",
   "queue_position": 0,
   "credit_estimate": {
-    "estimated_credits": 29,
-    "maximum_reserved_credits": 29
+    "estimated_credits": 8,
+    "maximum_reserved_credits": 8
   },
   "status_url": "/v1/runs/run_.../status",
   "response_url": "/v1/runs/run_..."
 }
 ```
 
-Credit prices can change. Use the estimate returned by the API instead of
-hard-coding the value shown here.
+`credit_estimate` is a hold on your balance, and a run that produces no
+output releases it. Rates change, so read the estimate from the response
+rather than hard-coding the number above.
 
-## 2. Check the status
+`Idempotency-Key` is any string you choose, and sending the same one
+twice returns this same `202` instead of generating twice.
 
-```sh
+## Wait for the file
+
+Poll `status_url` about once a second until `status` reaches
+`completed`, `failed`, or `canceled`. It reports state without carrying
+the file.
+
+```bash
 curl https://api.protoface.com/v1/runs/run_.../status \
   -H "Authorization: Bearer $PROTOFACE_API_KEY"
 ```
 
-Poll until `status` is `completed`, `failed`, or `canceled`. Use a delay between
-requests; the status endpoint is intended for polling.
+```json
+{
+  "id": "run_...",
+  "object": "run.status",
+  "status": "running",
+  "progress": 40,
+  "queue_position": null,
+  "error": null
+}
+```
 
-## 3. Retrieve the result
+How long a run takes depends on the model, the length you asked for, and
+current load. While it waits, `queue_position` counts the runs ahead of
+it. Once it starts, `progress` tracks it to completion. Fetch the run
+once it completes:
 
-```sh
+```bash
 curl https://api.protoface.com/v1/runs/run_... \
   -H "Authorization: Bearer $PROTOFACE_API_KEY"
 ```
-
-For a run with one video output, `video` contains the file. This is an excerpt:
 
 ```json
 {
@@ -91,21 +148,151 @@ For a run with one video output, `video` contains the file. This is an excerpt:
   "video": {
     "url": "https://...",
     "content_type": "video/mp4",
-    "file_name": "output.mp4"
+    "file_name": "output.mp4",
+    "file_size": 3919397
   },
-  "error": null
+  "outputs": [
+    {
+      "role": "output",
+      "modality": "video",
+      "type": "asset",
+      "asset_id": "asset_...",
+      "file": { "url": "https://...", "content_type": "video/mp4" }
+    }
+  ],
+  "credits": { "reserved": 8, "charged": 8 }
 }
 ```
 
-See [Runs](/guides/runs) for the full `outputs` array and lifecycle.
+## The whole sequence
 
-## Next
+The curl version uses [jq](https://jqlang.github.io/jq/) to read fields
+from each response.
 
-<Columns cols={2}>
-  <Card title="Models" href="/guides/models" icon="boxes">
-    Read model capabilities and request fields.
-  </Card>
-  <Card title="Runs" href="/guides/runs" icon="list-checks">
-    Handle inputs, polling, cancellation, and retries.
-  </Card>
-</Columns>
+<CodeGroup>
+
+```bash curl
+RUN_ID=$(curl -s -X POST https://api.protoface.com/v1/run/minimax/minimax-h3 \
+  -H "Authorization: Bearer $PROTOFACE_API_KEY" \
+  -H "Content-Type: application/json" \
+  -H "Idempotency-Key: first-video-001" \
+  -d '{
+    "prompt": "A wide shot of a sailboat crossing a quiet bay at sunrise.",
+    "duration_seconds": 8,
+    "quality": "768p",
+    "aspect_ratio": "16:9"
+  }' | jq -r .id)
+
+while true; do
+  STATUS=$(curl -s "https://api.protoface.com/v1/runs/$RUN_ID/status" \
+    -H "Authorization: Bearer $PROTOFACE_API_KEY" | jq -r .status)
+  case "$STATUS" in
+    completed|failed|canceled) break ;;
+  esac
+  sleep 1
+done
+
+curl -s "https://api.protoface.com/v1/runs/$RUN_ID" \
+  -H "Authorization: Bearer $PROTOFACE_API_KEY" \
+  | jq -r '.video.url // .error.message'
+```
+
+```python httpx
+import os
+import time
+
+import httpx
+
+API = "https://api.protoface.com"
+headers = {"Authorization": f"Bearer {os.environ['PROTOFACE_API_KEY']}"}
+
+with httpx.Client(base_url=API, headers=headers, timeout=60.0) as client:
+    created = client.post(
+        "/v1/run/minimax/minimax-h3",
+        headers={"Idempotency-Key": "first-video-001"},
+        json={
+            "prompt": "A wide shot of a sailboat crossing a quiet bay at sunrise.",
+            "duration_seconds": 8,
+            "quality": "768p",
+            "aspect_ratio": "16:9",
+        },
+    )
+    created.raise_for_status()
+    run_id = created.json()["id"]
+
+    while True:
+        status = client.get(f"/v1/runs/{run_id}/status")
+        status.raise_for_status()
+        state = status.json()["status"]
+        if state in {"completed", "failed", "canceled"}:
+            break
+        time.sleep(1)
+
+    run = client.get(f"/v1/runs/{run_id}")
+    run.raise_for_status()
+    body = run.json()
+    if body["status"] != "completed":
+        raise SystemExit(body.get("error") or body["status"])
+    print(body["video"]["url"])
+```
+
+```javascript fetch
+const apiKey = process.env.PROTOFACE_API_KEY;
+const headers = {
+  Authorization: `Bearer ${apiKey}`,
+  "Content-Type": "application/json",
+};
+
+const created = await fetch("https://api.protoface.com/v1/run/minimax/minimax-h3", {
+  method: "POST",
+  headers: { ...headers, "Idempotency-Key": "first-video-001" },
+  body: JSON.stringify({
+    prompt: "A wide shot of a sailboat crossing a quiet bay at sunrise.",
+    duration_seconds: 8,
+    quality: "768p",
+    aspect_ratio: "16:9",
+  }),
+});
+
+if (!created.ok) {
+  throw new Error(await created.text());
+}
+
+const { id: runId } = await created.json();
+
+let status;
+do {
+  await new Promise((resolve) => setTimeout(resolve, 1000));
+  const response = await fetch(
+    `https://api.protoface.com/v1/runs/${runId}/status`,
+    { headers: { Authorization: `Bearer ${apiKey}` } },
+  );
+  if (!response.ok) {
+    throw new Error(await response.text());
+  }
+  status = (await response.json()).status;
+} while (status === "queued" || status === "running");
+
+const run = await fetch(`https://api.protoface.com/v1/runs/${runId}`, {
+  headers: { Authorization: `Bearer ${apiKey}` },
+});
+const body = await run.json();
+if (body.status !== "completed") {
+  throw new Error(JSON.stringify(body.error ?? body.status));
+}
+console.log(body.video.url);
+```
+
+</CodeGroup>
+
+Only the body changes between models. Field names, defaults, and bounds
+come from the model's [catalog entry](/guides/models).
+[Runs](/guides/runs) documents the rest of the run API.
+
+## Failures
+
+A failed generation puts `error` on both the status payload and the run.
+Branch on `error.code`. Exceeding your concurrency returns `429` with
+`run.concurrency_exceeded`. An empty balance returns `402` with
+`insufficient_credit_balance`. [Errors](/reference/errors) lists the
+rest.

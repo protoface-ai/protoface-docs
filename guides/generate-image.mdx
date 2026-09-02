@@ -1,0 +1,55 @@
+---
+title: "Generate an image"
+description: "Generate a still and reuse it as input to another model."
+---
+
+Text to image is a single request to an image model. Most image models
+expose several operations, usually generate and edit, so the request must
+name one. Omitting `operation` returns
+`error.code: "run.operation_required"` with the valid names in the
+message.
+
+The example below uses GPT Image 2, which takes a quality tier and a
+resolution alongside the operation name.
+
+```bash
+curl -X POST https://api.protoface.com/v1/run/openai/gpt-image-2 \
+  -H "Authorization: Bearer $PROTOFACE_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "operation": "image.generate",
+    "prompt": "A lighthouse in a storm",
+    "quality": "high",
+    "resolution": "2k"
+  }'
+```
+
+The file lands on `image.url` when the run completes, and the `asset_id`
+on `outputs` feeds straight into another run, as in
+[Animate an image](/guides/image-to-video).
+
+```bash
+curl https://api.protoface.com/v1/runs/run_... \
+  -H "Authorization: Bearer $PROTOFACE_API_KEY"
+```
+
+```json
+{
+  "id": "run_...",
+  "status": "completed",
+  "image": {
+    "url": "https://...",
+    "content_type": "image/png",
+    "file_name": "output.png"
+  },
+  "outputs": [
+    {
+      "role": "output",
+      "modality": "image",
+      "type": "asset",
+      "asset_id": "asset_...",
+      "file": { "url": "https://...", "content_type": "image/png" }
+    }
+  ]
+}
+```
