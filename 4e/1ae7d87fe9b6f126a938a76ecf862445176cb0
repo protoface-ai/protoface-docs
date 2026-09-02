@@ -1,0 +1,19 @@
+README.md
+  s_d638f47d1e7fef::t_4fb6fe44c19c84 7
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.0",
+  "base_commit_sha": "4e1ae7d87fe9b6f126a938a76ecf862445176cb0",
+  "prompts": {},
+  "sessions": {
+    "s_d638f47d1e7fef": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "911a6c9f-9cb7-43d7-b02e-eede178f6835",
+        "model": "grok-4.6"
+      },
+      "human_author": "Protoface Team <295041388+protoface-team@users.noreply.github.com>"
+    }
+  }
+}
