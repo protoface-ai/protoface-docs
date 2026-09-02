@@ -205,8 +205,9 @@ curl -X POST https://api.protoface.com/v1/runs/run_.../cancel \
 ```
 
 Canceling before work starts releases the hold and reports `charged` as
-`0`. Canceling after it starts charges the reserved amount. A finished
-run returns `409` with `error.code: "run.not_cancelable"`.
+`0`. Canceling after it starts charges the reserved amount. A run that
+already completed returns `409` with
+`error.code: "run.not_cancelable"`.
 
 ## List runs and events
 
