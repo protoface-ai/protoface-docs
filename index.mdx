@@ -1,6 +1,6 @@
 ---
 title: "Protoface API"
-description: "Run model inference and add realtime avatars to your apps."
+description: "Frontier media models and live avatars behind one API."
 ---
 
 <div
@@ -13,72 +13,81 @@ description: "Run model inference and add realtime avatars to your apps."
   }}
 >
   <img
-    src="/images/home/welcome-avatar-grid.webp"
-    alt="Protoface avatars displayed as realtime video tiles"
+    src="/images/home/studio-video-still.webp"
+    alt="Still from a generated Protoface video"
     style={{ display: "block", height: "auto", margin: 0, width: "100%" }}
   />
 </div>
 
-## Start here
+Protoface is a generative media inference platform, running frontier
+models for video, images, speech, music, 3D assets, and realtime avatars
+behind a single API key.
 
-Use the Protoface API to run model inference or add a live avatar to an agent.
-Both use the same API key and account.
+## Inference
+
+Generating a video takes one call to start it and one to fetch the
+result. In the example below, MiniMax H3 returns eight seconds of video
+with sound.
+
+```bash
+curl -X POST https://api.protoface.com/v1/run/minimax/minimax-h3 \
+  -H "Authorization: Bearer $PROTOFACE_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "prompt": "A wide shot of a sailboat crossing a quiet bay at sunrise.",
+    "duration_seconds": 8,
+    "quality": "768p",
+    "aspect_ratio": "16:9"
+  }'
+```
+
+The request returns a run ID immediately, and `GET /v1/runs/{id}` carries
+the file once the run finishes.
+
+```json
+{
+  "id": "run_...",
+  "status": "completed",
+  "video": {
+    "url": "https://...",
+    "content_type": "video/mp4",
+    "file_name": "output.mp4"
+  }
+}
+```
+
+Every model follows this pattern. Only the body changes, and you build it
+from the model's [catalog entry](/guides/models). The
+[inference quickstart](/guides/model-inference) runs the full sequence.
+
+## Realtime
+
+Protoface Realtime adds a realtime face to your voice agent, driven by
+the audio it already produces. It works across languages and with any
+pipeline, whether speech-to-speech or separate STT, LLM, and TTS. Use the
+LiveKit or Pipecat plugin, another supported platform, or the REST API.
+The [realtime quickstart](/quickstart) adds a live avatar to a LiveKit
+agent.
+
+## Next steps
 
 <Columns cols={2}>
-  <Card title="Run model inference" href="/guides/model-inference" icon="boxes">
-    Submit work to a model and retrieve the result when it is ready.
+  <Card title="Inference quickstart" href="/guides/model-inference" icon="rocket">
+    Generate a video with curl, Python, or JavaScript.
   </Card>
-  <Card title="Add a realtime avatar" href="/quickstart" icon="radio">
-    Turn your agent's audio into live avatar video.
+  <Card title="Model catalog" href="/guides/models" icon="layers">
+    Browse every model and read its input contract.
   </Card>
-</Columns>
-
-## Model inference
-
-All models use the same run lifecycle. The current catalog focuses on video
-generation.
-
-<Columns cols={2}>
-  <Card title="Models" href="/guides/models" icon="boxes">
-    See available models and the inputs they accept.
+  <Card title="Realtime quickstart" href="/quickstart" icon="radio">
+    Run a LiveKit agent with a live avatar.
   </Card>
-  <Card title="Runs" href="/guides/runs" icon="list-checks">
-    Submit, monitor, retrieve, and cancel inference runs.
-  </Card>
-</Columns>
-
-## Realtime avatars
-
-Protoface turns an agent's audio into live avatar video. Use the LiveKit or
-Pipecat integration, another supported platform, or the REST API.
-
-Because Protoface consumes agent audio, it works across languages and with both
-speech-to-speech and STT/LLM/TTS pipelines.
-
-<Columns cols={3}>
-  <Card title="LiveKit Agents" href="/guides/livekit-agents" icon="radio">
-    Add the Protoface plugin to a LiveKit agent.
-  </Card>
-  <Card title="Pipecat" href="/guides/pipecat" icon="workflow">
-    Add a Protoface video service to a Pipecat pipeline.
-  </Card>
-  <Card title="More integrations" href="/guides/more-integrations" icon="blocks">
-    Find SDKs, plugins, and starter repositories.
-  </Card>
-</Columns>
-
-## Shared resources
-
-Avatars, authentication, usage, and errors are shared across the API.
-
-<Columns cols={3}>
-  <Card title="API Reference" href="/api-reference" icon="square-terminal">
-    Browse endpoint schemas generated from OpenAPI.
+  <Card title="Other integrations" href="/guides/more-integrations" icon="blocks">
+    Starters for Pipecat, Agora, Vapi, and more.
   </Card>
   <Card title="Avatars" href="/guides/avatars" icon="user-round">
     Create and manage avatars for realtime sessions.
   </Card>
-  <Card title="Errors and retries" href="/reference/errors" icon="triangle-alert">
-    Handle stable error codes, rate limits, and retries.
+  <Card title="Errors" href="/reference/errors" icon="triangle-alert">
+    Stable error codes, rate limits, and retries.
   </Card>
 </Columns>

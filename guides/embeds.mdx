@@ -1,94 +1,77 @@
 ---
 title: "Embeds"
-description: "Add a hosted Protoface avatar to a website or share it with a direct link."
+description: "Share links, iframes, and custom UIs for live conversations."
 ---
 
-Embeds let people talk to one of your ready custom or stock avatars. Protoface
-starts the conversation on the server, so you never need to put an API key in
-your website's code.
+Embeds let visitors talk to a ready avatar, custom or stock. Protoface
+hosts the conversation, so there is no agent to build and no API key on
+the page, only a public embed ID.
 
-You can publish an avatar in three ways:
+All three options share the same settings, credits, and limits.
 
-| Option | Use It When |
+| Option | What it does |
 | --- | --- |
-| Share Link | Send people a link they can open directly. |
-| iFrame Embed | Add the avatar directly to a page on your website. |
-| Custom UI | Build your own interface with `protoface-client`. |
+| Share link | Opens a Protoface-hosted page you can send to anyone. |
+| iframe embed | Puts the avatar on a page of your site. |
+| Custom UI | Wraps the conversation in your own interface with `protoface-client`. |
 
-All three options use the same embed settings, usage credits, and conversation
-limits.
+## Default embed
 
-## Start With the Default Embed
+Every ready avatar has a default embed, enabled on any origin until
+restricted.
 
-Every ready avatar has a default embed. It is enabled and works on any website,
-so you can use its **Share Link** or **Embed Code** right away.
+1. Open **Avatars** in the [dashboard](https://app.protoface.com).
+2. Select a ready avatar, then **Embed**.
+3. Find the default embed under **Current Embed**.
 
-To find it:
+That panel sets the intro, placement, conversation limits, and domain
+restrictions. Voice and instructions live on the avatar under **Avatar
+Settings** and apply everywhere it is used.
 
-1. Open **Avatars** in the [Protoface dashboard](https://app.protoface.com).
-2. Find a ready avatar and select **Embed**.
-3. The default embed appears under **Current Embed**.
+## Additional embeds
 
-From the Embed panel, you can change the intro headline and description,
-placement, conversation limits, and domain restrictions. Select **Save Changes**
-when you are finished.
+**New Embed** creates a second configuration for another site,
+environment, or campaign. It starts enabled, with domain restrictions
+off.
 
-An embed uses the avatar's voice and instructions. To change them, open the
-avatar's **Avatar Settings**. Those settings apply anywhere the avatar is used.
+To restrict it, open **Advanced Options**, turn on **Domain
+Restrictions**, and add origins under **Allowed Website Origins**. An
+origin is scheme, host, and optional port. Paths, query strings,
+fragments, and wildcards are rejected.
 
-## Create Another Embed
-
-Select **New Embed** if you want different settings for another website,
-environment, or campaign. New embeds start enabled with **Domain Restrictions**
-off, just like the default embed.
-
-To limit where an embed can run, open **Advanced Options** and turn on **Domain
-Restrictions**. Add each permitted domain under **Allowed Website Origins**.
-These entries are origins, not full page URLs. An origin contains only the
-protocol, domain, and optional port.
-
-| Accepted | Not Accepted |
+| Accepted | Rejected |
 | --- | --- |
 | `https://acme.com` | `https://acme.com/products` |
 | `https://app.acme.com` | `https://acme.com/*` |
 | `http://localhost:3000` | `*.acme.com` |
 
-Put one origin on each line. Do not add a path, query string, fragment, or
-wildcard.
+One origin per line. Each domain and subdomain is separate, so
+`https://acme.com` does not allow `https://www.acme.com`.
 
-<Warning>
-  When **Domain Restrictions** is off, the embed works on any website. This is
-  convenient for testing, but we recommend limiting production embeds to the
-  websites where you plan to use them. Each domain and subdomain must be added
-  separately. Adding `https://acme.com` does not also allow
-  `https://www.acme.com`.
-</Warning>
+With restrictions off, the embed works on any website, which is
+convenient while testing. Restrict production embeds to the origins you
+actually use.
 
-## Share Link
+## Share link
 
-Use the **Share Link** when you want to send someone directly to the avatar.
-Copy or open it from the Embed panel.
+The share link in the Embed panel opens a Protoface-hosted page. Nothing
+is added to your site.
 
-The link opens a Protoface-hosted page, so there is nothing to add to a website.
+## iframe embed
 
-## iFrame Embed
-
-The iFrame embed is the quickest way to add an avatar to your site. Select
-**Embed Code**, copy the code from the Embed panel, and paste it into your page:
+Copy **Embed Code** from the panel:
 
 ```html
 <protoface-avatar embed-public-id="emb_..."></protoface-avatar>
 <script src="https://app.protoface.com/embed-widget.js" async></script>
 ```
 
-Choose a **Placement** before copying the code. **Inline** places the avatar in
-the normal flow of your page. The four corner placements keep it visible in the
-selected corner as visitors move through the page. The saved placement is
-applied automatically wherever you use the embed code.
+Set **Placement** before copying. The placement saves on the embed, so it
+applies anywhere you use that ID. **Inline** sits in document flow. The
+four corner placements stay visible as visitors scroll.
 
-For an inline embed, the element fills the available width. The copied code
-includes an aspect ratio based on the avatar's portrait. You can adjust its size
-with CSS:
+An inline embed fills the available width, and the snippet carries an
+aspect ratio taken from the portrait. Override either with CSS.
 
 ```css
 protoface-avatar {
@@ -97,19 +80,12 @@ protoface-avatar {
 }
 ```
 
-### Respond to Embed Events
+### Embed events
 
-The iFrame embed can notify your page when something happens inside it. These
-notifications are called browser events. You might use them to update text on
-the page, record that a conversation started, or display a final transcript in
-another part of your interface.
-
-Events are optional. The embed works normally if your website does not listen
-for them.
-
-Each event is sent from the `<protoface-avatar>` element. The event's
-`detail` property contains information about what happened. For example, this
-updates a status message when a conversation starts and ends:
+The `<protoface-avatar>` element dispatches browser events as the
+conversation progresses, which you can use to update your own page. They
+report state and do not control it, and the embed works whether or not
+you listen.
 
 ```html
 <p id="avatar-status">Ready to talk</p>
@@ -128,91 +104,59 @@ updates a status message when a conversation starts and ends:
 </script>
 ```
 
-The available events are:
+Listen on the element or a parent. `detail` carries the payload.
 
-| Event | When It Happens | Useful Details |
+| Event | When | Useful `detail` |
 | --- | --- | --- |
-| `protoface-avatar:config-loaded` | The embed finishes loading its settings. | `enabled`, `avatarName`, `placement` |
-| `protoface-avatar:consent-changed` | The visitor changes the consent checkbox. | `checked` |
-| `protoface-avatar:conversation-started` | Protoface creates the conversation. | `room`, `expiresAt` |
-| `protoface-avatar:live` | The conversation connects and is ready. | `room` |
-| `protoface-avatar:transcript` | The visitor or avatar speaks. This may fire more than once as speech is transcribed. | `role`, `content`, `final` |
-| `protoface-avatar:ended` | The conversation ends. | `reason`, `failed` |
-| `protoface-avatar:error` | The embed cannot complete an action. | `code`, `message` |
-| `protoface-avatar:closed` | The visitor hides a corner embed. | `reason` |
-| `protoface-avatar:reopened` | The visitor reopens a corner embed. | None |
+| `protoface-avatar:config-loaded` | Settings finished loading | `enabled`, `avatarName`, `placement` |
+| `protoface-avatar:consent-changed` | Consent checkbox changed | `checked` |
+| `protoface-avatar:conversation-started` | Conversation created | `room`, `expiresAt` |
+| `protoface-avatar:live` | Conversation connected | `room` |
+| `protoface-avatar:transcript` | Visitor or avatar speech (may fire more than once) | `role`, `content`, `final` |
+| `protoface-avatar:ended` | Conversation ended | `reason`, `failed` |
+| `protoface-avatar:error` | The embed cannot complete an action | `code`, `message` |
+| `protoface-avatar:closed` | Visitor hides a corner embed | `reason` |
+| `protoface-avatar:reopened` | Visitor reopens a corner embed | none |
 
-For transcript events, `role` is either `user` or `agent`, `content` contains
-the transcribed speech, and `final` is `true` once that part of the transcript
-is complete. The `room` value identifies the individual conversation.
+On transcripts, `role` is either `user` or `agent`, and `final` is `true`
+once that part of the transcript is complete. `room` identifies the
+individual conversation.
 
-You can listen on the `<protoface-avatar>` element or one of its parent
-elements. Events can report activity, but they do not provide methods for
-starting or controlling a conversation.
+## Custom UI
 
-## Custom UI With Protoface Client
+With `protoface-client`, you own consent, controls, placement,
+transcripts, errors, and status in your own layout. Start from the
+[conversations quickstart](https://github.com/protoface-ai/protoface-quickstart-conversations)
+and swap in the public ID from the Embed panel.
 
-Use `protoface-client` when you want to design the whole interface yourself,
-including consent, controls, avatar placement, transcripts, errors, and status
-messages.
+The frontend needs nothing beyond that ID. Embed settings and account
+limits still apply server-side.
 
-Start with the
-[Protoface Conversations quickstart](https://github.com/protoface-ai/protoface-quickstart-conversations),
-then replace its embed ID with the public ID from your Embed panel.
+## What visitors see
 
-Your frontend only needs the public embed ID. Protoface still applies the saved
-embed settings and account limits behind the scenes.
+The iframe and share link show the portrait and intro, then consent and
+microphone access. A custom UI presents the same steps in its own design.
+Visitors can end a conversation at any time, and the hosted UIs explain a
+disabled embed, an exhausted limit, or an outage.
 
-## What Visitors Experience
+## Access and limits
 
-The iFrame embed and Share Link show the avatar portrait and intro. Before a
-conversation begins, visitors are guided through consent and microphone access.
-A custom UI presents the same steps in its own design.
+Every conversation spends the embed owner's credits and counts against
+their concurrent-session limit.
 
-Visitors can end a conversation at any time. The hosted options also explain
-when an embed is disabled, has reached a limit, or is temporarily unavailable.
-
-Conversation starts consume the embed owner's Protoface credits and count
-toward the account's concurrent-session limits.
-
-## Manage Access and Limits
-
-- **Deactivate** stops new conversations but keeps the embed's settings.
-- **Regenerate Link** creates a new public ID. Anything using the old ID will
-  stop working, including iFrame embeds, custom UIs, and Share Links.
-- **Starts per Hour** limits new conversations started through that embed.
-- **Active per Visitor** limits simultaneous conversations by the same visitor.
-- **Max Seconds** ends an individual conversation after the configured time,
-  up to 3,600 seconds.
+| Control | Effect |
+| --- | --- |
+| Deactivate | Stops new conversations, keeps settings |
+| Regenerate Link | Issues a new public ID, breaking existing iframe embeds, custom UIs, and share links |
+| Starts per Hour | Caps new conversations on the embed |
+| Active per Visitor | Caps simultaneous conversations per visitor |
+| Max Seconds | Ends a conversation after the set time, up to 3,600 seconds |
 
 ## Troubleshooting
 
-Most embed issues can be resolved with a quick check in the Embed panel.
-
-### Embed Display
-
-If the avatar does not appear, open the Embed panel and check that it is
-enabled. When **Domain Restrictions** is on, the website's origin should appear
-under **Allowed Website Origins**. Leaving restrictions off can make testing
-easier; you can add the origins before launching.
-
-### Microphone Access
-
-If the avatar cannot hear the visitor, the browser may simply need microphone
-permission. Select the lock or settings icon beside the website address, allow
-microphone access, and reload the page.
-
-### Starting a Conversation
-
-Give it a moment, then try again. If the conversation still does not start,
-review **Starts per Hour** and **Active per Visitor** in the Embed panel. It may
-also help to check **Billing** for the account's available credits.
-
-### Older Links
-
-The embed's public link may have been regenerated since the page was set up.
-Open **Avatars**, select **Embed**, and copy the current **Share Link** or
-**Embed Code**.
-
-If you are still stuck, ask the person who manages your Protoface account or
-[contact Protoface support](https://protoface.discourse.group/).
+| Symptom | Check |
+| --- | --- |
+| Avatar does not appear | Embed is enabled. If domain restrictions are on, the page origin is in **Allowed Website Origins**. |
+| Avatar cannot hear the visitor | Browser microphone permission for this origin, then reload. |
+| Conversation does not start | **Starts per Hour**, **Active per Visitor**, and the account credit balance. |
+| Old links 404 | The public ID was regenerated. Open **Avatars**, select **Embed**, and copy the current share link or embed code. |

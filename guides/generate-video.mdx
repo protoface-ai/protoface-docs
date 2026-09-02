@@ -1,0 +1,45 @@
+---
+title: "Generate a video"
+description: "Turn a text prompt into a finished clip with sound."
+---
+
+Text to video is a single request. In the example below, MiniMax H3 takes
+a prompt, a length in seconds, a quality tier, and an aspect ratio.
+
+```bash
+curl -X POST https://api.protoface.com/v1/run/minimax/minimax-h3 \
+  -H "Authorization: Bearer $PROTOFACE_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "prompt": "A wide shot of a sailboat crossing a quiet bay at sunrise.",
+    "duration_seconds": 8,
+    "quality": "768p",
+    "aspect_ratio": "16:9"
+  }'
+```
+
+The request returns a run ID immediately. The clip lands on `video.url`
+once `status` reaches `completed`.
+
+```bash
+curl https://api.protoface.com/v1/runs/run_... \
+  -H "Authorization: Bearer $PROTOFACE_API_KEY"
+```
+
+```json
+{
+  "id": "run_...",
+  "status": "completed",
+  "video": {
+    "url": "https://...",
+    "content_type": "video/mp4",
+    "file_name": "output.mp4"
+  }
+}
+```
+
+Bodies are not portable between video models. `duration_seconds` and
+`quality` are MiniMax H3's names. Most models use `duration` and
+`resolution`, and models with several operations require `operation`.
+Build each body from its
+[request schema](/guides/models#request-schemas).

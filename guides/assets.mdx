@@ -1,0 +1,83 @@
+---
+title: "Assets"
+description: "Upload a file once and reuse it across generations."
+---
+
+An asset is a file you upload once and then pass into any generation by
+its `asset_...` ID.
+
+Completed runs return an `asset_id` on every file output, so chaining one
+generation into the next never requires downloading the result first.
+
+## Upload
+
+`POST /v1/assets` takes `multipart/form-data` with `file` and `modality`.
+Uploads cap at 100 MB and accept image, audio, video, JSON, and binary
+model artifacts. `schema_uri` and `duration_ms` are optional form fields.
+
+```bash
+curl -X POST https://api.protoface.com/v1/assets \
+  -H "Authorization: Bearer $PROTOFACE_API_KEY" \
+  -F "file=@reference.png;type=image/png" \
+  -F "modality=image"
+```
+
+Success returns `201` and the ID.
+
+```json
+{
+  "id": "asset_...",
+  "object": "asset",
+  "modality": "image",
+  "media_type": "image/png",
+  "status": "ready",
+  "download_url": "https://..."
+}
+```
+
+A run accepts the ID once `status` reads `ready`.
+
+The ID goes in whichever field the model uses for that input. In the
+example below, MiniMax H3 calls that field `first_frame`.
+
+```bash
+curl -X POST https://api.protoface.com/v1/run/minimax/minimax-h3 \
+  -H "Authorization: Bearer $PROTOFACE_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "prompt": "The ceramic lamp turns slowly under a single studio light.",
+    "duration_seconds": 8,
+    "quality": "768p",
+    "aspect_ratio": "16:9",
+    "first_frame": "asset_..."
+  }'
+```
+
+Field names vary by model. `GET /v1/models/{model_id}` lists them.
+
+Uploads fail for three reasons. An empty file returns
+`error.code: "asset.empty"`. A file over the size cap returns
+`error.code: "asset.too_large"`. A media type Protoface does not handle
+returns `error.code: "asset.media_type_unsupported"`.
+
+## Manage assets
+
+Assets paginate like runs, with `limit` and `starting_after`. Retrieve one
+to inspect it, pull raw bytes from `/content`, or delete it. Deletion
+makes the asset unavailable to future runs and leaves historical records
+intact.
+
+```bash
+curl "https://api.protoface.com/v1/assets?limit=20" \
+  -H "Authorization: Bearer $PROTOFACE_API_KEY"
+
+curl https://api.protoface.com/v1/assets/asset_... \
+  -H "Authorization: Bearer $PROTOFACE_API_KEY"
+
+curl https://api.protoface.com/v1/assets/asset_.../content \
+  -H "Authorization: Bearer $PROTOFACE_API_KEY" \
+  -o reference.png
+
+curl -X DELETE https://api.protoface.com/v1/assets/asset_... \
+  -H "Authorization: Bearer $PROTOFACE_API_KEY"
+```
