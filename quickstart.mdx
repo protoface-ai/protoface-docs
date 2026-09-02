@@ -1,24 +1,43 @@
 ---
-title: "Realtime Quickstart"
-description: "Run a LiveKit Agents app with a realtime Protoface avatar."
+title: "Realtime quickstart"
+sidebarTitle: "Quickstart"
+description: "Add a live avatar to a LiveKit agent."
 ---
 
-This sample uses Gemini Live. The same avatar flow applies to agents that use
-separate STT, LLM, and TTS components.
+<div
+  style={{
+    border: "1px solid rgba(12, 13, 14, 0.10)",
+    borderRadius: "12px",
+    marginBottom: "2rem",
+    marginTop: "0.5rem",
+    overflow: "hidden"
+  }}
+>
+  <img
+    src="/images/home/welcome-avatar-grid.webp"
+    alt="Protoface avatars displayed as realtime video tiles"
+    style={{ display: "block", height: "auto", margin: 0, width: "100%" }}
+  />
+</div>
 
-For other frameworks, see the
-[Protoface quickstarts](https://github.com/protoface-ai/protoface-quickstart).
+Protoface Realtime turns an agent's audio into live avatar video. This
+sample uses Gemini Live, and the same avatar flow applies to agents built
+from separate STT, LLM, and TTS components. For more examples you can
+clone and run, see the
+[quickstart repo](https://github.com/protoface-ai/protoface-quickstart).
 
 ## Prerequisites
 
-- A Protoface API key from [app.protoface.com](https://app.protoface.com).
+- A Protoface API key from [app.protoface.com](https://app.protoface.com),
+  covered in [Authentication](/guides/authentication).
 - A LiveKit project with `LIVEKIT_URL`, `LIVEKIT_API_KEY`, and
   `LIVEKIT_API_SECRET`.
-- A Google Gemini API key for the sample realtime model: `GOOGLE_API_KEY`.
+- A Google Gemini API key for the sample realtime model, set as
+  `GOOGLE_API_KEY`.
 
 ## 1. Install
 
-```sh
+```bash
 python -m venv .venv
 source .venv/bin/activate
 pip install livekit-plugins-protoface livekit-plugins-google python-dotenv
@@ -26,9 +45,9 @@ pip install livekit-plugins-protoface livekit-plugins-google python-dotenv
 
 ## 2. Set environment variables
 
-Create `.env`:
+Create a `.env` file:
 
-```sh
+```bash
 LIVEKIT_URL="wss://your-project.livekit.cloud"
 LIVEKIT_API_KEY="..."
 LIVEKIT_API_SECRET="..."
@@ -98,18 +117,20 @@ if __name__ == "__main__":
 
 ## 4. Run the agent
 
-```sh
+```bash
 python agent.py start
 ```
 
-Open [Agents Playground](https://agents-playground.livekit.io), connect it to
-your LiveKit project, join the room, and talk to the agent.
+Open [Agents Playground](https://agents-playground.livekit.io), connect
+to your LiveKit project, join the room, and talk to the agent.
 
 ## Expected result
 
 - A `protoface-avatar-agent` participant joins the same LiveKit room.
-- The avatar publishes audio/video.
-- `avatar.session_id` contains the `sess_...` ID.
+- The avatar publishes audio and video.
+- `avatar.session_id` contains the `sess_...` ID, which moves through
+  `queued`, `starting`, and `running` before the first frame.
+- The session ends when the agent stops, or on `await avatar.aclose()`.
 
 ## Troubleshooting
 
@@ -120,16 +141,7 @@ your LiveKit project, join the room, and talk to the agent.
 | No avatar participant appears | Confirm the agent connected to the same LiveKit room as the Playground. |
 | Avatar joins but stays silent | Confirm the agent can produce speech and the avatar participant joined the same room. |
 
-## Next
-
-<Columns cols={3}>
-  <Card title="LiveKit Agents guide" href="/guides/livekit-agents" icon="radio">
-    Configuration options and lifecycle details.
-  </Card>
-  <Card title="More Integrations" href="/guides/more-integrations" icon="blocks">
-    Quickstarts for other platforms and SDKs.
-  </Card>
-  <Card title="Avatars" href="/guides/avatars" icon="user-round">
-    Choose the avatar ID for your app.
-  </Card>
-</Columns>
+[LiveKit Agents](/guides/livekit-agents) covers plugin options, the
+session lifecycle, and the REST endpoints underneath.
+[Avatars](/guides/avatars) shows how to replace the stock avatar with
+your own.

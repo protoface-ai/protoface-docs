@@ -1,41 +1,24 @@
-# Protoface Developer Docs
+# Protoface Docs
 
-This repository contains the documentation published at
-[docs.protoface.com](https://docs.protoface.com).
+The Protoface docs are live here: [docs.protoface.com](https://docs.protoface.com/?utm_source=github&utm_medium=referral&utm_campaign=github_docs&utm_content=protoface-docs)
 
-The docs cover two parts of the Protoface API:
+## About Protoface
 
-- Model inference, currently focused on video generation.
-- Realtime avatars for agents, calls, and web experiences.
+Protoface runs frontier models for video, images, speech, music, and 3D, and adds a real-time avatar to your AI app or agent. Read the docs (published from this repo) to find out more!
 
-They also cover shared resources such as avatars, authentication, usage, limits,
-and errors. Protoface Studio is the browser-based video editor; its interface is
-not documented here.
+Get a **free** API key at [protoface.com](https://protoface.com/?utm_source=github&utm_medium=referral&utm_campaign=github_docs&utm_content=protoface-docs).
 
-Create an API key in the [Protoface dashboard](https://app.protoface.com).
+Want to get started quickly? Check out the [Quickstart Repo](https://github.com/protoface-ai/protoface-quickstart), which has examples you can easily clone and run in under 5 minutes.
 
-## Run locally
+## For Docs Developers
 
-```shell
+To run the docs locally:
+
+```sh
 npm install -g mint
 mint dev
 ```
 
-## Repository structure
-
-- `docs.json` contains the Mintlify navigation and site configuration.
-- `index.mdx` is the developer documentation homepage.
-- `guides/` contains task-based guides.
-- `reference/` contains shared behavior such as errors and limits.
-- `api-reference/` contains the API reference introduction.
-- `openapi.json` generates the endpoint reference.
-
 ## API Reference
 
-The endpoint reference is generated from `openapi.json`. Update the API schema
-from its source rather than editing generated endpoint pages by hand.
-
-## Writing
-
-Keep pages short and direct. Lead with the task, use working examples, and link
-to the generated API reference for complete request and response schemas.
+The API reference is generated from `openapi.json`.

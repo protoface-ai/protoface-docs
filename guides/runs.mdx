@@ -1,28 +1,29 @@
 ---
 title: "Runs"
-description: "Submit, monitor, retrieve, and cancel model inference runs."
+description: "Submit, poll, retrieve, and cancel a generation."
 ---
 
-A run is one model inference request. Submission reserves the quoted credits
-and returns a run ID immediately.
+A run is one model inference request. Submitting one reserves credits
+against your balance and returns a run ID immediately. Once the run
+completes, that ID carries the finished file.
 
 ## Lifecycle
 
-A run moves through these states:
+| Status | Meaning |
+| --- | --- |
+| `queued` | Accepted, waiting to start |
+| `running` | Generation in progress |
+| `completed` | Output is ready |
+| `failed` | Generation failed and the reservation was released |
+| `canceled` | Canceled by the caller |
 
-- `queued`: accepted and waiting to start.
-- `running`: generation is in progress.
-- `completed`: output is ready.
-- `failed`: generation failed and the reservation was released.
-- `canceled`: canceled by the caller.
+## Generate
 
-## Submit
+Send a flat JSON body to `POST /v1/run/{model_id}`. The model's
+[catalog entry](/guides/models) defines which fields the body accepts.
 
-Send a flat JSON body to `POST /v1/run/{model_id}`. The model entry defines
-which fields the body accepts.
-
-```sh
-curl -X POST https://api.protoface.com/v1/run/minimax-h3 \
+```bash
+curl -X POST https://api.protoface.com/v1/run/minimax/minimax-h3 \
   -H "Authorization: Bearer $PROTOFACE_API_KEY" \
   -H "Content-Type: application/json" \
   -H "Idempotency-Key: product-shot-001" \
@@ -34,80 +35,198 @@ curl -X POST https://api.protoface.com/v1/run/minimax-h3 \
   }'
 ```
 
-Use an `Idempotency-Key` when a request may be retried. Reusing the key with the
-same request returns the original run. Reusing it with a different request
-returns a conflict.
+The `202` carries the run ID, the URLs for polling and retrieval, and a
+credit estimate.
+
+```json
+{
+  "id": "run_...",
+  "object": "run",
+  "model": "minimax/minimax-h3",
+  "model_revision": "2026-08-20",
+  "operation": "video.general",
+  "status": "queued",
+  "queue_position": 0,
+  "credit_estimate": {
+    "pricing_version": "model-2026-08-15",
+    "estimated_credits": 29,
+    "maximum_reserved_credits": 29,
+    "lines": [
+      {
+        "operation": "video.general",
+        "model": "minimax-h3",
+        "meter": "output_seconds",
+        "unit": "second",
+        "quantity": 8,
+        "credits": 29
+      }
+    ]
+  },
+  "status_url": "/v1/runs/run_.../status",
+  "response_url": "/v1/runs/run_...",
+  "created_at": "2026-09-01T07:14:36.347084Z"
+}
+```
+
+`maximum_reserved_credits` is the hold placed against your balance, and
+`lines` itemizes it by meter. `queue_position` becomes `null` once the
+run starts. [Credits and limits](/reference/quotas) covers settlement.
+
+`metadata` takes arbitrary JSON and `external_id` takes a string, both of
+which tie a run back to a record in your own database. Keys beginning
+with `protoface_` are reserved and return
+`error.code: "run.metadata_reserved"`.
+
+### Operation
+
+A model with one operation uses it by default. A model with several
+operations requires `operation` on the request, and omitting it returns
+`error.code: "run.operation_required"`. Naming an operation the model
+does not have returns `error.code: "run.operation_unsupported"`.
+
+## Idempotency
+
+Use an `Idempotency-Key` when a request may be retried. Reusing the key
+with the same body returns the original run. Reusing it with a different
+body returns `409` and `error.type: "conflict"`.
+
+The key is any unique string up to 255 characters, and Protoface
+remembers it for 24 hours.
 
 ## Media inputs
 
 Models that accept images, video, or audio can take:
 
 - An `asset_...` ID returned by `POST /v1/assets` or a previous run.
-- A public HTTPS URL.
+- A public URL.
 - A data URI.
 
-Use a URL or data URI for one-off input. Use an asset ID to reuse media across
-runs.
+Use a URL or data URI for one-off input. Use an asset ID to reuse media
+across runs. [Assets](/guides/assets) covers uploading and reusing them.
 
-The field names and maximum number of files vary by model. Check
-`GET /v1/models/{model_id}` before building the request.
+Field names, size limits, and the maximum number of files vary by model.
+`GET /v1/models/{model_id}` carries all three.
 
-## Poll status
+Models also constrain which inputs travel together. Omitting a field that
+another one requires returns `error.code: "run.input_role_dependency"`,
+and the catalog states those requirements on `role_dependencies`. Sending
+a combination the model refuses returns
+`error.code: "run.input_role_conflict"`. See
+[Models](/guides/models#operations).
 
-Use the lightweight status endpoint while the run is active:
+## Status
 
-```sh
+Use the lightweight status endpoint while the run is active. It returns
+`status`, `progress`, `queue_position`, and `error`, but not the file.
+
+Poll about once a second, and stop once `status` reaches `completed`,
+`failed`, or `canceled`.
+
+```bash
 curl https://api.protoface.com/v1/runs/run_.../status \
   -H "Authorization: Bearer $PROTOFACE_API_KEY"
 ```
 
-Wait between polls. `queue_position` is available while a run is queued and may
-be `null` after it starts.
-
 ## Retrieve a result
 
-```sh
+Fetch the whole object once the run finishes:
+
+```bash
 curl https://api.protoface.com/v1/runs/run_... \
   -H "Authorization: Bearer $PROTOFACE_API_KEY"
 ```
 
-The `outputs` array contains the full result. When there is exactly one video
-output, the response also includes it in `video` for convenience.
+```json
+{
+  "id": "run_...",
+  "object": "run",
+  "model": "minimax/minimax-h3",
+  "model_revision": "2026-08-20",
+  "operation": "video.general",
+  "status": "completed",
+  "progress": 100,
+  "video": {
+    "url": "https://...",
+    "content_type": "video/mp4",
+    "file_name": "output.mp4",
+    "file_size": 3919397
+  },
+  "image": null,
+  "audio": null,
+  "outputs": [
+    {
+      "role": "output",
+      "modality": "video",
+      "type": "asset",
+      "asset_id": "asset_...",
+      "file": {
+        "url": "https://...",
+        "content_type": "video/mp4",
+        "file_name": "output.mp4",
+        "file_size": 3919397
+      },
+      "text": null,
+      "data": null
+    }
+  ],
+  "credits": { "pricing_version": "model-2026-08-15", "reserved": 29, "charged": 29 },
+  "error": null,
+  "metadata": {},
+  "external_id": null,
+  "created_at": "2026-09-01T05:13:51.540770Z",
+  "started_at": "2026-09-01T05:16:40.595801Z",
+  "completed_at": "2026-09-01T05:26:02.667683Z"
+}
+```
+
+`outputs` is the complete result. Each entry has a `modality` and a
+`type` of `asset`, `text`, or `data`, with the value on the matching
+`file`, `text`, or `data` field. File entries carry an `asset_id` for
+chaining into the next run.
+
+A single file of a given modality is also copied onto `image`, `video`,
+or `audio` as a shortcut. Multi-part results, text, and structured data
+appear only on `outputs`.
+
+`credits` records `reserved` and `charged` against the `pricing_version`
+set at creation. `created_at` to `started_at` is queue time, and
+`started_at` to `completed_at` is generation.
+
+A failed run keeps `error.code` and `error.message`. An uncharged run
+reports `charged` as `0` and leaves `reserved` at the original hold.
 
 ## Cancel
 
-```sh
+Queued and running runs can be canceled.
+
+```bash
 curl -X POST https://api.protoface.com/v1/runs/run_.../cancel \
   -H "Authorization: Bearer $PROTOFACE_API_KEY"
 ```
 
-Canceling a queued run releases all reserved credits. Once a run starts,
-canceling it still charges the full reserved amount. Completed and failed runs
-return `409` if you try to cancel them.
+Canceling before work starts releases the hold and reports `charged` as
+`0`. Canceling after it starts charges the reserved amount. A run that
+already completed returns `409` with
+`error.code: "run.not_cancelable"`.
 
 ## List runs and events
 
-List recent runs:
+Lists return newest first and page with `limit` and `starting_after`,
+which takes a run ID. `has_more` and `next_cursor` signal another page.
 
-```sh
+```bash
 curl "https://api.protoface.com/v1/runs?limit=20" \
   -H "Authorization: Bearer $PROTOFACE_API_KEY"
 ```
 
-For detailed progress or debugging, read the ordered event stream:
+`/events` returns one run's ordered history, useful for detailed progress
+and for debugging.
 
-```sh
+```bash
 curl https://api.protoface.com/v1/runs/run_.../events \
   -H "Authorization: Bearer $PROTOFACE_API_KEY"
 ```
 
-## Next
-
-<Columns cols={2}>
-  <Card title="Models" href="/guides/models" icon="boxes">
-    Read model capabilities and request fields.
-  </Card>
-  <Card title="Errors" href="/reference/errors" icon="triangle-alert">
-    Handle rate limits, conflicts, and failed requests.
-  </Card>
-</Columns>
+Events are ordered by `sequence`. Terminal events (`run.completed`,
+`run.failed`, `run.canceled`) carry `credits_charged` in `data`, which
+makes this the endpoint to reconcile billing against.

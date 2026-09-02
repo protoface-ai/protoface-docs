@@ -1,51 +1,50 @@
 ---
 title: "Avatars"
-description: "Create and use avatars in realtime sessions."
+sidebarTitle: "Overview"
+description: "Create, list, and use avatars in realtime sessions."
 ---
 
-Use an avatar ID with realtime sessions. Start with `av_stock_001`, then switch
-to a custom avatar from the dashboard or API.
+Every realtime session runs one avatar. Start with the stock avatar
+`av_stock_001` while you validate session creation and media routing,
+then switch to a custom avatar built from the dashboard or the API.
+
+Building is asynchronous. You upload a PNG or JPEG portrait, and the
+avatar must reach `status: "ready"` before a session accepts it.
+[Source images](/guides/avatar-source-images) has examples of portraits
+that build and ones that fail.
 
 ## Create an avatar
 
-Custom avatar builds are asynchronous. Upload a portrait image, then poll the
-avatar until `status` is `ready` or `failed`.
-
-```sh
+```bash
 curl -X POST https://api.protoface.com/v1/avatars \
   -H "Authorization: Bearer $PROTOFACE_API_KEY" \
   -F "image=@portrait.png" \
   -F "name=Demo Avatar"
 ```
 
-## Source image checklist
-
-- Use a PNG or JPEG source image.
-- Use one clearly visible, forward-facing face or face-like subject.
-- Avoid heavy occlusion, extreme crop, harsh lighting, multiple faces, or
-  screen-only/abstract faces without distinct features.
-- See [Source Images](/guides/avatar-source-images) for examples of
-  good and bad portrait uploads.
-- If the avatar reaches `status: "failed"`, check `failure_reason` on the
-  avatar response before uploading a new source image.
+The portrait needs one clearly visible, forward-facing face or face-like
+subject. Avoid heavy occlusion, extreme crops, harsh lighting, and
+multiple faces. A `"failed"` build puts the reason on `failure_reason`.
 
 ## List avatars
 
-```sh
+```bash
 curl https://api.protoface.com/v1/avatars \
   -H "Authorization: Bearer $PROTOFACE_API_KEY"
 ```
 
-Use avatars with `status: "ready"` in realtime sessions.
-
 ## Retrieve an avatar
 
-```sh
+```bash
 curl https://api.protoface.com/v1/avatars/av_... \
   -H "Authorization: Bearer $PROTOFACE_API_KEY"
 ```
 
+Poll this endpoint until `status` reaches `ready` or `failed`.
+
 ## Use an avatar
+
+Pass a ready avatar ID into the LiveKit plugin:
 
 ```python
 from livekit.plugins import protoface
@@ -53,26 +52,21 @@ from livekit.plugins import protoface
 avatar = protoface.AvatarSession(avatar_id="av_stock_001")
 ```
 
-When using the REST API, pass the same value as `avatar_id` in
-`POST /v1/sessions`.
+The avatar starts before the agent session. Once running,
+`avatar.session_id` holds the Protoface `sess_...` ID, and
+`GET /v1/sessions/{id}` reports `status` and `usage`. End it with
+`await avatar.aclose()` or `POST /v1/sessions/{id}/end`.
+[LiveKit Agents](/guides/livekit-agents) covers the plugin in full.
+
+Without the plugin, the avatar ID goes to `POST /v1/sessions` as
+`avatar_id`. The request shape is in [API Reference](/api-reference).
 
 ## Delete an avatar
 
-```sh
+```bash
 curl -X DELETE https://api.protoface.com/v1/avatars/av_... \
   -H "Authorization: Bearer $PROTOFACE_API_KEY"
 ```
 
-Deleting a custom avatar removes its uploaded source image and built assets.
-Past session and usage records remain. Stock avatars cannot be deleted.
-
-## Next
-
-<Columns cols={2}>
-  <Card title="Realtime quickstart" href="/quickstart" icon="rocket">
-    Run a LiveKit Agents app with a Protoface avatar.
-  </Card>
-  <Card title="Embeds" href="/guides/embeds" icon="panel-top">
-    Add an avatar to a website or share a standalone conversation link.
-  </Card>
-</Columns>
+Deleting a custom avatar removes its source image and built assets. Past
+session and usage records remain. Stock avatars cannot be deleted.

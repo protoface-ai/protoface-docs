@@ -1,0 +1,50 @@
+---
+title: "Authentication"
+description: "API keys, scopes, and where to keep them."
+---
+
+Most requests need an API key sent as a Bearer token. Keys are created
+and revoked in the [dashboard](https://app.protoface.com) and belong to
+one environment, staging or production. One key covers both media
+generation and realtime sessions.
+
+```http
+Authorization: Bearer sk_live_...
+```
+
+Only `GET /v1/status` and `GET /v1/billing/plans` are public. Everything
+else under `/v1` requires the header. Keep the key in the environment.
+
+```bash
+export PROTOFACE_API_KEY="sk_live_..."
+```
+
+## Test your key
+
+`GET /v1/models` returns `200` for a working key and `401` otherwise.
+
+```bash
+curl https://api.protoface.com/v1/models \
+  -H "Authorization: Bearer $PROTOFACE_API_KEY"
+```
+
+## Scopes
+
+A key is either unrestricted, with access to the whole API, or limited to
+named scopes. Generating media needs both scopes below, since creating a
+run and reading its result are separate permissions.
+
+| Scope | Access |
+| --- | --- |
+| `runs:write` | Create and cancel runs |
+| `runs:read` | List runs, poll status, retrieve results |
+
+A valid key without the required scope returns `403` with
+`error.code: "api_key.scope_required"`. A missing, malformed, or revoked
+key returns `401`.
+
+## Browsers and embeds
+
+Keep API keys server-side. Anything shipped to a browser is readable.
+[Embeds](/guides/embeds) let a visitor reach an avatar directly, using a
+public embed ID (`emb_...`) that carries no account access.
