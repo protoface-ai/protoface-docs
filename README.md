@@ -28,11 +28,7 @@ Requires Node 20.17+. The preview runs at `http://localhost:3000`.
 
 The published site also serves `/llms.txt` and `/llms-full.txt` for agents.
 
-## Writing
-
-Keep pages short and direct. Lead with the task, use working examples,
-and link to the generated API reference for complete request and response
-schemas.
+## API reference
 
 The endpoint reference is generated from `openapi.json`. Update the API
 schema from its source rather than editing that file or the generated
