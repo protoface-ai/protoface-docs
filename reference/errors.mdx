@@ -58,10 +58,11 @@ until something already running finishes.
 | `run.operation_unsupported` | That operation is not on this model |
 | `model.not_available` | Model is missing or not accepting runs |
 | `run.parameter_invalid` | A field failed the model's contract |
+| `run.field_unsupported` | A field the model's schema does not define |
 | `run.concurrency_exceeded` | Too many runs queued or running |
 | `run.rate_limited` | Too many run requests on this key |
 | `insufficient_credit_balance` | Not enough credits to reserve the run (`402`) |
-| `run.not_cancelable` | Cancel after the run already finished |
+| `run.not_cancelable` | Cancel after the run already completed |
 | `run.metadata_reserved` | `metadata` used a `protoface_` key |
 | `run.input_role_dependency` | A field requires another field that was omitted |
 | `run.input_role_conflict` | Two fields cannot be combined on this model |
