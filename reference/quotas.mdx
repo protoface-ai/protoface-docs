@@ -47,19 +47,29 @@ Need higher limits? [Contact us](https://protoface.com/enterprise).
 
 ## Realtime sessions
 
-Your plan sets how many sessions you can run at once and how long each
-one lasts. Every session response carries the effective limits for that
-session.
+Your plan sets how long each session lasts, and — except on Scale — how
+many sessions you can run at once. Every session response carries the
+effective limits for that session.
 
 | Plan | Concurrent sessions | Max session duration |
 | --- | --- | --- |
 | Free | 1 | 2 minutes |
 | Starter | 2 | 10 minutes |
 | Launch | 10 | 20 minutes |
-| Scale | 50 | 60 minutes |
+| Scale | Uncapped* | 60 minutes |
 
-If you exceed your concurrency, session creation returns `429` with
+*Uncapped means no artificial cap on simultaneous sessions. Ramp and
+system technical limits still apply, and uncapped does not imply
+guaranteed concurrency.
+
+On capped plans, exceeding your concurrency returns `429` with
 `error.type: "quota_exceeded"` and `error.code: "concurrent_sessions"`.
+
+Session starts are ramp rate-limited on all plans to prevent abuse (see
+create rate limit below); this affects ramp-up speed only, not your
+total concurrency budget. If production frequently hits ramp limits,
+[contact us](https://protoface.com/enterprise) to discuss higher ramp
+limits.
 
 | Limit | Default |
 | --- | --- |
