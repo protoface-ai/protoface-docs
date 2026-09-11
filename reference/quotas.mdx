@@ -58,16 +58,18 @@ effective limits for that session.
 | Launch | 10 | 20 minutes |
 | Scale | Uncapped* | 60 minutes |
 
-*Uncapped means no artificial cap on simultaneous sessions. To prevent
-abuse, session starts are ramp rate-limited (see create rate limit
-below); this affects ramp-up speed only, not your total concurrency
-budget. Ramp and system technical limits still apply, and uncapped does
-not imply guaranteed concurrency. If production frequently hits ramp
-limits, [contact us](https://protoface.com/enterprise) to discuss higher
-ramp limits.
+*Uncapped means no artificial cap on simultaneous sessions. Ramp and
+system technical limits still apply, and uncapped does not imply
+guaranteed concurrency.
 
 On capped plans, exceeding your concurrency returns `429` with
 `error.type: "quota_exceeded"` and `error.code: "concurrent_sessions"`.
+
+Session starts are ramp rate-limited on all plans to prevent abuse (see
+create rate limit below); this affects ramp-up speed only, not your
+total concurrency budget. If production frequently hits ramp limits,
+[contact us](https://protoface.com/enterprise) to discuss higher ramp
+limits.
 
 | Limit | Default |
 | --- | --- |
