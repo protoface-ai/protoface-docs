@@ -1,78 +1,77 @@
 ---
-title: "Coding agents (MCP)"
-description: "Generate media from Codex, Claude Code, or Cursor with the Protoface MCP server."
+title: "MCP server"
+description: "Generate media from Codex, Claude Code, or Cursor."
 ---
 
-`protoface-mcp` gives your coding agent 17 typed tools for media
-generation: discover models, submit runs, poll status, download outputs,
-manage assets, and check spend. Install once, then ask for videos.
+`protoface-mcp` is an MCP server for the media generation API. It runs on
+your machine through `uvx` and authenticates with your API key. It covers
+models, runs, and assets. Realtime sessions and avatars are not included.
 
-This covers media generation only. Realtime avatar sessions, custom
-avatars, and website embeds stay on the API — start with
-[Quickstart](/quickstart) for those.
+You need [uv](https://docs.astral.sh/uv/) and a key from the
+[dashboard](https://app.protoface.com). Export the key first:
 
-## Prerequisites
-
-- [uv](https://docs.astral.sh/uv/) installed (`uvx` runs the server).
-- A Protoface API key from the [dashboard](https://app.protoface.com).
-  See [Authentication](/guides/authentication).
-
-## Setup
-
-Add one block, then restart your agent. Replace `sk_live_...` with your key.
-
-**Codex** — `~/.codex/config.toml` (with `PROTOFACE_API_KEY` exported in
-your shell):
-
-```toml
-[mcp_servers.protoface]
-command = "uvx"
-args = ["protoface-mcp"]
-env_vars = ["PROTOFACE_API_KEY"]
+```bash
+export PROTOFACE_API_KEY="sk_live_..."
 ```
 
-**Claude Code** — `.mcp.json` in your project root:
+## Install
 
-```json
-{
-  "mcpServers": {
-    "protoface": {
-      "command": "uvx",
-      "args": ["protoface-mcp"],
-      "env": { "PROTOFACE_API_KEY": "sk_live_..." }
-    }
-  }
-}
-```
-
-**Cursor** — `~/.cursor/mcp.json`:
-
-```json
-{
-  "mcpServers": {
-    "protoface": {
-      "command": "uvx",
-      "args": ["protoface-mcp"],
-      "env": { "PROTOFACE_API_KEY": "sk_live_..." }
-    }
-  }
-}
-```
-
-Verify with:
+Paste this into your agent and it installs itself:
 
 ```text
-Using Protoface, list the available models and my credit balance.
+Install the Protoface MCP server. It is a stdio server: the command is
+`uvx protoface-mcp` and it needs the environment variable PROTOFACE_API_KEY,
+which is already set in my shell. Register it under the name "protoface"
+at user scope, then call its list_models tool to confirm it works.
 ```
 
-## Give your agent the skill
+Or run one command:
 
-The MCP server provides the tools; the skill teaches the workflow. Save
-this as `SKILL.md` under a `protoface-media` skills folder:
+<CodeGroup>
 
-- Codex: `~/.agents/skills/protoface-media/SKILL.md`
-- Claude Code: `~/.claude/skills/protoface-media/SKILL.md` (personal) or
-  `.claude/skills/protoface-media/SKILL.md` (project)
+```bash Codex
+codex mcp add protoface --env PROTOFACE_API_KEY="$PROTOFACE_API_KEY" -- uvx protoface-mcp
+```
+
+```bash Claude Code
+claude mcp add --scope user --env PROTOFACE_API_KEY="$PROTOFACE_API_KEY" protoface -- uvx protoface-mcp
+```
+
+```json Cursor
+// ~/.cursor/mcp.json
+{
+  "mcpServers": {
+    "protoface": {
+      "command": "uvx",
+      "args": ["protoface-mcp"],
+      "env": { "PROTOFACE_API_KEY": "${env:PROTOFACE_API_KEY}" }
+    }
+  }
+}
+```
+
+</CodeGroup>
+
+Cursor can also install it from a link:
+[Add to Cursor](cursor://anysphere.cursor-deeplink/mcp/install?name=protoface&config=eyJjb21tYW5kIjoidXZ4IiwiYXJncyI6WyJwcm90b2ZhY2UtbWNwIl0sImVudiI6eyJQUk9UT0ZBQ0VfQVBJX0tFWSI6IiR7ZW52OlBST1RPRkFDRV9BUElfS0VZfSJ9fQ%3D%3D).
+
+Restart the agent, then ask:
+
+```text
+List the Protoface models and my credit balance.
+```
+
+## Add the skill
+
+The server exposes tools. The skill below tells the agent the order to
+call them in, and it is the same file for every client. Save it as
+`SKILL.md`:
+
+| Client | Path |
+| --- | --- |
+| Codex | `~/.agents/skills/protoface-media/SKILL.md` |
+| Claude Code | `~/.claude/skills/protoface-media/SKILL.md` |
+| Cursor | `.cursor/skills/protoface-media/SKILL.md` in the project |
 
 ```markdown
 ---
@@ -82,69 +81,63 @@ description: Generate images, video, and audio with Protoface models. Use when t
 
 # Protoface media generation
 
-Requires the `protoface` MCP server (tools below) and a `PROTOFACE_API_KEY`.
-If tools are missing, tell the user to install `protoface-mcp`
-(see https://docs.protoface.com/reference/mcp) and retry.
+Requires the `protoface` MCP server and a `PROTOFACE_API_KEY`. If the tools
+are missing, point the user to https://docs.protoface.com/reference/mcp.
 
-## Generate media (the core loop)
+## Generating
 
-Never guess a payload shape. Every model has its own input contract:
+Every model has its own input schema. Do not guess a payload.
 
-1. **Discover**: `list_models` → pick a model → `get_model`. Read its
-   `request_schemas` (per-operation JSON schemas), `operations`, modalities,
-   and `pricing`. If the model has multiple operations, confirm which one
-   the user wants.
-2. **Inputs first**: if the payload needs source files (images, audio),
-   `upload_asset` each local file and reference the returned asset ids.
-3. **Check spend**: `get_quota_limits` before submitting anything large.
-   Refuse to spend the user's credits blind — state the expected cost.
-4. **Submit**: `submit_run` with the schema-shaped payload. Pass an
-   `idempotency_key` (any opaque string) whenever retrying, so a duplicate
-   submit returns the original run instead of double-spending.
-5. **Poll**: `get_run_status` until terminal. It is cheap — poll it, not
-   `get_run`. Back off (seconds, not milliseconds); `list_run_events`
-   with `after` shows progress detail for long runs.
-6. **Collect**: `get_run` → `outputs[]`. Each entry has `type`:
-   `asset` (downloadable `file.url` + `asset_id`), `text`, or `data`.
-   Use `download_asset` when the user wants the file on disk.
+1. `list_models`, then `get_model` on the one you want. Read
+   `request_schemas` (one JSON schema per operation), `operations`, and
+   `pricing`. If a model has several operations, ask which one.
+2. If the payload needs files, `upload_asset` each one first and reference
+   the returned asset ids.
+3. `get_quota_limits` before anything large. State the expected cost.
+4. `submit_run` with a payload that matches the schema. On any retry, reuse
+   the same `idempotency_key` so the run is not charged twice.
+5. Poll `get_run_status` every few seconds until the status is terminal.
+   It is cheaper than `get_run`. `list_run_events` with `after` shows
+   progress on long runs.
+6. `get_run` for `outputs[]`. Each entry has `type`: `asset` (a `file.url`
+   and an `asset_id`), `text`, or `data`. `download_asset` writes an asset
+   to disk.
 
-## Status vocabulary
+## Statuses
 
-In-flight: `queued` (`queue_position` tells where), `running` (`progress`
-is 0–100). Terminal: `completed`, `failed` (read `error.code`/`message`),
-`canceled`. Terminal states are final — never re-poll them.
+`queued` (see `queue_position`) and `running` (see `progress`, 0–100) are
+in flight. `completed`, `failed` (see `error`), and `canceled` are final.
+Do not poll a final run.
 
 ## Errors
 
-Tool failures lead with a stable wire code in brackets (e.g.
-`[quota.exceeded]`). Switch on the code, not the message. On auth errors,
-ask the user to check `PROTOFACE_API_KEY`; on quota errors, report
-`get_quota_limits` and stop spending.
+Tool errors start with a stable code in brackets, such as
+`[quota.exceeded]`. Branch on the code. On auth errors ask the user to
+check `PROTOFACE_API_KEY`. On quota errors report `get_quota_limits` and
+stop.
 
-## Out of scope
+## Scope
 
-This skill covers media generation only. Realtime avatar sessions, custom
-avatars, and website embeds are separate Protoface surfaces — say so and
-point at https://docs.protoface.com instead of improvising.
+Media generation only. Realtime sessions, avatars, and embeds are separate
+APIs; send the user to https://docs.protoface.com rather than improvising.
 ```
 
-## Example prompts
+## Prompts that work
 
 ```text
-Generate a 5-second video of a lighthouse at dusk.
-```
-
-```text
-List image models costing at most 5 credits, then generate a
-1024x1024 lighthouse with the cheapest one.
+Generate an 8-second video of a sailboat crossing a quiet bay at sunrise.
 ```
 
 ```text
-Check my Protoface credit balance and summarize this month's usage.
+Find the cheapest image model and generate a 1024x1024 lighthouse with it.
 ```
 
 ```text
-Download the outputs of my latest run into ./outputs/.
+Download the outputs of my most recent run to ./outputs/.
+```
+
+```text
+How many credits do I have left, and what did I spend this month?
 ```
 
 ## Tools
@@ -152,23 +145,23 @@ Download the outputs of my latest run into ./outputs/.
 | Group | Tools |
 | --- | --- |
 | Runs | `submit_run`, `get_run_status`, `get_run`, `cancel_run`, `list_runs`, `list_run_events` |
-| Models | `list_models`, `get_model` (input contracts live here) |
+| Models | `list_models`, `get_model` |
 | Assets | `upload_asset`, `list_assets`, `get_asset`, `download_asset`, `delete_asset` |
-| Spend and health | `get_usage_summary`, `list_billing_plans`, `get_quota_limits`, `get_status` |
+| Account | `get_usage_summary`, `list_billing_plans`, `get_quota_limits`, `get_status` |
 
-Run statuses: `queued` → `running` → `completed` / `failed` / `canceled`.
-Submit reserves credits up front; if a run starts before your cancel
-lands, the started work is charged. Pass an `idempotency_key` to
-`submit_run` when retrying so a duplicate never double-spends. Full
-endpoint details live under [API Reference](/api-reference/index).
+Each tool maps to one endpoint in the [API Reference](/api-reference/index).
+`submit_run` holds the credit estimate when the run is accepted. A cancel
+that lands after the run has started does not refund the work done.
+Uploads are capped at 100 MB per file.
 
 ## Troubleshooting
 
 | Symptom | Fix |
 | --- | --- |
-| `PROTOFACE_API_KEY is not set` | Export the key (Codex) or check the `env` block (Claude Code, Cursor), then restart the agent. |
-| `[api_key.unknown]` | Wrong or mistyped key. Recreate it in the [dashboard](https://app.protoface.com) and check [Authentication](/guides/authentication). |
-| `[model.not_found]` | Call `list_models` — model ids change as the catalog grows. |
-| Quota errors | Call `get_quota_limits`, then top up in the [dashboard](https://app.protoface.com). |
-| Run stuck in `queued` | Check `queue_position` and keep polling — don't resubmit. |
-| Tool failures with a `[code]` | Switch on the code, not the message. See [Errors](/reference/errors). |
+| `PROTOFACE_API_KEY is not set` | Export the key in the shell that launches the agent, then restart it. |
+| `[api_key.unknown]` | The key is wrong or revoked. Create a new one in the [dashboard](https://app.protoface.com). |
+| `[api_key.scope_required]` | The key needs `runs:read` and `runs:write`. See [Authentication](/guides/authentication). |
+| `[model.not_found]` | Call `list_models`; ids are exact and the catalog changes. |
+| `[connection_error]` | Network problem between your machine and the API. Check [status](https://status.protoface.com). |
+| Run stays `queued` | `queue_position` counts the runs ahead of it. Keep polling; do not resubmit. |
+| Other `[code]` | Every code is listed in [Errors](/reference/errors). |
