@@ -150,7 +150,8 @@
             "group": "Reference",
             "pages": [
               "guides/authentication",
-              "reference/errors"
+              "reference/errors",
+              "reference/mcp"
             ]
           }
         ]
