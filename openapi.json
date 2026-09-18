@@ -1183,7 +1183,15 @@
             "type": "string"
           },
           "max_concurrency": {
-            "type": "integer"
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Maximum concurrent realtime sessions. Null when the plan has no artificial concurrency cap."
           },
           "max_video_concurrency": {
             "type": "integer"
@@ -1224,7 +1232,6 @@
           "monthly_price_cents",
           "included_credits",
           "extra_credit_unit_micros",
-          "max_concurrency",
           "max_video_concurrency",
           "custom_avatar_slots",
           "extra_avatar_slot_cents",
@@ -1357,6 +1364,69 @@
         "title": "RunCreditsView",
         "type": "object"
       },
+      "RunDeletionView": {
+        "properties": {
+          "completed_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "error": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Set when storage purge failed, or when deletion completed but some input assets were retained because they cannot be distinguished from library uploads."
+          },
+          "id": {
+            "type": "string"
+          },
+          "object": {
+            "const": "run.deletion",
+            "default": "run.deletion",
+            "type": "string"
+          },
+          "requested_at": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "run_id": {
+            "type": "string"
+          },
+          "started_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "status": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "run_id",
+          "status",
+          "requested_at"
+        ],
+        "title": "RunDeletionView",
+        "type": "object"
+      },
       "RunErrorView": {
         "properties": {
           "code": {
@@ -1371,6 +1441,27 @@
           "message"
         ],
         "title": "RunErrorView",
+        "type": "object"
+      },
+      "RunEtaView": {
+        "description": "Remaining time to output; absent whenever the platform cannot honestly say.",
+        "properties": {
+          "p50_seconds": {
+            "type": "number"
+          },
+          "p95_seconds": {
+            "type": "number"
+          },
+          "source": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "p50_seconds",
+          "p95_seconds",
+          "source"
+        ],
+        "title": "RunEtaView",
         "type": "object"
       },
       "RunEventList": {
@@ -1669,6 +1760,16 @@
               }
             ]
           },
+          "eta": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/RunEtaView"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
           "id": {
             "type": "string"
           },
@@ -1742,10 +1843,31 @@
               }
             ]
           },
+          "deleted_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
           "error": {
             "anyOf": [
               {
                 "$ref": "#/components/schemas/RunErrorView"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "eta": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/RunEtaView"
               },
               {
                 "type": "null"
@@ -2438,7 +2560,8 @@
               {
                 "type": "null"
               }
-            ]
+            ],
+            "description": "Customer-facing model identifier for the charge, using the same resolution as `by_model`. Null when the work bills no model, or bills one that is not offered as a customer-facing model."
           },
           "operation": {
             "type": "string"
@@ -2488,6 +2611,10 @@
               "api": 180,
               "playground": 58
             },
+            "by_model": {
+              "lightricks/ltx-2.5-fast": 58,
+              "minimax/minimax-h3": 180
+            },
             "by_quality": {
               "pro": 2280,
               "standard": 12000
@@ -2529,6 +2656,13 @@
               "$ref": "#/components/schemas/EmbedUsageSummary"
             },
             "type": "array"
+          },
+          "by_model": {
+            "additionalProperties": {
+              "type": "integer"
+            },
+            "description": "`credits_charged` per model identifier, across every charge in the window. Charges that are not attributed to a model are omitted, as are charges for internal models that are not offered as customer-facing models, so these values intentionally do not sum to `credits_charged`. Unlike `recent_charges`, this covers the whole window rather than the most recent settled charges.",
+            "type": "object"
           },
           "by_operation": {
             "additionalProperties": {
@@ -3146,6 +3280,7 @@
     },
     "/v1/assets/{asset_id}": {
       "delete": {
+        "description": "Permanently delete an asset's stored content.\n\nThis is irreversible. Every stored version of the content is erased rather\nthan hidden, so the bytes cannot be recovered afterwards. The asset record\nis retained with a `deleted` status and its usage and billing history stay\nintact, but the content is no longer downloadable.\n\nDeleting an asset that is already deleted succeeds and does nothing.\n\nReturns `409` when work that is still in progress needs the content \u2014\neither as an input to it, or as the output it is still producing \u2014 or when\nthe content is shared with another resource, in which case delete that\nresource instead.",
         "operationId": "delete_asset",
         "parameters": [
           {
@@ -3161,6 +3296,26 @@
         "responses": {
           "204": {
             "description": "Successful Response"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "The asset is a system asset, which cannot be deleted."
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "Work that is still in progress needs the content, or the content is shared with another resource. Retry once the work has finished, or delete the owning resource instead."
           },
           "422": {
             "content": {
@@ -4094,6 +4249,92 @@
       }
     },
     "/v1/runs/{run_id}": {
+      "delete": {
+        "description": "Tombstone the run and enqueue irreversible content purge.\n\nThe run id stays listable with empty content so deletion is auditable.\nBilling rows are not removed. Enterprise accounts only.",
+        "operationId": "deleteRun",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "run_id",
+            "required": true,
+            "schema": {
+              "title": "Run Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "202": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RunDeletionView"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "402": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "The organization has insufficient credits for this run."
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "The API key's scopes do not permit this operation."
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "The request conflicts with the current state of the run."
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "Request body or parameters failed validation."
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "Rate limit or queue capacity reached. Retry after the indicated delay."
+          }
+        },
+        "security": [
+          {
+            "ApiKey": []
+          }
+        ],
+        "summary": "Delete a run's content",
+        "tags": [
+          "runs"
+        ]
+      },
       "get": {
         "operationId": "getRun",
         "parameters": [
@@ -4263,6 +4504,93 @@
           }
         ],
         "summary": "Cancel a run",
+        "tags": [
+          "runs"
+        ]
+      }
+    },
+    "/v1/runs/{run_id}/deletion": {
+      "get": {
+        "operationId": "getRunDeletion",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "run_id",
+            "required": true,
+            "schema": {
+              "title": "Run Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RunDeletionView"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "402": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "The organization has insufficient credits for this run."
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "The API key's scopes do not permit this operation."
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "The request conflicts with the current state of the run."
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "Request body or parameters failed validation."
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorEnvelope"
+                }
+              }
+            },
+            "description": "Rate limit or queue capacity reached. Retry after the indicated delay."
+          }
+        },
+        "security": [
+          {
+            "ApiKey": []
+          }
+        ],
+        "summary": "Retrieve a run deletion receipt",
         "tags": [
           "runs"
         ]
