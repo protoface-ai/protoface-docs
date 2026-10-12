@@ -22,3 +22,25 @@ mint dev
 ## API Reference
 
 The API reference is generated from `openapi.json`.
+
+## Supported models table
+
+The Models page includes a generated inference model table. Refresh it from
+the live catalog with an API key supplied through the environment:
+
+```sh
+node scripts/sync-supported-models.mjs
+```
+
+Set `PROTOFACE_API_KEY` before running the command. Alternatively, use an
+exported `GET /v1/models` response:
+
+```sh
+node scripts/sync-supported-models.mjs --catalog models.json
+node scripts/sync-supported-models.mjs --catalog models.json --check
+node --test scripts/sync-supported-models.test.mjs
+```
+
+Only public, available inference models are included. The generated table
+contains model names, IDs, providers, and output types. Add provider marks
+under `images/providers/<owner>.png` as new providers join the catalog.

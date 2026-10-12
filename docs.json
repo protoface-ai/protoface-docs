@@ -143,7 +143,8 @@
             "group": "Account",
             "pages": [
               "reference/quotas",
-              "guides/usage"
+              "guides/usage",
+              "guides/compliance"
             ]
           },
           {
@@ -172,7 +173,9 @@
               "GET /v1/runs/{run_id}",
               "GET /v1/runs/{run_id}/status",
               "GET /v1/runs/{run_id}/events",
-              "POST /v1/runs/{run_id}/cancel"
+              "POST /v1/runs/{run_id}/cancel",
+              "DELETE /v1/runs/{run_id}",
+              "GET /v1/runs/{run_id}/deletion"
             ]
           },
           {

@@ -1,0 +1,34 @@
+---
+title: "Compliance"
+description: "Enterprise data retention and deletion controls."
+---
+
+<Info>
+  Everything on this page applies to enterprise accounts only.
+</Info>
+
+## Custom Data Retention
+
+In the dashboard, open **Settings → Enterprise** and set the **Data retention
+period (days)**. This controls the number of days that model-call data is
+retained for new API runs. Clear the value to turn off automatic deletion.
+
+### Realtime
+
+These model-call retention controls do not apply to the Realtime API.
+
+## Zero Data Retention
+
+The [Deletion API](/api-reference/runs/delete-a-runs-content)
+lets you delete a run's prompts, request content, and generated assets.
+Retrieve the outputs you need, then request deletion as soon as generation
+finishes to minimize retention of model-call content. Check the deletion
+receipt to confirm completion. Separately stored or shared input assets
+may require their own deletion.
+
+Billing and deletion audit records remain after run content is deleted.
+
+### Realtime
+
+Conversations integrated with our Realtime API do not retain customer audio
+or use customer audio for training.
