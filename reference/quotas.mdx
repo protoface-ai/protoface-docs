@@ -23,27 +23,33 @@ outright reserves nothing.
 
 ### Concurrency
 
-Concurrency is based on platform spend over the last 30 days: the price of
-your current plan plus any credits you buy. Refunded purchases do not
-count.
+Concurrency is the maximum number of jobs that can be running
+simultaneously. Your active Monthly Top Up amount determines your concurrency.
+Additional jobs queue until a running job finishes.
 
-Workers is how many generations can run at the same time. Requested is how
-many runs you can have queued or running. Extra runs wait until a worker is
-free. If you hit the requested limit, the API returns `429` with
+| Monthly Top Up amount | Concurrency |
+| --- | --- |
+| Off, with no qualifying payment | 1 |
+| Off, with a qualifying payment | 3 |
+| \$100–\$499.99 | 10 |
+| \$500–\$999.99 | 20 |
+| \$1,000–\$1,999.99 | 30 |
+| \$2,000–\$2,999.99 | 40 |
+| \$3,000 | 50 |
+
+Without an active Monthly Top Up, a qualifying payment is an unrefunded
+credit purchase or paid invoice from the last 30 days, or a paid invoice
+covering the current billing period.
+
+Non-enterprise users can have a maximum of **5,000 in-flight requests**
+(queued and running combined). Enterprise limits are agreed separately.
+Reaching the in-flight limit returns `429` with
 `error.code: "run.concurrency_exceeded"`.
-
-| Last 30-day spend | Workers | Requested |
-| --- | --- | --- |
-| Under $10 | 1 | 100 |
-| $10+ | 3 | 300 |
-| $100+ | 10 | 1,000 |
-| $500+ | 30 | 3,000 |
-| $1,000+ | 40 | 4,000 |
 
 Run submissions are separately capped at 60 per minute per key, and
 exceeding that returns `429` with `error.code: "run.rate_limited"`.
 
-Need higher limits? [Contact us](https://protoface.com/enterprise).
+Need higher limits? [Contact us](https://protoface.com/enterprise?utm_source=docs&utm_medium=referral&utm_campaign=enterprise&utm_content=reference-quotas).
 
 ## Realtime sessions
 
@@ -68,7 +74,7 @@ On capped plans, exceeding your concurrency returns `429` with
 Session starts are ramp rate-limited on all plans to prevent abuse (see
 create rate limit below); this affects ramp-up speed only, not your
 total concurrency budget. If production frequently hits ramp limits,
-[contact us](https://protoface.com/enterprise) to discuss higher ramp
+[contact us](https://protoface.com/enterprise?utm_source=docs&utm_medium=referral&utm_campaign=enterprise&utm_content=reference-quotas) to discuss higher ramp
 limits.
 
 | Limit | Default |

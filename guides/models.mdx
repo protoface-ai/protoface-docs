@@ -3,6 +3,8 @@ title: "Models"
 description: "Fields, operations, and request schemas for every model."
 ---
 
+import SupportedModels from '/snippets/supported-models.mdx';
+
 `GET /v1/models` is the live contract for every model: operations,
 request schemas, accepted and returned media, and availability. It
 changes as models are added and retired, so read it at runtime rather
@@ -136,3 +138,10 @@ delivered. Request-metered models carry `minimum_credits`.
 
 [Credits and limits](/reference/quotas) covers what a run is actually
 charged.
+
+## Supported models
+
+The table below lists supported inference models by type. For the latest
+models, visit [protoface.com/models](https://protoface.com/models?utm_source=docs&utm_medium=referral&utm_campaign=models&utm_content=guides-models).
+
+<SupportedModels />
