@@ -44,10 +44,57 @@ test("escapes MDX table content and supports multiple output types", () => {
       ...model,
       display_name: "Image | {video}",
       output_modalities: ["video", "image", "video"],
+      operations: { "image.generate": {}, "video.generate": {} },
     },
   ]);
   assert.match(output, /Image &#124; &#123;video&#125;/);
   assert.match(output, /\| Image, Video \|/);
+});
+
+test("classifies video soundtracks separately from standalone audio operations", () => {
+  const output = renderSupportedModels([
+    {
+      ...model,
+      id: "example/video",
+      output_modalities: ["video", "audio"],
+      operations: { "video.general": {} },
+    },
+    {
+      ...model,
+      id: "example/music",
+      output_modalities: ["audio"],
+      operations: { "music.generate": {} },
+    },
+    {
+      ...model,
+      id: "example/speech",
+      output_modalities: ["audio"],
+      operations: { "speech.generate": {} },
+    },
+    {
+      ...model,
+      id: "example/audio",
+      output_modalities: ["audio"],
+      operations: { "audio.generate": {} },
+    },
+    {
+      ...model,
+      id: "example/3d",
+      output_modalities: ["model.3d"],
+      operations: { "3d.generate": {} },
+    },
+    {
+      ...model,
+      id: "example/mixed",
+      output_modalities: ["video", "audio"],
+      operations: { "video.general": {}, "audio.generate": {} },
+    },
+  ]);
+  assert.match(output, /`example\/video`.*\| Video \|/);
+  for (const id of ["music", "speech", "audio"])
+    assert.match(output, new RegExp("`example/" + id + "`.*\\| Audio \\|"));
+  assert.match(output, /`example\/3d`.*\| 3D \|/);
+  assert.match(output, /`example\/mixed`.*\| Audio, Video \|/);
 });
 
 test("refuses an empty, duplicate, or unknown output catalog", () => {

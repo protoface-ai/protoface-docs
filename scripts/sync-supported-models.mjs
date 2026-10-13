@@ -35,6 +35,14 @@ const TYPES = {
   audio: "Audio",
   "model.3d": "3D",
 };
+const OPERATION_TYPES = {
+  image: "image",
+  video: "video",
+  audio: "audio",
+  speech: "audio",
+  music: "audio",
+  "3d": "model.3d",
+};
 
 function escapeText(value) {
   return String(value)
@@ -82,7 +90,15 @@ export function renderSupportedModels(models, icons = new Set()) {
     }
     if (ids.has(model.id)) throw new Error(`Duplicate model ID: ${model.id}`);
     ids.add(model.id);
-    const types = [...new Set(model.output_modalities)]
+    for (const modality of model.output_modalities ?? []) {
+      if (!TYPES[modality])
+        throw new Error(`Unknown model output type: ${modality}`);
+    }
+    const types = [
+      ...new Set(
+        operations.map((operation) => OPERATION_TYPES[operation.split(".")[0]]),
+      ),
+    ]
       .map((type) => {
         if (!TYPES[type]) throw new Error(`Unknown model output type: ${type}`);
         return TYPES[type];
