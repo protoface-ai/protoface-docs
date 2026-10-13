@@ -42,5 +42,7 @@ node --test scripts/sync-supported-models.test.mjs
 ```
 
 Only public, available inference models are included. The generated table
-contains model names, IDs, providers, and output types. Add provider marks
+contains model names, IDs, providers, and types derived from supported inference
+operations. Video with a soundtrack is listed as Video; Audio denotes standalone
+audio, speech, or music operations. Add provider marks
 under `images/providers/<owner>.png` as new providers join the catalog.
