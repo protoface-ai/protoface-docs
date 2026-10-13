@@ -2377,6 +2377,25 @@
           "app_id": {
             "type": "string"
           },
+          "aspect_ratio": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              },
+              {
+                "type": "number"
+              },
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
           "avatar_id": {
             "type": "string"
           },
@@ -2412,6 +2431,44 @@
           "video_encoding": {
             "default": "h264",
             "type": "string"
+          },
+          "video_height": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              },
+              {
+                "type": "number"
+              },
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "video_width": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              },
+              {
+                "type": "number"
+              },
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ]
           }
         },
         "required": [
@@ -4064,7 +4121,7 @@
             }
           },
           {
-            "description": "Maximum wait for platform GPU capacity, in seconds from request creation. May shorten the server's default 30-minute limit; does not limit a started render.",
+            "description": "Optional maximum start wait, in seconds from request creation, including account queue time. Without this header, the server's 30-minute capacity limit starts at the first worker claim. Does not limit a started render.",
             "in": "header",
             "name": "X-Capacity-Wait-Seconds",
             "required": false,
@@ -4079,7 +4136,7 @@
                   "type": "null"
                 }
               ],
-              "description": "Maximum wait for platform GPU capacity, in seconds from request creation. May shorten the server's default 30-minute limit; does not limit a started render.",
+              "description": "Optional maximum start wait, in seconds from request creation, including account queue time. Without this header, the server's 30-minute capacity limit starts at the first worker claim. Does not limit a started render.",
               "title": "X-Capacity-Wait-Seconds"
             }
           }
