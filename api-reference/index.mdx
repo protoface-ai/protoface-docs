@@ -15,8 +15,9 @@ Authorization: Bearer sk_live_...
 
 Create and manage keys in
 [app.protoface.com](https://app.protoface.com). One key covers inference
-and Realtime, and [Authentication](/guides/authentication) covers
-scopes.
+and Realtime. A `401` with `error.code: "missing_authorization"` means
+the Authorization header did not parse; [Authentication](/guides/authentication)
+covers troubleshooting, the other auth codes, and scopes.
 
 ## Conventions
 
