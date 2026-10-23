@@ -19,9 +19,10 @@ that a request has authenticated successfully.
 Authorization: Bearer sk_live_...
 ```
 
-Only `GET /v1/status` and `GET /v1/billing/plans` are public. Everything
-else under `/v1` requires the header. Keep the full secret in the
-environment. Replace `sk_live_...` in examples with that secret.
+Only `GET /v1/status` and `GET /v1/billing/plans` do not require a key.
+Most other `/v1` calls use the Bearer header above; [Agora](#agora) uses
+`X-API-Key`. Keep the full secret in the environment. Replace
+`sk_live_...` in examples with that secret.
 
 ```bash
 export PROTOFACE_API_KEY="sk_live_..."
@@ -41,14 +42,29 @@ curl https://api.protoface.com/v1/models \
 The `-H` line is required. A bare `GET https://api.protoface.com/v1/models`
 without the header returns `401` with `error.code: "missing_authorization"`.
 
+## Agora
+
+Agora Generic Avatar endpoints `POST /v1/agora/session/start` and
+`DELETE /v1/agora/session/stop` use the same full API key in a different
+header:
+
+```http
+X-API-Key: sk_live_...
+```
+
+Send the secret directly as the header value, without a `Bearer` scheme.
+An absent or empty `X-API-Key` returns `401` with
+`error.code: "missing_api_key"`, even if an Authorization header is present.
+
 ## Troubleshoot authentication
 
 Use the stable `error.code` to choose the next step:
 
 | `error.code` | HTTP | What to check |
 | --- | --- | --- |
-| `missing_authorization` | 401 | The header is absent or malformed. Check that the request actually sends `Authorization: Bearer` followed by the full secret, rather than the short dashboard identifier or a placeholder. The key has not been looked up. |
-| `api_key.unknown` | 401 | The token passed header parsing but did not match a key. Check the saved secret. |
+| `missing_authorization` | 401 | A Bearer header is absent or malformed. Check that the request actually sends `Authorization: Bearer` followed by the full secret, rather than the short dashboard identifier or a placeholder. The key has not been looked up. |
+| `missing_api_key` | 401 | An Agora call has no `X-API-Key` value. Send the full secret in that header. |
+| `api_key.unknown` | 401 | The supplied API key did not match a key. Check the saved full secret and the header required by this endpoint. |
 | `api_key.revoked` | 401 | The key was revoked. Use an active key. |
 | `api_key.expired` | 401 | The key expired. Use an unexpired key. |
 | `api_key.environment` | 401 | The key belongs to a different environment than the host. Use a key from `app.protoface.com` with `api.protoface.com`. |

@@ -2826,6 +2826,12 @@
       }
     },
     "securitySchemes": {
+      "AgoraApiKey": {
+        "description": "Full Protoface API key for Agora Generic Avatar endpoints. Pass as `X-API-Key: sk_live_\u2026`. HTTP 401 `missing_api_key` means this header is absent or empty.",
+        "in": "header",
+        "name": "X-API-Key",
+        "type": "apiKey"
+      },
       "ApiKey": {
         "bearerFormat": "sk_live_*",
         "description": "Production API key created at https://app.protoface.com for https://api.protoface.com; no activation step or environment switch. Pass the full secret shown once at creation as `Authorization: Bearer sk_live_\u2026`, not the short dashboard identifier. HTTP 401 `missing_authorization` means the header did not parse; the key was not looked up. A token that passes parsing can return `api_key.unknown`, `api_key.revoked`, `api_key.expired`, or `api_key.environment`. See https://docs.protoface.com/reference/errors#authentication-codes.",
@@ -2835,7 +2841,7 @@
     }
   },
   "info": {
-    "description": "Create realtime avatar sessions.\n\n### Authentication\nAll `/v1/*` endpoints except `GET /v1/status` and `GET /v1/billing/plans`\nrequire an API key:\n\n```\nAuthorization: Bearer sk_live_...\n```\n\nA key created at https://app.protoface.com is a production key for\nhttps://api.protoface.com, ready to use without an activation step or an\nenvironment switch. `sk_live_` is the only customer API key prefix.\nThe full secret is shown once at creation. The dashboard key list later\nshows only `sk_live_` plus the last four characters; that identifier cannot\nauthenticate. Replace `sk_live_...` in examples with the full secret.\n\nTest with `GET /v1/models` and the Authorization header above. Your plan\nand credit balance do not gate this call. Insufficient credits on a\nbillable call return HTTP 402.\n\n### Idempotency\n`POST /v1/sessions` may include an `Idempotency-Key` header (any opaque string,\n<= 255 chars). Retries with the same key inside 24 hours return the first\nresponse. The header is optional.\n\n### Errors\nEvery non-2xx response is a JSON body of the form:\n\n```json\n{\n  \"error\": {\n    \"type\": \"invalid_request\",\n    \"code\": \"transport.unsupported\",\n    \"message\": \"transport.type=pipecat is not supported\",\n    \"param\": \"transport.type\",\n    \"request_id\": \"req_01HXY...\"\n  }\n}\n```\n\nSwitch on `error.code` (stable lower_snake_case or dotted), not `error.message`.\nThe message provides readable context, but its wording may change.\n\n| `error.code` | HTTP | When |\n| --- | --- | --- |\n| `missing_authorization` | 401 | Authorization header absent, scheme not Bearer (case-insensitive), token not prefixed with `sk_live_`, or fewer than 16 characters after the prefix. The key was not looked up. |\n| `api_key.unknown` | 401 | The token passed header parsing but matched no key. |\n| `api_key.revoked` | 401 | The key is revoked. |\n| `api_key.expired` | 401 | The key is past its expiry. |\n| `api_key.environment` | 401 | The key belongs to a different environment than this host. |\n| `org.suspended` | 403 | The account is suspended. |\n| `api_key.scope_required` | 403 | The key is valid but lacks a required scope. |\n\n`missing_authorization` is a header parse failure, not an account activation\nerror. Its message describes the expected `Authorization: Bearer sk_live_\u2026`\nheader. Rotating keys does not fix a request that still sends a missing or\nmalformed header. Check the outgoing header with the secret redacted; never\nsend the secret to support. Include `request_id` when asking for help.\nSee https://docs.protoface.com/guides/authentication and\nhttps://docs.protoface.com/reference/errors#authentication-codes.\n\n### Pagination\nList endpoints use cursor pagination:\n\n```\nGET /v1/sessions?limit=20&starting_after=sess_01HXY...\n```\n\nResponse shape:\n\n```json\n{\n  \"object\": \"list\",\n  \"data\": [...],\n  \"has_more\": true,\n  \"next_cursor\": \"sess_01HXY...\"\n}\n```\n",
+    "description": "Create realtime avatar sessions.\n\n### Authentication\nAll `/v1/*` endpoints except `GET /v1/status` and `GET /v1/billing/plans`\nrequire an API key. Most use a Bearer header:\n\n```\nAuthorization: Bearer sk_live_...\n```\n\nAgora Generic Avatar endpoints `POST /v1/agora/session/start` and\n`DELETE /v1/agora/session/stop` use the same full secret in an `X-API-Key`\nheader:\n\n```\nX-API-Key: sk_live_...\n```\n\nA key created at https://app.protoface.com is a production key for\nhttps://api.protoface.com, ready to use without an activation step or an\nenvironment switch. `sk_live_` is the only customer API key prefix.\nThe full secret is shown once at creation. The dashboard key list later\nshows only `sk_live_` plus the last four characters; that identifier cannot\nauthenticate. Replace `sk_live_...` in examples with the full secret.\n\nTest with `GET /v1/models` and the Authorization header above. Your plan\nand credit balance do not gate this call. Insufficient credits on a\nbillable call return HTTP 402.\n\n### Idempotency\n`POST /v1/sessions` may include an `Idempotency-Key` header (any opaque string,\n<= 255 chars). Retries with the same key inside 24 hours return the first\nresponse. The header is optional.\n\n### Errors\nEvery non-2xx response is a JSON body of the form:\n\n```json\n{\n  \"error\": {\n    \"type\": \"invalid_request\",\n    \"code\": \"transport.unsupported\",\n    \"message\": \"transport.type=pipecat is not supported\",\n    \"param\": \"transport.type\",\n    \"request_id\": \"req_01HXY...\"\n  }\n}\n```\n\nSwitch on `error.code` (stable lower_snake_case or dotted), not `error.message`.\nThe message provides readable context, but its wording may change.\n\n| `error.code` | HTTP | When |\n| --- | --- | --- |\n| `missing_authorization` | 401 | On Bearer endpoints: Authorization header absent, scheme not Bearer (case-insensitive), token not prefixed with `sk_live_`, or fewer than 16 characters after the prefix. The key was not looked up. |\n| `missing_api_key` | 401 | The `X-API-Key` header is absent or empty on an Agora endpoint. |\n| `api_key.unknown` | 401 | The supplied API key matched no key. |\n| `api_key.revoked` | 401 | The key is revoked. |\n| `api_key.expired` | 401 | The key is past its expiry. |\n| `api_key.environment` | 401 | The key belongs to a different environment than this host. |\n| `org.suspended` | 403 | The account is suspended. |\n| `api_key.scope_required` | 403 | The key is valid but lacks a required scope. |\n\n`missing_authorization` is a header parse failure, not an account activation\nerror. Its message describes the expected `Authorization: Bearer sk_live_\u2026`\nheader. Rotating keys does not fix a request that still sends a missing or\nmalformed header. Check the outgoing header with the secret redacted; never\nsend the secret to support. Include `request_id` when asking for help.\nSee https://docs.protoface.com/guides/authentication and\nhttps://docs.protoface.com/reference/errors#authentication-codes.\n\n### Pagination\nList endpoints use cursor pagination:\n\n```\nGET /v1/sessions?limit=20&starting_after=sess_01HXY...\n```\n\nResponse shape:\n\n```json\n{\n  \"object\": \"list\",\n  \"data\": [...],\n  \"has_more\": true,\n  \"next_cursor\": \"sess_01HXY...\"\n}\n```\n",
     "summary": "Protoface \u2014 realtime avatar API for developers.",
     "title": "Protoface API",
     "version": "0.1.0"
@@ -3187,7 +3193,7 @@
         },
         "security": [
           {
-            "ApiKey": []
+            "AgoraApiKey": []
           }
         ],
         "summary": "Start",
@@ -3233,7 +3239,7 @@
         },
         "security": [
           {
-            "ApiKey": []
+            "AgoraApiKey": []
           }
         ],
         "summary": "Stop",

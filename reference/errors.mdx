@@ -34,7 +34,7 @@ reworded at any time.
 | HTTP | `error.type` | When |
 | --- | --- | --- |
 | 400 | `invalid_request` | Malformed JSON, missing or invalid field |
-| 401 | `authentication` | Missing or malformed Authorization header, or a rejected API key; see [Authentication codes](#authentication-codes) |
+| 401 | `authentication` | Missing or malformed authentication header, or a rejected API key; see [Authentication codes](#authentication-codes) |
 | 402 | `quota_exceeded` | Not enough credits, or billing is inactive for a credit-gated action |
 | 403 | `permission` | Account suspended, or this key cannot access the resource |
 | 404 | `not_found` | Resource does not exist or is not visible to this key |
@@ -57,8 +57,9 @@ or permission failure:
 
 | `error.code` | HTTP | When |
 | --- | --- | --- |
-| `missing_authorization` | 401 | The Authorization header is absent, the scheme is not `Bearer` (case-insensitive), the token does not start with `sk_live_`, or fewer than 16 characters follow that prefix. The key was not looked up. |
-| `api_key.unknown` | 401 | The token passed header parsing, but did not match any key. |
+| `missing_authorization` | 401 | On Bearer endpoints: the Authorization header is absent, the scheme is not `Bearer` (case-insensitive), the token does not start with `sk_live_`, or fewer than 16 characters follow that prefix. The key was not looked up. |
+| `missing_api_key` | 401 | The `X-API-Key` header is absent or empty on an Agora endpoint. |
+| `api_key.unknown` | 401 | The supplied API key did not match any key. |
 | `api_key.revoked` | 401 | The key is revoked. |
 | `api_key.expired` | 401 | The key is past its expiry. |
 | `api_key.environment` | 401 | The key is bound to a different environment than this host. |
@@ -70,9 +71,11 @@ activation error. Its message describes the expected header,
 `Authorization: Bearer sk_live_…`. Keep branching on `error.code`;
 the message is readable context rather than a stable contract.
 
-The short identifier shown in the dashboard key list (`sk_live_` plus
-the last four characters) fails parsing. Use the full secret shown once
-at creation. See [Authentication](/guides/authentication#troubleshoot-authentication)
+On Bearer endpoints, the short dashboard identifier (`sk_live_` plus
+the last four characters) fails parsing. Agora looks up the `X-API-Key`
+value directly; an unrecognized value, including the short identifier,
+returns `api_key.unknown`. Use the full secret shown once at creation.
+See [Authentication](/guides/authentication#troubleshoot-authentication)
 for how to check the outgoing header without exposing the secret.
 
 ## Inference codes

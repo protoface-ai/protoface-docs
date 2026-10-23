@@ -13,6 +13,10 @@ Authenticate with a Protoface API key:
 Authorization: Bearer sk_live_...
 ```
 
+Agora Generic Avatar endpoints `POST /v1/agora/session/start` and
+`DELETE /v1/agora/session/stop` use `X-API-Key: sk_live_...` with the full
+secret. See [Agora authentication](/guides/authentication#agora).
+
 Create and manage keys in
 [app.protoface.com](https://app.protoface.com). One key covers inference
 and Realtime. A `401` with `error.code: "missing_authorization"` means
