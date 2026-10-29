@@ -3,17 +3,26 @@ title: "Authentication"
 description: "API keys, scopes, and where to keep them."
 ---
 
-Most requests need an API key sent as a Bearer token. Keys are created
-and revoked in the [dashboard](https://app.protoface.com) and belong to
-one environment, staging or production. One key covers both media
-generation and realtime sessions.
+Most requests need an API key sent as a Bearer token. A key created in
+the [dashboard](https://app.protoface.com) is a production key for
+`https://api.protoface.com`, ready to use without an activation step or
+an environment switch. One key covers both media generation and realtime
+sessions.
+
+The full secret is shown once when you create the key. Save it then.
+The key list later shows only `sk_live_` plus the last four characters,
+such as `sk_live_ABCD`. This short identifier cannot authenticate.
+`sk_live_` is the only customer API key prefix; it does not indicate
+that a request has authenticated successfully.
 
 ```http
 Authorization: Bearer sk_live_...
 ```
 
-Only `GET /v1/status` and `GET /v1/billing/plans` are public. Everything
-else under `/v1` requires the header. Keep the key in the environment.
+Only `GET /v1/status` and `GET /v1/billing/plans` do not require a key.
+Most other `/v1` calls use the Bearer header above; [Agora](#agora) uses
+`X-API-Key`. Keep the full secret in the environment. Replace
+`sk_live_...` in examples with that secret.
 
 ```bash
 export PROTOFACE_API_KEY="sk_live_..."
@@ -21,12 +30,57 @@ export PROTOFACE_API_KEY="sk_live_..."
 
 ## Test your key
 
-`GET /v1/models` returns `200` for a working key and `401` otherwise.
+`GET /v1/models` returns `200` for a working key. Your plan and credit
+balance do not gate this call, including on the Free plan. Insufficient
+credits on a billable call return `402`, not an authentication error.
 
 ```bash
 curl https://api.protoface.com/v1/models \
   -H "Authorization: Bearer $PROTOFACE_API_KEY"
 ```
+
+The `-H` line is required. A bare `GET https://api.protoface.com/v1/models`
+without the header returns `401` with `error.code: "missing_authorization"`.
+
+## Agora
+
+Agora Generic Avatar endpoints `POST /v1/agora/session/start` and
+`DELETE /v1/agora/session/stop` use the same full API key in a different
+header:
+
+```http
+X-API-Key: sk_live_...
+```
+
+Send the secret directly as the header value, without a `Bearer` scheme.
+An absent or empty `X-API-Key` returns `401` with
+`error.code: "missing_api_key"`, even if an Authorization header is present.
+
+## Troubleshoot authentication
+
+Use the stable `error.code` to choose the next step:
+
+| `error.code` | HTTP | What to check |
+| --- | --- | --- |
+| `missing_authorization` | 401 | A Bearer header is absent or malformed. Check that the request actually sends `Authorization: Bearer` followed by the full secret, rather than the short dashboard identifier or a placeholder. The key has not been looked up. |
+| `missing_api_key` | 401 | An Agora call has no `X-API-Key` value. Send the full secret in that header. |
+| `api_key.unknown` | 401 | The supplied API key did not match a key. Check the saved full secret and the header required by this endpoint. |
+| `api_key.revoked` | 401 | The key was revoked. Use an active key. |
+| `api_key.expired` | 401 | The key expired. Use an unexpired key. |
+| `api_key.environment` | 401 | The key belongs to a different environment than the host. Use a key from `app.protoface.com` with `api.protoface.com`. |
+| `org.suspended` | 403 | The account is suspended. |
+| `api_key.scope_required` | 403 | The key is valid but lacks the scope required by this call. See [Scopes](#scopes). |
+
+Rotating keys does not fix `missing_authorization` if the request still
+sends a missing or malformed header. Check the outgoing request in the
+process making the call, including whether a proxy or redirect removes
+the header. Inspect it locally with the secret redacted; do not share
+the secret or an unredacted request with support. Include the
+`request_id` if you need help.
+
+[Authentication codes](/reference/errors#authentication-codes) lists
+the exact parsing conditions. `error.message` provides readable context,
+but its wording can change.
 
 ## Scopes
 
@@ -40,8 +94,7 @@ run and reading its result are separate permissions.
 | `runs:read` | List runs, poll status, retrieve results |
 
 A valid key without the required scope returns `403` with
-`error.code: "api_key.scope_required"`. A missing, malformed, or revoked
-key returns `401`.
+`error.code: "api_key.scope_required"`.
 
 ## Browsers and embeds
 

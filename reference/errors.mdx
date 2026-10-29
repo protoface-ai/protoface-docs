@@ -34,9 +34,9 @@ reworded at any time.
 | HTTP | `error.type` | When |
 | --- | --- | --- |
 | 400 | `invalid_request` | Malformed JSON, missing or invalid field |
-| 401 | `authentication` | Missing, bad, or revoked API key |
+| 401 | `authentication` | Missing or malformed authentication header, or a rejected API key; see [Authentication codes](#authentication-codes) |
 | 402 | `quota_exceeded` | Not enough credits, or billing is inactive for a credit-gated action |
-| 403 | `permission` | Authenticated, but this key cannot access the resource |
+| 403 | `permission` | Account suspended, or this key cannot access the resource |
 | 404 | `not_found` | Resource does not exist or is not visible to this key |
 | 409 | `conflict` | Same `Idempotency-Key` with a changed body, or a state conflict |
 | 422 | `unprocessable` | Valid shape, invalid semantics |
@@ -49,6 +49,34 @@ Two failures share HTTP `429` and call for opposite responses. A
 `rate_limit` means you are asking too fast, so back off and retry. A
 `quota_exceeded` means a ceiling is full, and backing off will not help
 until something already running finishes.
+
+## Authentication codes
+
+These codes distinguish a Bearer header parse failure from a key lookup
+or permission failure:
+
+| `error.code` | HTTP | When |
+| --- | --- | --- |
+| `missing_authorization` | 401 | On Bearer endpoints: the Authorization header is absent, the scheme is not `Bearer` (case-insensitive), the token does not start with `sk_live_`, or fewer than 16 characters follow that prefix. The key was not looked up. |
+| `missing_api_key` | 401 | The `X-API-Key` header is absent or empty on an Agora endpoint. |
+| `api_key.unknown` | 401 | The supplied API key did not match any key. |
+| `api_key.revoked` | 401 | The key is revoked. |
+| `api_key.expired` | 401 | The key is past its expiry. |
+| `api_key.environment` | 401 | The key is bound to a different environment than this host. |
+| `org.suspended` | 403 | The account is suspended. |
+| `api_key.scope_required` | 403 | The key is valid but lacks a scope required by this call. |
+
+`missing_authorization` is a header parse failure, not an account
+activation error. Its message describes the expected header,
+`Authorization: Bearer sk_live_…`. Keep branching on `error.code`;
+the message is readable context rather than a stable contract.
+
+On Bearer endpoints, the short dashboard identifier (`sk_live_` plus
+the last four characters) fails parsing. Agora looks up the `X-API-Key`
+value directly; an unrecognized value, including the short identifier,
+returns `api_key.unknown`. Use the full secret shown once at creation.
+See [Authentication](/guides/authentication#troubleshoot-authentication)
+for how to check the outgoing header without exposing the secret.
 
 ## Inference codes
 
@@ -68,7 +96,6 @@ until something already running finishes.
 | `run.input_role_conflict` | Two fields cannot be combined on this model |
 | `asset.not_available` | An `asset_...` input is missing, deleted, or owned by another org |
 | `run.input_url_unreachable` | An input URL could not be fetched |
-| `api_key.scope_required` | The key lacks `runs:write` or `runs:read` (`403`) |
 
 Inputs resolve before roles are checked, so a bad asset is reported ahead
 of an illegal combination. `param` points at the offending input as a

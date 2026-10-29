@@ -8,7 +8,8 @@ your machine through `uvx` and authenticates with your API key. It covers
 models, runs, and assets. Realtime sessions and avatars are not included.
 
 You need [uv](https://docs.astral.sh/uv/) and a key from the
-[dashboard](https://app.protoface.com). Export the key first:
+[dashboard](https://app.protoface.com). Export the full secret shown at
+creation, rather than the short identifier in the key list:
 
 ```bash
 export PROTOFACE_API_KEY="sk_live_..."
@@ -110,8 +111,12 @@ Do not poll a final run.
 
 Tool errors start with a stable code in brackets, such as
 `[quota.exceeded]`. Branch on the code. On auth errors ask the user to
-check `PROTOFACE_API_KEY`. On quota errors report `get_quota_limits` and
-stop.
+check the configured full secret in `PROTOFACE_API_KEY`.
+`[missing_authorization]` means the Bearer header did not parse, before
+key lookup; check the MCP process's environment and saved configuration,
+then restart the client. Other auth failures have separate codes at
+https://docs.protoface.com/reference/errors#authentication-codes.
+On quota errors report `get_quota_limits` and stop.
 
 ## Scope
 
@@ -156,9 +161,14 @@ Uploads are capped at 100 MB per file.
 | Symptom | Fix |
 | --- | --- |
 | `PROTOFACE_API_KEY is not set` | Export the key in the shell that launches the agent, then restart it. |
-| `[api_key.unknown]` | The key is wrong or revoked. Create a new one in the [dashboard](https://app.protoface.com). |
+| `[missing_authorization]` | The client process did not send a parseable Bearer secret. Export the full key in the shell that launches the agent. If the MCP registration saved the key with `--env`, update that value too, then restart the agent. See [Authentication](/guides/authentication#troubleshoot-authentication). |
+| `[api_key.unknown]` | The token passed header parsing but matched no key. Check the saved full secret and the key value in the MCP configuration. |
+| `[api_key.revoked]` | The key was revoked. Configure an active key from the [dashboard](https://app.protoface.com), then restart the agent. |
+| `[api_key.expired]` | Configure an unexpired key, then restart the agent. |
+| `[api_key.environment]` | Use a dashboard key with `https://api.protoface.com`. Check any `PROTOFACE_BASE_URL` override. |
+| `[org.suspended]` | The account is suspended. |
 | `[api_key.scope_required]` | The key needs `runs:read` and `runs:write`. See [Authentication](/guides/authentication). |
 | `[model.not_found]` | Call `list_models`; ids are exact and the catalog changes. |
 | `[connection_error]` | Network problem between your machine and the API. Check [status](https://status.protoface.com). |
 | Run stays `queued` | `queue_position` counts the runs ahead of it. Keep polling; do not resubmit. |
-| Other `[code]` | Every code is listed in [Errors](/reference/errors). |
+| Other `[code]` | See [Authentication codes](/reference/errors#authentication-codes) for auth failures and [Errors](/reference/errors) for other documented codes. |
