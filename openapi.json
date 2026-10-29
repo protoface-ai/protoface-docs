@@ -903,6 +903,15 @@
           "available": {
             "type": "boolean"
           },
+          "catalog_visibility": {
+            "default": "listed",
+            "description": "Presentation policy: api_only models remain callable and discoverable through the API, but are omitted from Studio and browsable marketing catalogs.",
+            "enum": [
+              "listed",
+              "api_only"
+            ],
+            "type": "string"
+          },
           "contract_revision": {
             "type": "string"
           },
@@ -987,6 +996,13 @@
           },
           "revision": {
             "type": "string"
+          },
+          "schema_fingerprints": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "description": "Per-operation SHA-256 digests of request controls and validation rules. Pricing and descriptive copy do not affect these digests; a digest does not guarantee backwards compatibility.",
+            "type": "object"
           },
           "tags": {
             "items": {
