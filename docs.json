@@ -152,6 +152,7 @@
             "pages": [
               "guides/authentication",
               "reference/errors",
+              "reference/comfyui",
               "reference/mcp"
             ]
           }

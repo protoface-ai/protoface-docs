@@ -1,0 +1,96 @@
+---
+title: "ComfyUI"
+description: "Generate images, video, and audio from your ComfyUI workflow with Protoface."
+---
+
+The official Protoface extension adds model-specific nodes to ComfyUI.
+Generation runs through the Protoface API, so you do not need downloaded
+model weights or a local GPU for Protoface nodes. Connect prompts and
+reference media, then preview, save, or pass the results to another node.
+
+You need **ComfyUI 0.41.0 or newer**, Python **3.10 or newer**, and an API
+key from the [dashboard](https://app.protoface.com). Generations use your
+Protoface API credits at the same [model rates](https://protoface.com/pricing).
+The extension is free to install.
+
+## Install with ComfyUI Manager
+
+1. Open **Extensions** or **Manager** in ComfyUI.
+2. Search **Protoface** and install **protoface-nodes**, published by
+   **protoface** on [Comfy Registry](https://registry.comfy.org/nodes/protoface-nodes).
+3. Restart ComfyUI and reload the browser.
+4. Click **Protoface** in the lower-right corner and enter your API key.
+
+If Manager does not show the package, refresh its catalog. For Git, ZIP,
+Windows portable, and Desktop installation instructions, use the
+[installation guide](https://github.com/protoface-ai/protoface-comfyui/blob/master/docs/installation.md).
+
+The key stays in the ComfyUI server's memory and is excluded from exported
+workflows. Enter it again after restarting the server. Anyone who can run
+workflows on a shared server can use its configured key.
+
+## Make your first generation
+
+Open **Templates → the Protoface extension** and choose an included workflow,
+or search **Protoface**, a model name such as **MiniMax H3** or **LTX 2.5**,
+or a task such as **Text to Video** in Add Node.
+
+Enter your prompt, set the model controls, and queue the graph. Native
+image, video, and audio connections let you use reference media and feed
+results into the next step. **Protoface Reuse Result Asset** passes an
+existing result to another Protoface generation without reuploading it.
+
+The [workflow guide](https://github.com/protoface-ai/protoface-comfyui/tree/master/example_workflows)
+explains the included video, reference-media, asset-reuse, and recovery
+templates. Model nodes become searchable after you install the extension;
+Registry and Manager search find the package itself.
+
+## Request a new generation or recover a run
+
+Keep **generation_id** fixed to reuse or resume the same request. Increment
+it to request a fresh paid generation. Changing the prompt, model controls,
+or reference inputs also creates a new request. The generation ID is
+separate from the model's random seed.
+
+If execution is interrupted, preserve the workflow and generation ID, then
+requeue it. **Protoface Resume Run** retrieves an existing run by its run ID
+without submitting another generation. Preserve the extension's local state
+directory across updates so it can recover recorded jobs. Cancellation is
+best effort and does not promise a refund.
+
+## Update models and the extension
+
+For compatible new models or controls, click **Protoface → Refresh catalog**,
+then restart ComfyUI and reload the browser. These updates do not require
+reinstalling the extension. Protoface settings lists any skipped tasks that
+need a new adapter; compatible tasks still load.
+
+For extension updates, use Manager to install the latest approved Registry
+version, then restart and reload. A new control type or media adapter may
+require an extension update. Keep only one installed copy.
+
+## Headless and hosted use
+
+For a persistent or headless setup, set `PROTOFACE_API_KEY_FILE` to a private
+file containing your key before launching ComfyUI. You can also set
+`PROTOFACE_API_KEY` in the server environment. Keep credentials outside
+workflow JSON. API-format workflows need a stable, unique `request_scope`
+for each workflow/node; preserve it when recovering a request.
+
+Local ComfyUI and hosted services that permit independent custom nodes can
+use this extension. Desktop users should follow the managed-environment
+instructions in the installation guide. **Comfy Cloud does not currently
+permit installing the Protoface extension**, and Comfy credits do not pay
+for Protoface API generations.
+
+## Troubleshooting
+
+| Problem | What to check |
+| --- | --- |
+| No Protoface nodes | Restart and reload, check the startup log, and confirm there is only one copy installed. |
+| Authentication or credit error | Re-enter your API key after a restart and check your account's API credits. |
+| A new model is missing | Refresh the catalog, restart, and reload. Check Protoface settings for skipped tasks. |
+| A run times out | Keep the generation ID fixed and requeue, or use Resume Run with its run ID. |
+
+See the [full troubleshooting guide](https://github.com/protoface-ai/protoface-comfyui/blob/master/docs/installation.md#troubleshooting).
+For support, include the extension version and run ID, but never your API key.
