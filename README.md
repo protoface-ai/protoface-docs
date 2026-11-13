@@ -4,7 +4,7 @@ The Protoface docs are live here: [docs.protoface.com](https://docs.protoface.co
 
 ## About Protoface
 
-Protoface runs frontier models for video, images, speech, music, and 3D, and adds a real-time avatar to your AI app or agent. Read the docs (published from this repo) to find out more!
+Protoface is a cost-effective generative media inference platform, running frontier models for video, images, speech, music, 3D assets, and realtime avatars behind a single API key. Now with the cheapest [Seedance 2.5 API](https://docs.protoface.com/guides/generate-video), alongside [MiniMax H3](https://docs.protoface.com/guides/model-inference) and more. Read the docs (published from this repo) to find out more!
 
 Get a **free** API key at [protoface.com](https://protoface.com/?utm_source=github&utm_medium=referral&utm_campaign=github_docs&utm_content=protoface-docs).
 
