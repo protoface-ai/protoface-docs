@@ -21,7 +21,7 @@ Paste this into your agent and it installs itself:
 
 ```text
 Install the Protoface MCP server. It is a stdio server: the command is
-`uvx protoface-mcp` and it needs the environment variable PROTOFACE_API_KEY,
+`uvx protoface-mcp@latest` and it needs the environment variable PROTOFACE_API_KEY,
 which is already set in my shell. Register it under the name "protoface"
 at user scope, then call its list_models tool to confirm it works.
 ```
@@ -31,11 +31,11 @@ Or run one command:
 <CodeGroup>
 
 ```bash Codex
-codex mcp add protoface --env PROTOFACE_API_KEY="$PROTOFACE_API_KEY" -- uvx protoface-mcp
+codex mcp add protoface --env PROTOFACE_API_KEY="$PROTOFACE_API_KEY" -- uvx protoface-mcp@latest
 ```
 
 ```bash Claude Code
-claude mcp add --scope user --env PROTOFACE_API_KEY="$PROTOFACE_API_KEY" protoface -- uvx protoface-mcp
+claude mcp add --scope user --env PROTOFACE_API_KEY="$PROTOFACE_API_KEY" protoface -- uvx protoface-mcp@latest
 ```
 
 ```json Cursor
@@ -44,7 +44,7 @@ claude mcp add --scope user --env PROTOFACE_API_KEY="$PROTOFACE_API_KEY" protofa
   "mcpServers": {
     "protoface": {
       "command": "uvx",
-      "args": ["protoface-mcp"],
+      "args": ["protoface-mcp@latest"],
       "env": { "PROTOFACE_API_KEY": "${env:PROTOFACE_API_KEY}" }
     }
   }
@@ -52,6 +52,10 @@ claude mcp add --scope user --env PROTOFACE_API_KEY="$PROTOFACE_API_KEY" protofa
 ```
 
 </CodeGroup>
+
+`@latest` checks for the newest published version whenever the MCP server
+starts. For an existing setup, change the command argument from
+`protoface-mcp` to `protoface-mcp@latest`, then restart the MCP connection.
 
 Restart the agent, then ask:
 
