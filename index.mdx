@@ -1,6 +1,6 @@
 ---
 title: "Protoface API"
-description: "Frontier media models and live avatars behind one API."
+description: "The cheapest generative AI models and realtime avatars behind one API."
 ---
 
 <div
@@ -19,25 +19,28 @@ description: "Frontier media models and live avatars behind one API."
   />
 </div>
 
-Protoface is a generative media inference platform, running frontier
-models for video, images, speech, music, 3D assets, and realtime avatars
-behind a single API key.
+Protoface is a cost-effective generative media inference platform, running
+frontier models for video, images, speech, music, 3D assets, and realtime
+avatars behind a single API key. Now with the cheapest
+[Seedance 2.5 API](/guides/generate-video).
 
 ## Inference
 
 Generating a video takes one call to start it and one to fetch the
-result. In the example below, MiniMax H3 returns eight seconds of video
-with sound.
+result. In the example below, Seedance 2.5 generates eight seconds of
+720p video with synchronized audio.
 
 ```bash
-curl -X POST https://api.protoface.com/v1/run/minimax/minimax-h3 \
+curl -X POST https://api.protoface.com/v1/run/bytedance/seedance-2.5 \
   -H "Authorization: Bearer $PROTOFACE_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
+    "operation": "video.generate",
     "prompt": "A wide shot of a sailboat crossing a quiet bay at sunrise.",
-    "duration_seconds": 8,
-    "quality": "768p",
-    "aspect_ratio": "16:9"
+    "duration": 8,
+    "resolution": "720p",
+    "aspect_ratio": "16:9",
+    "generate_audio": true
   }'
 ```
 
@@ -58,7 +61,8 @@ the file once the run finishes.
 
 Every model follows this pattern. Only the body changes, and you build it
 from the model's [catalog entry](/guides/models). The
-[inference quickstart](/guides/model-inference) runs the full sequence.
+[MiniMax H3 inference quickstart](/guides/model-inference) runs the full
+sequence, with a separate [image-to-video example](/guides/image-to-video).
 
 ## Realtime
 
@@ -73,7 +77,7 @@ agent.
 
 <Columns cols={2}>
   <Card title="Inference quickstart" href="/guides/model-inference" icon="rocket">
-    Generate a video with curl, Python, or JavaScript.
+    Generate a MiniMax H3 video with curl, Python, or JavaScript.
   </Card>
   <Card title="Model catalog" href="/guides/models" icon="layers">
     Browse every model and read its input contract.
