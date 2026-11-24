@@ -1379,6 +1379,189 @@
         "title": "QuotaLimits",
         "type": "object"
       },
+      "RunCancelView": {
+        "description": "Confirmed cancellation, with the run and released reservation.",
+        "properties": {
+          "audio": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/RunFileView"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "capacity_wait": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/CapacityWaitView"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "completed_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "created_at": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "credits": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/RunCreditsView"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "credits_released": {
+            "description": "Credits released by the confirmed cancellation.",
+            "minimum": 0.0,
+            "type": "integer"
+          },
+          "deleted_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "error": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/RunErrorView"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "eta": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/RunEtaView"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "external_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "id": {
+            "type": "string"
+          },
+          "image": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/RunFileView"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "message": {
+            "type": "string"
+          },
+          "metadata": {
+            "additionalProperties": true,
+            "type": "object"
+          },
+          "model": {
+            "type": "string"
+          },
+          "model_revision": {
+            "type": "string"
+          },
+          "object": {
+            "const": "run",
+            "default": "run",
+            "type": "string"
+          },
+          "operation": {
+            "type": "string"
+          },
+          "outputs": {
+            "items": {
+              "$ref": "#/components/schemas/RunOutputView"
+            },
+            "type": "array"
+          },
+          "progress": {
+            "type": "integer"
+          },
+          "started_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "status": {
+            "type": "string"
+          },
+          "video": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/RunFileView"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "model",
+          "model_revision",
+          "operation",
+          "status",
+          "progress",
+          "outputs",
+          "credits",
+          "error",
+          "metadata",
+          "external_id",
+          "created_at",
+          "started_at",
+          "completed_at",
+          "message",
+          "credits_released"
+        ],
+        "title": "RunCancelView",
+        "type": "object"
+      },
       "RunCreditsView": {
         "properties": {
           "charged": {
@@ -4193,7 +4376,7 @@
                 }
               }
             },
-            "description": "The organization has insufficient credits for this run."
+            "description": "Insufficient credits, or media API generation requires a first credit top-up or paid subscription payment (billing.api_payment_required). Existing paid entitlements, payment history and staff video-watermark waivers qualify. Realtime sessions and non-media operations are unaffected."
           },
           "403": {
             "content": {
@@ -4539,7 +4722,7 @@
     },
     "/v1/runs/{run_id}/cancel": {
       "post": {
-        "description": "Call off a run. Queued work is refunded; running work is charged in full.\n\nCancelling twice is not an error, so a client that lost the first response can\nretry without having to know whether it landed.",
+        "description": "Cancel work that has not begun execution or provider submission.\n\nA successful response confirms cancellation and releases all reserved credits.\nOnce work has started, return 409 `run.not_cancelable` without stopping it:\npoll the status URL and retrieve the original run's outputs when ready.\nReplaying a historical charged cancellation reports its existing charge\nwithout claiming a refund or making another charge.\n\nCancelling twice is not an error, so a client that lost the first response can\nretry without having to know whether it landed.",
         "operationId": "cancelRun",
         "parameters": [
           {
@@ -4557,7 +4740,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/RunView"
+                  "$ref": "#/components/schemas/RunCancelView"
                 }
               }
             },
@@ -4591,7 +4774,15 @@
                 }
               }
             },
-            "description": "The request conflicts with the current state of the run."
+            "description": "Cancellation is too late once execution or provider submission has begun. The run continues and its outputs remain retrievable. Completed or failed runs also cannot be canceled. The Location header identifies the run.",
+            "headers": {
+              "Location": {
+                "description": "Retrieve this run's status, outputs and credit details.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
           },
           "422": {
             "content": {
